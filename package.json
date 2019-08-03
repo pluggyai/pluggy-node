@@ -1,0 +1,30 @@
+{
+  "name": "hermes-sdk-node",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "prepublish": "npm run build"
+  },
+  "repository": "https://github.com/hermesapi/hermes-sdk-node",
+  "keywords": [
+    "hermes",
+    "hermesapi",
+    "aggregation",
+    "hermes-sdk"
+  ],
+  "dependencies": {
+    "node-fetch": "^2.6.0",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^2.5.0",
+    "ts-node": "^8.2.0",
+    "typescript": "^3.5.1"
+  }
+}
