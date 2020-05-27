@@ -1,97 +1,56 @@
-import fetch from 'node-fetch'
+import { BaseApi } from './baseApi'
 
 /**
- * Creates a new client instance for interacting with Hermes API
+ * Creates a new client instance for interacting with Pluggy API
  * @constructor
  * @param API_KEY for authenticating to the API
- * @returns {HermesClient} a client for making Hermes requests
+ * @returns {PluggyClient} a client for making requests
  */
-export class HermesClient {
-  private apiKey: string
+export class PluggyClient extends BaseApi{
 
-  constructor(API_KEY: string, private HERMES_ENDPOINT: string = 'https://api.hermesapi.com/v1') {
-    this.apiKey = API_KEY
+  /**
+   * Fetch all available connectors
+   * @returns {Connector[]} an array of connectors
+   */
+  async fetchConnectors() {
+    return this.createGetRequest('connectors')
+  }
+ 
+  /**
+   * Fetch a single Connector
+   * @param id The Connector ID
+   * @returns {Connector} a connector object
+   */
+  async fetchConnector(id: number) {
+    return this.createGetRequest(`connectors/${id}`)
   }
 
   /**
-   * Fetch all available from Hermes API
-   * @returns {Robot[]} an array robots
+   * Fetch a single item
+   * @param id The Item ID
+   * @returns {Item} a item object
    */
-  async fetchRobots() {
-    const response = await this.createGetRequest('robots')
-    return response.json()
+  async fetchItem(id: string) {
+    return this.createGetRequest(`items/${id}`)
+  }
+
+  /*
+   * Fetch accounts from an Item
+   * @param itemId The Item id
+   * @returns {Account[]} an array of transactions
+   */
+  async fetchAccounts(itemId: string, type: string) {
+    return this.createGetRequest(`accounts${this.mapToQueryString({ itemId, type })}`)
   }
 
   /**
-   * Fetch a single robot
-   * @param id The robot ID
-   * @returns {Robot} a robot object
+   * Fetch transactions from an account
+   * @param accountId The account id
+   * @param from filter greater than date. Format (mm/dd/yyyy | yyyy-mm-dd)
+   * @param to filter lower than date. Format (mm/dd/yyyy | yyyy-mm-dd)
+   * @returns {Transaction[]} an array of transactions
    */
-  async fetchRobot(id: number) {
-    const response = await this.createGetRequest(`robots/${id}`)
-    return response.json()
-  }
-
-  /**
-   * Creates a new execution of a robot
-   * @param robotId the ID of the robot to be executed
-   * @param executionParameters The executions parameters
-   * @returns {Execution} an object with the info to retrieve the data when the execution
-   * is already finished
-   */
-  async execute(
-    robotId: number,
-    executionParameters: {
-      credentials: any
-      startDate: string
-      endDate: string
-    }
-  ) {
-    const response = await this.createPostRequest(
-      `executions`,
-      { robot_id: `${robotId}` },
-      executionParameters
-    )
-    return response.json()
-  }
-
-  /**
-   * Fetch a single execution
-   * @param id the execution ID
-   * @returns {Execution} with status info or result
-   */
-  async fetchExecution(id: string) {
-    const response = await this.createGetRequest(`executions/${id}`)
-    return response.json()
-  }
-
-  private createGetRequest(endpoint: string, params?: any) {
-    return fetch(`${this.HERMES_ENDPOINT}/${endpoint}${this.mapToQueryString(params)}`, {
-      method: 'get',
-      headers: {
-        Authorization: `Bearer ${this.apiKey}`
-      }
-    })
-  }
-
-  private createPostRequest(endpoint: string, params?: any, body?: any) {
-    return fetch(`${this.HERMES_ENDPOINT}/${endpoint}${this.mapToQueryString(params)}`, {
-      method: 'post',
-      headers: {
-        Authorization: `Bearer ${this.apiKey}`
-      },
-      body: JSON.stringify(body)
-    })
-  }
-
-  private mapToQueryString(params: any): string {
-    if (!params) {
-      return ''
-    }
-
-    const query = Object.keys(params)
-      .map(key => key + '=' + params[key])
-      .join('&')
-    return `?${query}`
+  async fetchTransactions(accountId: string, from: string | undefined, to: string | undefined) {
+    return this.createGetRequest(`transactions${this.mapToQueryString({ from, to, accountId })}`)
   }
 }

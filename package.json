@@ -1,5 +1,5 @@
 {
-  "name": "hermes-sdk-node",
+  "name": "pluggy-sdk-node",
   "version": "0.0.0",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -11,12 +11,12 @@
     "build": "tsc",
     "prepublish": "npm run build"
   },
-  "repository": "https://github.com/hermesapi/hermes-sdk-node",
+  "repository": "https://github.com/pluggyai/pluggy-sdk-node",
   "keywords": [
-    "hermes",
-    "hermesapi",
+    "pluggy",
+    "pluggyapi",
     "aggregation",
-    "hermes-sdk"
+    "pluggy-sdk"
   ],
   "dependencies": {
     "node-fetch": "^2.6.0",
