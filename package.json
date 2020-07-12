@@ -1,6 +1,6 @@
 {
-  "name": "pluggy",
-  "version": "0.1.0",
+  "name": "pluggy-sdk",
+  "version": "0.1.0-beta2",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
@@ -9,7 +9,9 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "release": "npm i && npm run build && npm publish",
+    "release:next": "npm i && npm run build && npm publish --tag next"
   },
   "repository": "https://github.com/pluggyai/pluggy-sdk-node",
   "keywords": [

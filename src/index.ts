@@ -1,4 +1,5 @@
 import { BaseApi } from './baseApi'
+import { TransactionFilters, AccountType, InvestmentType, Category, Investment, Transaction, Account, Connector, ConnectorFilters } from './types'
 
 /**
  * Creates a new client instance for interacting with Pluggy API
@@ -12,8 +13,8 @@ export class PluggyClient extends BaseApi{
    * Fetch all available connectors
    * @returns {Connector[]} an array of connectors
    */
-  async fetchConnectors() {
-    return this.createGetRequest('connectors')
+  async fetchConnectors(options: ConnectorFilters = {}): Promise<Connector[]> {
+    return this.createGetRequest(`connectors${this.mapToQueryString({ ...options })}`)
   }
  
   /**
@@ -21,8 +22,16 @@ export class PluggyClient extends BaseApi{
    * @param id The Connector ID
    * @returns {Connector} a connector object
    */
-  async fetchConnector(id: number) {
+  async fetchConnector(id: number): Promise<Connector> {
     return this.createGetRequest(`connectors/${id}`)
+  }
+
+  /**
+   * Fetch all items from the client
+   * @returns {Item[]} list of connected items
+   */
+  async fetchItems(id: string) {
+    return this.createGetRequest(`items`)
   }
 
   /**
@@ -34,23 +43,74 @@ export class PluggyClient extends BaseApi{
     return this.createGetRequest(`items/${id}`)
   }
 
-  /*
+  /**
    * Fetch accounts from an Item
    * @param itemId The Item id
-   * @returns {Account[]} an array of transactions
+   * @returns {Account[]} an array of accounts
    */
-  async fetchAccounts(itemId: string, type: string) {
+  async fetchAccounts(itemId: string, type: AccountType): Promise<Account[]> {
     return this.createGetRequest(`accounts${this.mapToQueryString({ itemId, type })}`)
+  }
+
+
+  /**
+   * Fetch a single account
+   * @returns {Account} an account object
+   */
+  async fetchAccount(id: string): Promise<Account>  {
+    return this.createGetRequest(`accounts/${id}`)
   }
 
   /**
    * Fetch transactions from an account
    * @param accountId The account id
-   * @param from filter greater than date. Format (mm/dd/yyyy | yyyy-mm-dd)
-   * @param to filter lower than date. Format (mm/dd/yyyy | yyyy-mm-dd)
+   * @param {TransactionFilters} options Transaction options to filter
    * @returns {Transaction[]} an array of transactions
    */
-  async fetchTransactions(accountId: string, from: string | undefined, to: string | undefined) {
-    return this.createGetRequest(`transactions${this.mapToQueryString({ from, to, accountId })}`)
+  async fetchTransactions(accountId: string, options: TransactionFilters = {}): Promise<Transaction[]>  {
+    return this.createGetRequest(`transactions${this.mapToQueryString({ ...options, accountId })}`)
+  }
+
+  /**
+   * Fetch a single transaction
+   * @returns {Transaction} an transaction object
+   */
+  async fetchTransaction(id: string): Promise<Transaction> {
+    return this.createGetRequest(`transactions/${id}`)
+  }
+
+  /**
+   * Fetch investments from an Item
+   * @param itemId The Item id
+   * @returns {Investment[]} an array of investments
+   */
+  async fetchInvestments(itemId: string, type: InvestmentType): Promise<Investment[]> {
+    return this.createGetRequest(`investments${this.mapToQueryString({ itemId, type })}`)
+  }
+
+
+  /**
+   * Fetch a single investment
+   * @returns {Investment} an investment object
+   */
+  async fetchInvestment(id: string): Promise<Investment> {
+    return this.createGetRequest(`investments/${id}`)
+  }
+
+  /**
+   * Fetch all available categories
+   * @returns {Categories[]} an array of categories
+   */
+  async fetchCategories(): Promise<Category[]> {
+    return this.createGetRequest('categories')
+  }
+
+
+  /**
+   * Fetch a single category
+   * @returns {Category} a category object
+   */
+  async fetchCategory(id: string): Promise<Category> {
+    return this.createGetRequest(`categories/${id}`)
   }
 }
