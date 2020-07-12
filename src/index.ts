@@ -1,5 +1,5 @@
 import { BaseApi } from './baseApi'
-import { TransactionFilters, AccountType, InvestmentType, Category, Investment, Transaction, Account, Connector, ConnectorFilters } from './types'
+import { TransactionFilters, AccountType, InvestmentType, Category, Investment, Transaction, Account, Connector, ConnectorFilters, Item } from './types'
 
 /**
  * Creates a new client instance for interacting with Pluggy API
@@ -30,7 +30,7 @@ export class PluggyClient extends BaseApi{
    * Fetch all items from the client
    * @returns {Item[]} list of connected items
    */
-  async fetchItems(id: string) {
+  async fetchItems(id: string): Promise<Item[]> {
     return this.createGetRequest(`items`)
   }
 
@@ -39,9 +39,35 @@ export class PluggyClient extends BaseApi{
    * @param id The Item ID
    * @returns {Item} a item object
    */
-  async fetchItem(id: string) {
+  async fetchItem(id: string): Promise<Item> {
     return this.createGetRequest(`items/${id}`)
   }
+
+  /**
+   * Creates an item
+   * @param connectorId The Connector's id
+   * @param parameters A map of name and value for the needed credentials
+   * @returns {Item} a item object
+  */
+  async createItem(connectorId: number, parameters: any): Promise<Item> {
+    return this.createPostRequest(`items`, null, {
+      connectorId,
+      parameters,
+    })
+  }
+
+  /**
+   * Updates an item
+   * @param id The Item ID
+   * @param parameters A map of name and value for the credentials to be updated
+   * @returns {Item} a item object
+  */
+ async update(id: string, parameters: any = undefined): Promise<Item> {
+  return this.createPatchRequest(`items`, null, {
+    id,
+    parameters,
+  })
+}
 
   /**
    * Fetch accounts from an Item

@@ -177,3 +177,22 @@ export type Connector = {
     country: string;
     credentials: any;
 }
+
+/*
+ * @typedef Item
+ * @type {object}
+ * @property {number} id - primary identifier of the Item
+ * @property {Connector} connector - Connector's associated with item
+ * @property {string} status - Current status of the item
+ * @property {string} executionStatus - Current execution status of item.
+ * @property {Date} createdAt - Date of the first connection
+ * @property {Date} lastUpdatedAt - Last connection sync date with the institution.
+*/
+export type Item = {
+    id:	string;
+    connector: Connector;
+    status: string;
+    executionStatus: string;
+    createdAt: Date;
+    lastUpdatedAt?: Date;
+}

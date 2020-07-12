@@ -30,8 +30,20 @@ export class BaseApi {
   }
 
   protected createPostRequest(endpoint: string, params?: any, body?: any) {
+    return this.createMutationRequest('post', endpoint, params, body);
+  }
+
+  protected createPutRequest(endpoint: string, params?: any, body?: any) {
+    return this.createMutationRequest('put', endpoint, params, body);
+  }
+
+  protected createPatchRequest(endpoint: string, params?: any, body?: any) {
+    return this.createMutationRequest('patch', endpoint, params, body);
+  }
+
+  protected createMutationRequest(method: string, endpoint: string, params?: any, body?: any) {
     return fetch(`${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`, {
-      method: 'post',
+      method,
       headers: {
         'X-API-KEY': this.apiKey
       },
