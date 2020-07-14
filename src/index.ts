@@ -1,5 +1,5 @@
 import { BaseApi } from './baseApi'
-import { TransactionFilters, AccountType, InvestmentType, Category, Investment, Transaction, Account, Connector, ConnectorFilters, Item } from './types'
+import { TransactionFilters, AccountType, InvestmentType, Category, Investment, Transaction, Account, Connector, ConnectorFilters, Item, PageResponse } from './types'
 
 /**
  * Creates a new client instance for interacting with Pluggy API
@@ -74,7 +74,7 @@ export class PluggyClient extends BaseApi{
    * @param itemId The Item id
    * @returns {Account[]} an array of accounts
    */
-  async fetchAccounts(itemId: string, type: AccountType): Promise<Account[]> {
+  async fetchAccounts(itemId: string, type: AccountType): Promise<PageResponse<Account>> {
     return this.createGetRequest(`accounts${this.mapToQueryString({ itemId, type })}`)
   }
 
@@ -93,7 +93,7 @@ export class PluggyClient extends BaseApi{
    * @param {TransactionFilters} options Transaction options to filter
    * @returns {Transaction[]} an array of transactions
    */
-  async fetchTransactions(accountId: string, options: TransactionFilters = {}): Promise<Transaction[]>  {
+  async fetchTransactions(accountId: string, options: TransactionFilters = {}): Promise<PageResponse<Transaction>>  {
     return this.createGetRequest(`transactions${this.mapToQueryString({ ...options, accountId })}`)
   }
 
@@ -110,7 +110,7 @@ export class PluggyClient extends BaseApi{
    * @param itemId The Item id
    * @returns {Investment[]} an array of investments
    */
-  async fetchInvestments(itemId: string, type: InvestmentType): Promise<Investment[]> {
+  async fetchInvestments(itemId: string, type: InvestmentType): Promise<PageResponse<Investment>> {
     return this.createGetRequest(`investments${this.mapToQueryString({ itemId, type })}`)
   }
 
@@ -127,7 +127,7 @@ export class PluggyClient extends BaseApi{
    * Fetch all available categories
    * @returns {Categories[]} an array of categories
    */
-  async fetchCategories(): Promise<Category[]> {
+  async fetchCategories(): Promise<PageResponse<Category>> {
     return this.createGetRequest('categories')
   }
 

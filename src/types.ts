@@ -196,3 +196,7 @@ export type Item = {
     createdAt: Date;
     lastUpdatedAt?: Date;
 }
+
+export type PageResponse<T> = {
+    results: T[];
+}
