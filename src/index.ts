@@ -14,7 +14,7 @@ export class PluggyClient extends BaseApi{
    * @returns {Connector[]} an array of connectors
    */
   async fetchConnectors(options: ConnectorFilters = {}): Promise<Connector[]> {
-    return this.createGetRequest(`connectors${this.mapToQueryString({ ...options })}`)
+    return this.createGetRequest('connectors', { ...options })
   }
  
   /**
@@ -63,7 +63,7 @@ export class PluggyClient extends BaseApi{
    * @returns {Item} a item object
   */
  async updateItem(id: string, parameters: any = undefined): Promise<Item> {
-  return this.createPatchRequest(`items`, null, {
+  return this.createPatchRequest(`items/${id}`, null, {
     id,
     parameters,
   })
@@ -75,7 +75,7 @@ export class PluggyClient extends BaseApi{
    * @returns {Account[]} an array of accounts
    */
   async fetchAccounts(itemId: string, type: AccountType): Promise<PageResponse<Account>> {
-    return this.createGetRequest(`accounts${this.mapToQueryString({ itemId, type })}`)
+    return this.createGetRequest('accounts', { itemId, type })
   }
 
 
@@ -94,7 +94,7 @@ export class PluggyClient extends BaseApi{
    * @returns {Transaction[]} an array of transactions
    */
   async fetchTransactions(accountId: string, options: TransactionFilters = {}): Promise<PageResponse<Transaction>>  {
-    return this.createGetRequest(`transactions${this.mapToQueryString({ ...options, accountId })}`)
+    return this.createGetRequest('transactions', { ...options, accountId })
   }
 
   /**
@@ -111,7 +111,7 @@ export class PluggyClient extends BaseApi{
    * @returns {Investment[]} an array of investments
    */
   async fetchInvestments(itemId: string, type: InvestmentType): Promise<PageResponse<Investment>> {
-    return this.createGetRequest(`investments${this.mapToQueryString({ itemId, type })}`)
+    return this.createGetRequest('investments', { itemId, type })
   }
 
 
