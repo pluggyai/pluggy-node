@@ -62,7 +62,7 @@ export class PluggyClient extends BaseApi{
    * @param parameters A map of name and value for the credentials to be updated
    * @returns {Item} a item object
   */
- async update(id: string, parameters: any = undefined): Promise<Item> {
+ async updateItem(id: string, parameters: any = undefined): Promise<Item> {
   return this.createPatchRequest(`items`, null, {
     id,
     parameters,
