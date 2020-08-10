@@ -3,13 +3,13 @@
  * @type {object}
  * @property {string} from - filter greater than date. Format (ISO Date | yyyy-mm-dd)
  * @property {string} to - filter greater than date. Format (ISO Date | yyyy-mm-dd)
- * @property {number} page_size - Amount of transactions to retrieve
+ * @property {number} pageSize - Amount of transactions to retrieve
  * @property {number} page - Page of transactions to retrieve, this calculates the offset.
  */
 export type TransactionFilters = {
   to?: string;
   from?: string;
-  page_size?: number;
+  pageSize?: number;
   page?: number;
 }
 
