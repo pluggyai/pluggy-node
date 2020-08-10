@@ -11,7 +11,10 @@
     "build": "tsc",
     "prepare": "npm run build",
     "release": "npm i && npm run build && npm publish",
-    "release:next": "npm i && npm run build && npm publish --tag next"
+    "release:next": "npm i && npm run build && npm publish --tag next",
+    "prettier-fix": "prettier --write \"src/**/*.ts\"",
+    "lint": "npm run prettier-fix && eslint . --ext .ts",
+    "lint:fix": "npm run lint -- --fix"
   },
   "repository": "https://github.com/pluggyai/pluggy-sdk-node",
   "keywords": [
@@ -26,6 +29,10 @@
   },
   "devDependencies": {
     "@types/node-fetch": "^2.5.0",
+    "@typescript-eslint/eslint-plugin": "^2.16.0",
+    "@typescript-eslint/parser": "^2.16.0",
+    "eslint": "^6.8.0",
+    "prettier": "^1.19.1",
     "ts-node": "^8.2.0",
     "typescript": "^3.5.1"
   }
