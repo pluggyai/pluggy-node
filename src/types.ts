@@ -150,6 +150,22 @@ export type Transaction = {
   amount: number;
   balance: number;
   currencyCode: CurrencyCode;
+  providerCode?: string;
+}
+
+/*
+ * @typedef ConnectorCredential
+ * @type {object}
+ * @property {string} label - parameter label that describes it
+ * @property {string} name - parameter key name
+ * @property {string} type - type of parameter to create the form
+ * @property {boolean} mfa - If parameter is used for MFA.
+ */
+export type ConnectorCredential = {
+  label: string;
+  name: string;
+  type?: 'text' | 'password' | 'number';
+  mfa?: boolean;
 }
 
 /*
@@ -172,10 +188,7 @@ export type Connector = {
   primaryColor: string;
   type: string;
   country: string;
-  credentials: {
-    label: string;
-    name: string;
-  };
+  credentials: ConnectorCredential[];
 }
 
 /*
