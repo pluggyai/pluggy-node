@@ -20,7 +20,7 @@
   "repository": "https://github.com/pluggyai/pluggy-sdk-node",
   "dependencies": {
     "dotenv": "^8.2.0",
-    "pluggy-sdk": "^0.1.5",
+    "pluggy-sdk": "^0.2.0",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7"
   },
