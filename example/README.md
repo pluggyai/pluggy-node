@@ -4,13 +4,13 @@ The following project underlines the key features of Pluggy API and how to use t
 
 ## Installation
 
-`npm install pluggy-sdk --save`
+From the root of this project you can just `npm install` the dependencies and run any example you want.
 
+Examples review each flow and ouputs the different steps made, this is meant as a basic example to understand how to use each method.
 
 ## Examples
 
 Before running the examples please setup the `.env` file using the provided credentials by Pluggy. An example is provided as `.env.example` for you to use.
-
 
 ### Authentication
 

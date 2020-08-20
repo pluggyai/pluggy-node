@@ -11,7 +11,6 @@ void (async function(): Promise<void> {
   let client = new PluggyClient({
     clientId: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
-    showUrls: true
   })
 
   const webhooks = await client.fetchWebhooks();
@@ -30,9 +29,8 @@ void (async function(): Promise<void> {
   await sleep(10000)
 
   console.log('You can update the webhook for specific events or url')
-  webhook = await client.updateWebhook(webhook.id, { event: 'item/update' })
+  webhook = await client.updateWebhook(webhook.id, { event: 'item/updated' })
 
   console.log('If the webhook is not needed anymore, you can delete it.')
   await client.deleteWebhook(webhook.id)
-
 })()
