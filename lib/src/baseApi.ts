@@ -3,23 +3,21 @@ import fetch from 'node-fetch'
 type QueryParameters = { [key: string]: number | number[] | string | string[] }
 
 export type ClientParams = {
-  clientId?: string
-  clientSecret?: string
+  clientId: string
+  clientSecret: string
   baseUrl?: string
-  apiKey?: string
   showUrls?: boolean
 }
 
 export class BaseApi {
-  private apiKey?: string
-  private clientId?: string
-  private clientSecret?: string
+  private apiKey: string;
+  private clientId: string
+  private clientSecret: string
   private baseUrl?: string 
   private showUrls = false
 
   constructor(params: ClientParams) {
     const {
-      apiKey,
       clientId,
       clientSecret,
       baseUrl = 'https://api.pluggy.ai',
@@ -28,9 +26,8 @@ export class BaseApi {
 
     this.baseUrl = baseUrl
     this.showUrls = showUrls
-    if (apiKey) {
-      this.apiKey = apiKey
-    } else if (clientSecret && clientId) {
+
+    if (clientSecret && clientId) {
       this.clientId = clientId
       this.clientSecret = clientSecret
     } else {
@@ -135,6 +132,9 @@ export class BaseApi {
     const url = `${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`
     if (this.showUrls) {
       console.log(url)
+    }
+    if (body) {
+      Object.keys(body).forEach(key => body[key] === undefined ? delete body[key] : {});
     }
     return fetch(url, {
       method,

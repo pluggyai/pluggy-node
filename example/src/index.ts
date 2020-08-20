@@ -1,13 +1,8 @@
 import dotenv from 'dotenv'
 import { PluggyClient } from 'pluggy-sdk'
+import { sleep } from './utils'
 
 dotenv.config()
-
-function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => {
-    setTimeout(resolve, ms)
-  })
-}
 
 void (async function(): Promise<void> {
   const { CLIENT_ID = '', CLIENT_SECRET = '', URL = '' } = process.env
