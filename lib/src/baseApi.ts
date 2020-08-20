@@ -2,14 +2,41 @@ import fetch from 'node-fetch'
 
 type QueryParameters = { [key: string]: number | number[] | string | string[] }
 
-export class BaseApi {
-  private apiKey: string
+export type ClientParams = {
+  clientId?: string
+  clientSecret?: string
+  baseUrl?: string
+  apiKey?: string
+  showUrls?: boolean
+}
 
-  constructor(
-    private clientId: string,
-    private clientSecret: string,
-    private baseUrl: string = 'https://api.pluggy.ai'
-  ) {}
+export class BaseApi {
+  private apiKey?: string
+  private clientId?: string
+  private clientSecret?: string
+  private baseUrl?: string 
+  private showUrls = false
+
+  constructor(params: ClientParams) {
+    const {
+      apiKey,
+      clientId,
+      clientSecret,
+      baseUrl = 'https://api.pluggy.ai',
+      showUrls = false
+    } = params
+
+    this.baseUrl = baseUrl
+    this.showUrls = showUrls
+    if (apiKey) {
+      this.apiKey = apiKey
+    } else if (clientSecret && clientId) {
+      this.clientId = clientId
+      this.clientSecret = clientSecret
+    } else {
+      throw new Error('Missing authorization for API communication')
+    }
+  }
 
   private async getApiKey(): Promise<string> {
     if (this.apiKey) {
@@ -35,7 +62,12 @@ export class BaseApi {
 
   protected async createGetRequest<T>(endpoint: string, params?: QueryParameters): Promise<T> {
     const apiKey = await this.getApiKey()
-    return fetch(`${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`, {
+    const url = `${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`
+    if (this.showUrls) {
+      console.log(url)
+    }
+
+    return fetch(url, {
       method: 'get',
       headers: {
         'X-API-KEY': apiKey,
@@ -84,6 +116,15 @@ export class BaseApi {
     return this.createMutationRequest('patch', endpoint, params, body)
   }
 
+  protected createDeleteRequest<T>(
+    endpoint: string,
+    params?: QueryParameters,
+    body?: any
+  ): Promise<T> {
+    return this.createMutationRequest('delete', endpoint, params, body)
+  }
+
+
   protected async createMutationRequest<T>(
     method: string,
     endpoint: string,
@@ -91,7 +132,11 @@ export class BaseApi {
     body?: any
   ): Promise<T> {
     const apiKey = await this.getApiKey()
-    return fetch(`${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`, {
+    const url = `${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`
+    if (this.showUrls) {
+      console.log(url)
+    }
+    return fetch(url, {
       method,
       headers: {
         'X-API-KEY': apiKey,
@@ -119,6 +164,7 @@ export class BaseApi {
     }
 
     const query = Object.keys(params)
+      .filter(key => params[key] !== undefined && params[key] !== null)
       .map(key => key + '=' + params[key])
       .join('&')
     return `?${query}`

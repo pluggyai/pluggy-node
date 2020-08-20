@@ -1,5 +1,11 @@
 # Compiled source
-dist
+lib/dist
+example/dist
 
 # Dependencies
-node_modules
+lib/node_modules
+example/node_modules
+
+
+# env
+example/.env

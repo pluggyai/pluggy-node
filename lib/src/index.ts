@@ -24,7 +24,7 @@ export class PluggyClient extends BaseApi {
    * Fetch all available connectors
    * @returns {Connector[]} an array of connectors
    */
-  async fetchConnectors(options: ConnectorFilters = {}): Promise<Connector[]> {
+  async fetchConnectors(options: ConnectorFilters = {}): Promise<PageResponse<Connector>> {
     return this.createGetRequest('connectors', { ...options })
   }
 
@@ -81,11 +81,18 @@ export class PluggyClient extends BaseApi {
   }
 
   /**
+   * Deletes an item
+   */
+  async deleteItem(id: string): Promise<void> {
+    return this.createDeleteRequest(`items/${id}`)
+  }
+
+  /**
    * Fetch accounts from an Item
    * @param itemId The Item id
    * @returns {Account[]} an array of accounts
    */
-  async fetchAccounts(itemId: string, type: AccountType): Promise<PageResponse<Account>> {
+  async fetchAccounts(itemId: string, type?: AccountType): Promise<PageResponse<Account>> {
     return this.createGetRequest('accounts', { itemId, type })
   }
 
@@ -96,6 +103,7 @@ export class PluggyClient extends BaseApi {
   async fetchAccount(id: string): Promise<Account> {
     return this.createGetRequest(`accounts/${id}`)
   }
+
 
   /**
    * Fetch transactions from an account
