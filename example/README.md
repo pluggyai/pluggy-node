@@ -14,19 +14,27 @@ Before running the examples please setup the `.env` file using the provided cred
 
 ### Authentication
 
-In the authentication example we validate the two different ways to connect with the API.
+In the authentication example we validate the credentials with the API.
 
-- a. Using a non-expiring API KEY, that can be reused across all requests.
-- b. Iniatiating the SDK with the `ClientID` and `ClientSecret`, this will recover an api key thats valid for a short term (2 hours).
+Iniatiating the SDK with the `ClientID` and `ClientSecret`, this will recover an api key thats valid for a short term (2 hours).
 
 You can run this example to verify that you have correctly configured your env file, using the script `npm run example:auth`.
-
 
 ### Main Flow
 
 There is a main example created to review the full process of connecting an account and retrieving its information.
 
 You can run this example use the script `npm start`.
+
+### Webhooks
+
+In the authentication example you can review the functionallity of webhooks and what payload you will be receiving for each event.
+
+To setup for this event you can configure an url to listen those notifications. ie. https://pluggy-sdk-node.requestcatcher.com/
+
+You can run this example use the script `npm run example:webhooks`.
+
+For more information about webhooks you can go to the [docs](https://docs.pluggy.ai/#webhooks) page.
 
 ## Documentation
 For most up-to-date and accurate documentation, please see our [API Reference](https://docs.pluggy.ai) page.

@@ -213,3 +213,11 @@ export type Item = {
 export type PageResponse<T> = {
   results: T[];
 }
+
+export type Webhook = {
+  id: string;
+  event: string;
+  url: string;
+}
+
+export type WebhookEvent = 'item/created' | 'item/updated' | 'item/error' | 'all'

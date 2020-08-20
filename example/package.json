@@ -13,7 +13,8 @@
     "lint": "npm run prettier-fix && eslint . --ext .ts",
     "lint:fix": "npm run lint -- --fix",
     "start": "ts-node src/index.ts",
-    "example:auth": "ts-node src/auth.ts"
+    "example:auth": "ts-node src/auth.ts",
+    "example:webhooks": "ts-node src/webhooks.ts"
   },
   "repository": "https://github.com/pluggyai/pluggy-sdk-node",
   "dependencies": {

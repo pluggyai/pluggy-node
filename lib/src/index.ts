@@ -11,6 +11,8 @@ import {
   ConnectorFilters,
   Item,
   PageResponse,
+  Webhook,
+  WebhookEvent,
 } from './types'
 
 /**
@@ -145,7 +147,7 @@ export class PluggyClient extends BaseApi {
 
   /**
    * Fetch all available categories
-   * @returns {Categories[]} an array of categories
+   * @returns {Categories[]} an paging response of categories
    */
   async fetchCategories(): Promise<PageResponse<Category>> {
     return this.createGetRequest('categories')
@@ -157,5 +159,52 @@ export class PluggyClient extends BaseApi {
    */
   async fetchCategory(id: string): Promise<Category> {
     return this.createGetRequest(`categories/${id}`)
+  }
+
+
+  /**
+   * Fetch a single webhook
+   * @returns {Webhook} a webhook object
+   */
+  async fetchWebhook(id: string): Promise<Webhook> {
+    return this.createGetRequest(`webhooks/${id}`)
+  }
+
+  /**
+   * Fetch all available webhooks
+   * @returns {Webhook[]} an paging response of webhooks
+   */
+  async fetchWebhooks(): Promise<PageResponse<Webhook>> {
+    return this.createGetRequest('webhooks')
+  }
+
+  /**
+   * Creates a Webhook
+   * @param event The type of event to listen
+   * @param url The url where will receive notifications
+   * @returns {Webhook} a webhook object
+   */
+  async createWebhook(event: WebhookEvent, url: string): Promise<Webhook> {
+    return this.createPostRequest(`webhooks`, null, {
+      event,
+      url,
+    })
+  }
+
+  /**
+   * Updates a Webhook
+   * @param id The Webhook ID
+   * @param webhook The webhook params to update
+   * @returns {Item} a item object
+   */
+  async updateWebhook(id: string, webhook: Partial<Webhook>): Promise<Webhook> {
+    return this.createPatchRequest(`webhooks/${id}`, null, webhook)
+  }
+
+  /**
+   * Deletes a Webhook
+   */
+  async deleteWebhook(id: string): Promise<void> {
+    return this.createDeleteRequest(`webhooks/${id}`)
   }
 }
