@@ -3,26 +3,21 @@ import fetch from 'node-fetch'
 type QueryParameters = { [key: string]: number | number[] | string | string[] }
 
 export type ClientParams = {
-  clientId: string
-  clientSecret: string
-  baseUrl?: string
-  showUrls?: boolean
+  clientId: string;
+  clientSecret: string;
+  baseUrl?: string;
+  showUrls?: boolean;
 }
 
 export class BaseApi {
-  private apiKey: string;
+  private apiKey: string
   private clientId: string
   private clientSecret: string
-  private baseUrl?: string 
+  private baseUrl?: string
   private showUrls = false
 
   constructor(params: ClientParams) {
-    const {
-      clientId,
-      clientSecret,
-      baseUrl = 'https://api.pluggy.ai',
-      showUrls = false
-    } = params
+    const { clientId, clientSecret, baseUrl = 'https://api.pluggy.ai', showUrls = false } = params
 
     this.baseUrl = baseUrl
     this.showUrls = showUrls
@@ -121,7 +116,6 @@ export class BaseApi {
     return this.createMutationRequest('delete', endpoint, params, body)
   }
 
-
   protected async createMutationRequest<T>(
     method: string,
     endpoint: string,
@@ -134,7 +128,7 @@ export class BaseApi {
       console.log(url)
     }
     if (body) {
-      Object.keys(body).forEach(key => body[key] === undefined ? delete body[key] : {});
+      Object.keys(body).forEach(key => (body[key] === undefined ? delete body[key] : {}))
     }
     return fetch(url, {
       method,

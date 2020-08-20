@@ -106,7 +106,6 @@ export class PluggyClient extends BaseApi {
     return this.createGetRequest(`accounts/${id}`)
   }
 
-
   /**
    * Fetch transactions from an account
    * @param accountId The account id
@@ -133,7 +132,7 @@ export class PluggyClient extends BaseApi {
    * @param itemId The Item id
    * @returns {Investment[]} an array of investments
    */
-  async fetchInvestments(itemId: string, type: InvestmentType): Promise<PageResponse<Investment>> {
+  async fetchInvestments(itemId: string, type?: InvestmentType): Promise<PageResponse<Investment>> {
     return this.createGetRequest('investments', { itemId, type })
   }
 
@@ -160,7 +159,6 @@ export class PluggyClient extends BaseApi {
   async fetchCategory(id: string): Promise<Category> {
     return this.createGetRequest(`categories/${id}`)
   }
-
 
   /**
    * Fetch a single webhook

@@ -54,6 +54,13 @@ export type Category = {
  * @property {string} number - Identifier from the institution for the investment.
  * @property {number} balance - Current balance of the investment
  * @property {number} annualRate - Annual rate of the investment
+ * @property {Date} date - Quota's date
+ * @property {number} value - Quota's value at date
+ * @property {number} quantity - Quota's quantity at date
+ * @property {number} taxes - Taxes of investment attached to the investment
+ * @property {number} taxes2 - Taxes of investment attached to owner.
+ * @property {number} amountProfit - Amount gained from the investment
+ * @property {number} amountWithdrawal - Amount available for withdrawal
  * @property {CurrencyCode} currencyCode - ISO Currency code of the investment
  * @property {InvestmentType} type - Type of the investment
  */
@@ -64,8 +71,15 @@ export type Investment = {
   number: string;
   balance: number;
   name: string;
-  annualRate: number;
+  annualRate?: number;
   currencyCode: CurrencyCode;
+  date?: Date;
+  value?: number;
+  quantity?: number;
+  taxes?: number;
+  taxes2?: number;
+  amountWithdrawal?: number;
+  amountProfit?: number;
 }
 
 /*
