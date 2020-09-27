@@ -200,7 +200,7 @@ export type Connector = {
   institutionUrl: string;
   imageUrl: string;
   primaryColor: string;
-  type: string;
+  type: ConnectorType;
   country: string;
   credentials: ConnectorCredential[];
 }
@@ -244,3 +244,5 @@ export enum ItemStatus {
   UPDATING = 'UPDATING',
   WAITING_USER_INPUT = 'WAITING_USER_INPUT'
 }
+
+export type ConnectorType = 'PERSONAL_BANK' | 'BUSINESS_BANK' | 'INVOICE' | 'INVESTMENT'
