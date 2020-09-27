@@ -83,6 +83,16 @@ export class PluggyClient extends BaseApi {
   }
 
   /**
+   * Send MFA for item execution
+   * @param id The Item ID
+   * @param parameters A map of name and value for the mfa requested
+   * @returns {Item} a item object
+   */
+  async updateItemMFA(id: string, parameters: { [key: string]: string } = undefined): Promise<Item> {
+    return this.createPostRequest(`items/${id}/mfa`, null, parameters)
+  }
+
+  /**
    * Deletes an item
    */
   async deleteItem(id: string): Promise<void> {

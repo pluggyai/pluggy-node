@@ -218,10 +218,11 @@ export type Connector = {
 export type Item = {
   id: string;
   connector: Connector;
-  status: string;
+  status: ItemStatus;
   executionStatus: string;
   createdAt: Date;
   lastUpdatedAt?: Date;
+  parameter?: ConnectorCredential
 }
 
 export type PageResponse<T> = {
@@ -235,3 +236,11 @@ export type Webhook = {
 }
 
 export type WebhookEvent = 'item/created' | 'item/updated' | 'item/error' | 'all'
+
+export enum ItemStatus {
+  LOGIN_ERROR = 'LOGIN_ERROR',
+  OUTDATED = 'OUTDATED',
+  UPDATED = 'UPDATED',
+  UPDATING = 'UPDATING',
+  WAITING_USER_INPUT = 'WAITING_USER_INPUT'
+}
