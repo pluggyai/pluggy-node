@@ -14,13 +14,14 @@
     "lint:fix": "npm run lint -- --fix",
     "start": "ts-node src/index.ts",
     "example:auth": "ts-node src/auth.ts",
+    "example:mfa": "ts-node src/mfa.ts",
     "example:webhooks": "ts-node src/webhooks.ts",
     "example:investments": "ts-node src/investments.ts"
   },
   "repository": "https://github.com/pluggyai/pluggy-sdk-node",
   "dependencies": {
     "dotenv": "^8.2.0",
-    "pluggy-sdk": "^0.2.0",
+    "pluggy-sdk": "^0.3.0",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7"
   },
