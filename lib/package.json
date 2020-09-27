@@ -24,7 +24,7 @@
     "pluggy-sdk"
   ],
   "dependencies": {
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "request": "^2.88.0"
   },
   "devDependencies": {
