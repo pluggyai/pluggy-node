@@ -7,10 +7,10 @@
  * @property {number} page - Page of transactions to retrieve, this calculates the offset.
  */
 export type TransactionFilters = {
-  to?: string;
-  from?: string;
-  pageSize?: number;
-  page?: number;
+  to?: string
+  from?: string
+  pageSize?: number
+  page?: number
 }
 
 /*
@@ -22,10 +22,10 @@ export type TransactionFilters = {
  * @property {boolean} sandbox - recovers sandbox connectors. Default: false
  */
 export type ConnectorFilters = {
-  name?: string;
-  countries?: string[];
-  types?: string[];
-  sandbox?: boolean;
+  name?: string
+  countries?: string[]
+  types?: string[]
+  sandbox?: boolean
 }
 
 export type CurrencyCode = 'USD' | 'ARS' | 'BRL'
@@ -41,10 +41,10 @@ export type InvestmentType = 'MUTUAL_FUND' | 'SECURITY' | 'EQUITY'
  * @property {string} parentDescription - Parent category hierachy name or description
  */
 export type Category = {
-  id: string;
-  description: string;
-  parentId?: string;
-  parentDescription?: string;
+  id: string
+  description: string
+  parentId?: string
+  parentDescription?: string
 }
 
 /*
@@ -67,21 +67,21 @@ export type Category = {
  * @property {InvestmentType} type - Type of the investment
  */
 export type Investment = {
-  id: string;
-  itemId: string;
-  type: InvestmentType;
-  number: string;
-  balance: number;
-  name: string;
-  annualRate?: number;
-  currencyCode: CurrencyCode;
-  date?: Date;
-  value?: number;
-  quantity?: number;
-  taxes?: number;
-  taxes2?: number;
-  amountWithdrawal?: number;
-  amountProfit?: number;
+  id: string
+  itemId: string
+  type: InvestmentType
+  number: string
+  balance: number
+  name: string
+  annualRate?: number
+  currencyCode: CurrencyCode
+  date?: Date
+  value?: number
+  quantity?: number
+  taxes?: number
+  taxes2?: number
+  amountWithdrawal?: number
+  amountProfit?: number
 }
 
 /*
@@ -100,19 +100,19 @@ export type Investment = {
  * @property {AccountSubType} subtype - Sub type of the account
  */
 export type Account = {
-  id: string;
-  itemId: string;
-  type: AccountType;
-  subtype: AccountSubType;
-  number: string;
-  balance: number;
-  name: string;
-  marketingName?: string;
-  owner?: string;
-  taxNumber?: string;
-  currencyCode: CurrencyCode;
-  bankData?: BankData;
-  creditData?: CreditData;
+  id: string
+  itemId: string
+  type: AccountType
+  subtype: AccountSubType
+  number: string
+  balance: number
+  name: string
+  marketingName?: string
+  owner?: string
+  taxNumber?: string
+  currencyCode: CurrencyCode
+  bankData?: BankData
+  creditData?: CreditData
 }
 
 /*
@@ -122,8 +122,8 @@ export type Account = {
  * @property {string} closingBalance - available balance of the account
  */
 export type BankData = {
-  transferNumber?: string;
-  closingBalance?: number;
+  transferNumber?: string
+  closingBalance?: number
 }
 
 /*
@@ -138,13 +138,13 @@ export type BankData = {
  * @property {number} availableCreditLimit - Available credit limit to use.
  */
 export type CreditData = {
-  level?: string;
-  brand?: string;
-  balanceCloseDate?: Date;
-  balanceDueDate?: Date;
-  availableCreditLimit?: number;
-  balanceForeignCurrency?: number;
-  minimumPayment?: number;
+  level?: string
+  brand?: string
+  balanceCloseDate?: Date
+  balanceDueDate?: Date
+  availableCreditLimit?: number
+  balanceForeignCurrency?: number
+  minimumPayment?: number
 }
 
 /*
@@ -159,14 +159,14 @@ export type CreditData = {
  * @property {CurrencyCode} currencyCode - ISO Currency code of the Transaction
  */
 export type Transaction = {
-  id: string;
-  accountId: string;
-  date: Date;
-  description: string;
-  amount: number;
-  balance: number;
-  currencyCode: CurrencyCode;
-  providerCode?: string;
+  id: string
+  accountId: string
+  date: Date
+  description: string
+  amount: number
+  balance: number
+  currencyCode: CurrencyCode
+  providerCode?: string
 }
 
 /*
@@ -178,10 +178,10 @@ export type Transaction = {
  * @property {boolean} mfa - If parameter is used for MFA.
  */
 export type ConnectorCredential = {
-  label: string;
-  name: string;
-  type?: 'text' | 'password' | 'number';
-  mfa?: boolean;
+  label: string
+  name: string
+  type?: 'text' | 'password' | 'number'
+  mfa?: boolean
 }
 
 /*
@@ -197,14 +197,14 @@ export type ConnectorCredential = {
  * @property {any} credentials - List of parameters needed to execute the connector
  */
 export type Connector = {
-  id: string;
-  name: string;
-  institutionUrl: string;
-  imageUrl: string;
-  primaryColor: string;
-  type: ConnectorType;
-  country: string;
-  credentials: ConnectorCredential[];
+  id: string
+  name: string
+  institutionUrl: string
+  imageUrl: string
+  primaryColor: string
+  type: ConnectorType
+  country: string
+  credentials: ConnectorCredential[]
 }
 
 /*
@@ -218,23 +218,23 @@ export type Connector = {
  * @property {Date} lastUpdatedAt - Last connection sync date with the institution.
  */
 export type Item = {
-  id: string;
-  connector: Connector;
-  status: ItemStatus;
-  executionStatus: string;
-  createdAt: Date;
-  lastUpdatedAt?: Date;
+  id: string
+  connector: Connector
+  status: ItemStatus
+  executionStatus: string
+  createdAt: Date
+  lastUpdatedAt?: Date
   parameter?: ConnectorCredential
 }
 
 export type PageResponse<T> = {
-  results: T[];
+  results: T[]
 }
 
 export type Webhook = {
-  id: string;
-  event: string;
-  url: string;
+  id: string
+  event: string
+  url: string
 }
 
 export type WebhookEvent = 'item/created' | 'item/updated' | 'item/error' | 'all'
@@ -244,7 +244,47 @@ export enum ItemStatus {
   OUTDATED = 'OUTDATED',
   UPDATED = 'UPDATED',
   UPDATING = 'UPDATING',
-  WAITING_USER_INPUT = 'WAITING_USER_INPUT'
+  WAITING_USER_INPUT = 'WAITING_USER_INPUT',
 }
 
 export type ConnectorType = 'PERSONAL_BANK' | 'BUSINESS_BANK' | 'INVOICE' | 'INVESTMENT'
+
+export type IdentityResponse = {
+  id: string
+  birthDate?: Date
+  taxNumber?: string
+  document?: string
+  documentType?: string
+  jobTitle?: string
+  fullName?: string
+  phoneNumbers?: PhoneNumber[]
+  emails?: Email[]
+  addresses?: Address[]
+  relations?: IdentityRelation[]
+}
+
+export type PhoneNumber = {
+  type?: 'Personal' | 'Work' | 'Residencial'
+  value: string
+}
+
+export type Email = {
+  type?: 'Personal' | 'Work'
+  value: string
+}
+
+export type IdentityRelation = {
+  type?: 'Mother' | 'Father' | 'Spouse'
+  name?: string
+  document?: string
+}
+
+export type Address = {
+  fullAddress?: string
+  primaryAddress?: string
+  city?: string
+  postalCode?: string
+  state?: string
+  country?: string
+  type?: 'Personal' | 'Work'
+}

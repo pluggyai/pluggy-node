@@ -13,6 +13,7 @@ import {
   PageResponse,
   Webhook,
   WebhookEvent,
+  IdentityResponse,
 } from './types'
 
 /**
@@ -88,7 +89,10 @@ export class PluggyClient extends BaseApi {
    * @param parameters A map of name and value for the mfa requested
    * @returns {Item} a item object
    */
-  async updateItemMFA(id: string, parameters: { [key: string]: string } = undefined): Promise<Item> {
+  async updateItemMFA(
+    id: string,
+    parameters: { [key: string]: string } = undefined
+  ): Promise<Item> {
     return this.createPostRequest(`items/${id}/mfa`, null, parameters)
   }
 
@@ -152,6 +156,22 @@ export class PluggyClient extends BaseApi {
    */
   async fetchInvestment(id: string): Promise<Investment> {
     return this.createGetRequest(`investments/${id}`)
+  }
+
+  /**
+   * Fetch the identity resource
+   * @returns {IdentityResponse} an identity object
+   */
+  async fetchIdentity(id: string): Promise<IdentityResponse> {
+    return this.createGetRequest(`identity/${id}`)
+  }
+
+  /**
+   * Fetch the identity resource by it's Item ID
+   * @returns {IdentityResponse} an identity object
+   */
+  async fetchIdentityByItemId(itemId: string): Promise<IdentityResponse> {
+    return this.createGetRequest(`identity?itemId=${itemId}`)
   }
 
   /**

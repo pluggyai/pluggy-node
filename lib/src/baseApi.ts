@@ -3,10 +3,10 @@ import fetch from 'node-fetch'
 type QueryParameters = { [key: string]: number | number[] | string | string[] | boolean }
 
 export type ClientParams = {
-  clientId: string;
-  clientSecret: string;
-  baseUrl?: string;
-  showUrls?: boolean;
+  clientId: string
+  clientSecret: string
+  baseUrl?: string
+  showUrls?: boolean
 }
 
 export class BaseApi {

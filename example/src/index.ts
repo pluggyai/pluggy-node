@@ -58,6 +58,10 @@ void (async function(): Promise<void> {
     })
   }
 
+  console.log(`Retrieving identity for item # ${item.id}`)
+  const identity = await client.fetchIdentityByItemId(item.id)
+  console.log(`Identity of the account name is ${identity.fullName}`)
+
   console.log(`Deleting retrieved data for item #${item.id}`)
   await client.deleteItem(item.id)
   console.log(`Item deleted succesfully`)
