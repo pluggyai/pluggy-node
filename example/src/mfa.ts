@@ -8,12 +8,11 @@ const DEFAULT_MFA_VALUE = '123456'
 dotenv.config()
 
 void (async function(): Promise<void> {
-  const { CLIENT_ID = '', CLIENT_SECRET = '', URL } = process.env
+  const { CLIENT_ID = '', CLIENT_SECRET = '' } = process.env
 
   const client = new PluggyClient({
     clientId: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
-    baseUrl: URL
   })
 
   // Create a connection
