@@ -19,11 +19,13 @@ export type TransactionFilters = {
  * @property {string} name - Connector´s name or alike name
  * @property {string[]} countries - list of countries to filter available connectors
  * @property {string[]} types - list of types to filter available connectors
+ * @property {boolean} sandbox - recovers sandbox connectors. Default: false
  */
 export type ConnectorFilters = {
   name?: string;
   countries?: string[];
   types?: string[];
+  sandbox?: boolean;
 }
 
 export type CurrencyCode = 'USD' | 'ARS' | 'BRL'

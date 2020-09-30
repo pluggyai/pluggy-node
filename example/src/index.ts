@@ -10,10 +10,13 @@ void (async function(): Promise<void> {
   const client = new PluggyClient({
     clientId: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
+    baseUrl: process.env.URL
   })
 
   // Review connectors endpoint
-  const response = await client.fetchConnectors()
+  const response = await client.fetchConnectors({
+    sandbox: true
+  })
   console.log('We support the following connectors: ')
   response.results.forEach(connector => {
     console.log(`(# ${connector.id} ) - ${connector.name}`)
