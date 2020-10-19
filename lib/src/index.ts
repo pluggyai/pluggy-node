@@ -235,4 +235,12 @@ export class PluggyClient extends BaseApi {
   async deleteWebhook(id: string): Promise<void> {
     return this.createDeleteRequest(`webhooks/${id}`)
   }
+
+  /**
+   * Creates a connect token that can be used as API KEY to connect items from the Frontend
+   * @returns {string} Access token to connect items with restrict access
+   */
+  async createConnectToken(): Promise<{ accessToken: string }> {
+    return this.createPostRequest(`connectTokens`)
+  }
 }
