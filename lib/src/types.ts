@@ -31,7 +31,14 @@ export type ConnectorFilters = {
 export type CurrencyCode = 'USD' | 'ARS' | 'BRL'
 export type AccountType = 'BANK' | 'CREDIT'
 export type AccountSubType = 'SAVINGS_ACCOUNT' | 'CHECKINGS_ACCOUNT' | 'CREDIT_CARD'
-export type InvestmentType = 'MUTUAL_FUND' | 'SECURITY' | 'EQUITY'
+export type InvestmentType =
+  | 'MUTUAL_FUND'
+  | 'SECURITY'
+  | 'EQUITY'
+  | 'FIXED_INCOME'
+  | 'ETF'
+  | 'OTHER'
+export type InvestmentStatus = 'ACTIVE' | 'PENDING' | 'TOTAL_WITHDRAWAL'
 /*
  * @typedef Category
  * @type {object}
@@ -48,6 +55,33 @@ export type Category = {
 }
 
 /*
+ * @typedef InvestmentTransaction
+ * @type {object}
+ * @property {string} id - primary identifier of the investment transacion
+ * @property {string} type - Type of the transaction
+ * @property {string} operationId - Identifier of the related operation
+ * @property {Investment} investment - Investment object the transaction belongs to
+ * @property {string} investmentId - Investment identifier related to the transaction
+ * @property {quantity} quantity - Quantity of quotas purchased
+ * @property {number} value - Value of the purchased quotas
+ * @property {number} amount - Amount spent or withrawaled from the investment.
+ * @property {Date} date - Date the transaction was confirmed
+ * @property {Date} tradeDate - Date the transaction was placed.
+ */
+export type InvestmentTransaction = {
+  id: string
+  type: string
+  operationId?: string
+  investment?: Investment
+  investmentId?: string
+  quantity?: number
+  value?: number
+  amount: number
+  date: Date
+  tradeDate: Date
+}
+
+/*
  * @typedef Investment
  * @type {object}
  * @property {string} id - primary identifier of the investment
@@ -56,6 +90,7 @@ export type Category = {
  * @property {string} number - Identifier from the institution for the investment.
  * @property {number} balance - Current balance of the investment
  * @property {number} annualRate - Annual rate of the investment
+ * @property {number} lastTwelveMonthsRate - Last twelve month period rate of the investment
  * @property {Date} date - Quota's date
  * @property {number} value - Quota's value at date
  * @property {number} quantity - Quota's quantity at date
@@ -65,6 +100,15 @@ export type Category = {
  * @property {number} amountWithdrawal - Amount available for withdrawal
  * @property {CurrencyCode} currencyCode - ISO Currency code of the investment
  * @property {InvestmentType} type - Type of the investment
+ * @property {InvestmentTransaction} transactions - Transactions list of the investment
+ * @property {Date} dueDate - Date the investment is due
+ * @property {string} issuer - Reference name of the investment issuer.
+ * @property {Date} issuerDate - Date the investment was issued.
+ * @property {number} rate - Current month rate value of the investment
+ * @property {string} rateType - Type of rate for the investment
+ * @property {number} originalAmount - Original amount deposited in the investment
+ * @property {number} lastMonthRate - Previous months rate value of the investment
+ * @property {InvestmentStatus} status - Current status of the investment
  */
 export type Investment = {
   id: string
@@ -74,6 +118,7 @@ export type Investment = {
   balance: number
   name: string
   annualRate?: number
+  lastTwelveMonthsRate?: number
   currencyCode: CurrencyCode
   date?: Date
   value?: number
@@ -82,6 +127,15 @@ export type Investment = {
   taxes2?: number
   amountWithdrawal?: number
   amountProfit?: number
+  transactions?: InvestmentTransaction[]
+  dueDate?: Date
+  issuer?: string
+  issuerDate?: Date
+  rate?: number
+  rateType?: string
+  originalAmount?: number
+  lastMonthRate?: number
+  status?: InvestmentStatus
 }
 
 /*
