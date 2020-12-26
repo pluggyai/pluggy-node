@@ -190,6 +190,7 @@ export type BankData = {
  * @property {number} minimumPayment - Current balance minimum payment due
  * @property {number} balanceForeignCurrency - Current balance in foreign currency
  * @property {number} availableCreditLimit - Available credit limit to use.
+ * @property {number} creditLimit - Maximum credit card limit.
  */
 export type CreditData = {
   level?: string
@@ -199,6 +200,7 @@ export type CreditData = {
   availableCreditLimit?: number
   balanceForeignCurrency?: number
   minimumPayment?: number
+  creditLimit?: number
 }
 
 /*
