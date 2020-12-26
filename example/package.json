@@ -17,6 +17,7 @@
     "example:mfa": "ts-node src/mfa.ts",
     "example:webhooks": "ts-node src/webhooks.ts",
     "example:investments": "ts-node src/investments.ts",
+    "example:creditcards": "ts-node src/creditCards.ts",
     "example:connecttoken": "ts-node src/connectToken.ts"
   },
   "repository": "https://github.com/pluggyai/pluggy-sdk-node",
