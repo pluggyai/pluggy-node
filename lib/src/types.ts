@@ -103,10 +103,10 @@ export type InvestmentTransaction = {
  * @property {InvestmentTransaction} transactions - Transactions list of the investment
  * @property {Date} dueDate - Date the investment is due
  * @property {string} issuer - Reference name of the investment issuer.
- * @property {Date} issuerDate - Date the investment was issued.
+ * @property {Date} issueDate - Date the investment was issued.
  * @property {number} rate - Current month rate value of the investment
  * @property {string} rateType - Type of rate for the investment
- * @property {number} originalAmount - Original amount deposited in the investment
+ * @property {number} amountOriginal - Original amount deposited in the investment
  * @property {number} lastMonthRate - Previous months rate value of the investment
  * @property {InvestmentStatus} status - Current status of the investment
  */
@@ -130,10 +130,10 @@ export type Investment = {
   transactions?: InvestmentTransaction[]
   dueDate?: Date
   issuer?: string
-  issuerDate?: Date
+  issueDate?: Date
   rate?: number
   rateType?: string
-  originalAmount?: number
+  amountOriginal?: number
   lastMonthRate?: number
   status?: InvestmentStatus
 }
