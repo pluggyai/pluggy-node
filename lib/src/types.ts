@@ -253,7 +253,7 @@ export type ConnectorCredential = {
  * @property {any} credentials - List of parameters needed to execute the connector
  */
 export type Connector = {
-  id: string
+  id: number
   name: string
   institutionUrl: string
   imageUrl: string
