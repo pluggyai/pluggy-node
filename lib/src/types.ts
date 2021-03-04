@@ -152,6 +152,7 @@ export type Investment = {
  * @property {CurrencyCode} currencyCode - ISO Currency code of the investment
  * @property {AccountType} type - Type of the account
  * @property {AccountSubType} subtype - Sub type of the account
+ * @property {CreditData} creditData - Account related credit data
  */
 export type Account = {
   id: string

@@ -240,7 +240,7 @@ export class PluggyClient extends BaseApi {
    * Creates a connect token that can be used as API KEY to connect items from the Frontend
    * @returns {string} Access token to connect items with restrict access
    */
-  async createConnectToken(): Promise<{ accessToken: string }> {
-    return this.createPostRequest(`connectTokens`)
+  async createConnectToken(itemId?: string): Promise<{ accessToken: string }> {
+    return this.createPostRequest(`connect_token`, null, { itemId })
   }
 }
