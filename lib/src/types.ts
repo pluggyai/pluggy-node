@@ -213,6 +213,7 @@ export type CreditData = {
  * @property {Date} date - Date of the transaction that was made.
  * @property {number} amount - Amount of the transaction
  * @property {number} balance - Current balance of the trasaction, after transaction was made.
+ * @property {string} category - Assigned category of the transaction.
  * @property {CurrencyCode} currencyCode - ISO Currency code of the Transaction
  */
 export type Transaction = {
@@ -223,6 +224,7 @@ export type Transaction = {
   amount: number
   balance: number
   currencyCode: CurrencyCode
+  category?: string
   providerCode?: string
 }
 
