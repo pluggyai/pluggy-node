@@ -2,6 +2,7 @@
 // Definitions by: Pluggy <https://github.com/pluggyai>
 
 export * from './common'
+export * from './auth'
 export * from './connector'
 export * from './category'
 export * from './item'

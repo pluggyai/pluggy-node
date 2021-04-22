@@ -14,6 +14,8 @@ import {
   Webhook,
   WebhookEvent,
   IdentityResponse,
+  ConnectTokenOptions,
+  CreateItemOptions,
 } from './types'
 
 /**
@@ -61,12 +63,18 @@ export class PluggyClient extends BaseApi {
    * Creates an item
    * @param connectorId The Connector's id
    * @param parameters A map of name and value for the needed credentials
+   * @param options Options available to set to the item
    * @returns {Item} a item object
    */
-  async createItem(connectorId: number, parameters: { [key: string]: string }): Promise<Item> {
+  async createItem(
+    connectorId: number,
+    parameters: Record<string, string>,
+    options?: CreateItemOptions
+  ): Promise<Item> {
     return this.createPostRequest(`items`, null, {
       connectorId,
       parameters,
+      ...(options || {}),
     })
   }
 
@@ -240,7 +248,10 @@ export class PluggyClient extends BaseApi {
    * Creates a connect token that can be used as API KEY to connect items from the Frontend
    * @returns {string} Access token to connect items with restrict access
    */
-  async createConnectToken(itemId?: string): Promise<{ accessToken: string }> {
-    return this.createPostRequest(`connect_token`, null, { itemId })
+  async createConnectToken(
+    itemId?: string,
+    options?: ConnectTokenOptions
+  ): Promise<{ accessToken: string }> {
+    return this.createPostRequest(`connect_token`, null, { itemId, options })
   }
 }
