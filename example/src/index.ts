@@ -23,7 +23,7 @@ void (async function(): Promise<void> {
   })
 
   // View credentials
-  const connector = await client.fetchConnector(0)
+  const connector = await client.fetchConnector(PLUGGY_BANK_CONNECTOR)
   console.log(`We are going to connect with ${connector.name}`)
 
   console.log('We will send the parameters that are OK.')
