@@ -3,7 +3,9 @@ import fetch from 'node-fetch'
 type QueryParameters = { [key: string]: number | number[] | string | string[] | boolean }
 
 export type ClientParams = {
+  /** primary client identifier */
   clientId: string
+  /** client password secret */
   clientSecret: string
   baseUrl?: string
   showUrls?: boolean
@@ -87,7 +89,7 @@ export class BaseApi {
   protected createPostRequest<T>(
     endpoint: string,
     params?: QueryParameters,
-    body?: any
+    body?: Record<string, unknown>
   ): Promise<T> {
     return this.createMutationRequest('post', endpoint, params, body)
   }
@@ -95,7 +97,7 @@ export class BaseApi {
   protected createPutRequest<T>(
     endpoint: string,
     params?: QueryParameters,
-    body?: any
+    body?: Record<string, unknown>
   ): Promise<T> {
     return this.createMutationRequest('put', endpoint, params, body)
   }
@@ -103,7 +105,7 @@ export class BaseApi {
   protected createPatchRequest<T>(
     endpoint: string,
     params?: QueryParameters,
-    body?: any
+    body?: Record<string, unknown>
   ): Promise<T> {
     return this.createMutationRequest('patch', endpoint, params, body)
   }
@@ -111,7 +113,7 @@ export class BaseApi {
   protected createDeleteRequest<T>(
     endpoint: string,
     params?: QueryParameters,
-    body?: any
+    body?: Record<string, unknown>
   ): Promise<T> {
     return this.createMutationRequest('delete', endpoint, params, body)
   }
@@ -120,7 +122,7 @@ export class BaseApi {
     method: string,
     endpoint: string,
     params?: QueryParameters,
-    body?: any
+    body?: Record<string, unknown>
   ): Promise<T> {
     const apiKey = await this.getApiKey()
     const url = `${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`
