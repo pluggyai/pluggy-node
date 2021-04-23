@@ -25,7 +25,7 @@
     "dotenv": "^8.2.0",
     "pluggy-sdk": "^0.6.4",
     "ts-node": "^8.10.2",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.9"
   },
   "devDependencies": {
     "@types/node": "^14.6.0",
