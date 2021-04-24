@@ -1,7 +1,18 @@
 import { CurrencyCode } from './common'
 
-export type AccountType = 'BANK' | 'CREDIT'
-export type AccountSubType = 'SAVINGS_ACCOUNT' | 'CHECKINGS_ACCOUNT' | 'CREDIT_CARD'
+export const ACCOUNT_TYPES = ['BANK', 'CREDIT'] as const
+/**
+ * @typedef AccountType
+ * Type of account
+ */
+export type AccountType = typeof ACCOUNT_TYPES[number]
+
+export const ACCOUNT_SUBTYPES = ['SAVINGS_ACCOUNT', 'CHECKINGS_ACCOUNT', 'CREDIT_CARD'] as const
+/**
+ * @typedef AccountSubType
+ * Type of account
+ */
+export type AccountSubType = typeof ACCOUNT_SUBTYPES[number]
 
 export type Account = {
   /** Primary identifier of the account */
@@ -26,8 +37,9 @@ export type Account = {
   taxNumber?: string
   /** ISO Currency code of the account's amounts */
   currencyCode: CurrencyCode
+  /** Account related bank data, when account is BANK type */
   bankData?: BankData
-  /** Account related credit data */
+  /** Account related credit data, when account is CREDIT type */
   creditData?: CreditData
 }
 

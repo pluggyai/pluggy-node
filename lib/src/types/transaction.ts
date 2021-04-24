@@ -1,6 +1,5 @@
 import { CurrencyCode } from './common'
 
-
 export type TransactionPaymentParticipantDocument = {
   /** document number */
   value?: string
