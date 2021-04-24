@@ -1,4 +1,9 @@
-export type ConnectorType = 'PERSONAL_BANK' | 'BUSINESS_BANK' | 'INVESTMENT'
+export const CONNECTOR_TYPES = ['PERSONAL_BANK', 'BUSINESS_BANK', 'INVESTMENT'] as const
+/**
+ * @typedef ConnectorType
+ * Type of connectors available
+ */
+export type ConnectorType = typeof CONNECTOR_TYPES[number]
 
 export type CredentialSelectOption = {
   /** Value of the option */
@@ -20,7 +25,8 @@ export type ConnectorCredential = {
   data?: string
   /** Assistive information to help the user provide us the credential */
   assistiveText?: string
-  /** Available options if credential is of type 'select' */ 
+  /** Available options if credential is of type 'select' */
+
   options?: CredentialSelectOption[]
   /** Regex to validate input */
   validation?: string

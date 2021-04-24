@@ -1,14 +1,25 @@
 import { CurrencyCode } from './common'
 
-export type InvestmentType =
-  | 'MUTUAL_FUND'
-  | 'SECURITY'
-  | 'EQUITY'
-  | 'FIXED_INCOME'
-  | 'ETF'
-  | 'OTHER'
+export const INVESTMENT_TYPES = [
+  'MUTUAL_FUND',
+  'SECURITY',
+  'EQUITY',
+  'FIXED_INCOME',
+  'ETF',
+  'OTHER',
+] as const
+/**
+ * @typedef InvestmentType
+ * Type of investment
+ */
+export type InvestmentType = typeof INVESTMENT_TYPES[number]
 
-export type InvestmentStatus = 'ACTIVE' | 'PENDING' | 'TOTAL_WITHDRAWAL'
+export const INVESTMENT_STATUS = ['ACTIVE', 'PENDING', 'TOTAL_WITHDRAWAL'] as const
+/**
+ * @typedef InvestmentStatus
+ * Status of investment
+ */
+export type InvestmentStatus = typeof INVESTMENT_STATUS[number]
 
 export type InvestmentTransaction = {
   /** Primary identifier of the transacion */
