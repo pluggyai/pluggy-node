@@ -5,6 +5,18 @@ export const CONNECTOR_TYPES = ['PERSONAL_BANK', 'BUSINESS_BANK', 'INVESTMENT'] 
  */
 export type ConnectorType = typeof CONNECTOR_TYPES[number]
 
+export const CREDENTIAL_TYPES = ['number', 'password', 'text', 'image', 'select'] as const
+/**
+ * @typedef CredentialType
+ * credential type, used to show a proper form input to the user
+ *  'number' -> numeric only data
+ *  'text' -> alpha-numeric data
+ *  'password' -> alpha-numeric password, must be obfuscated
+ *  'image' -> a QR code needs to be decoded (QR is provided in the credential.data field)
+ *  'select' -> credential has to be picked from values listed in credential.options field
+ */
+export type CredentialType = typeof CREDENTIAL_TYPES[number]
+
 export type CredentialSelectOption = {
   /** Value of the option */
   value: string
@@ -18,7 +30,7 @@ export type ConnectorCredential = {
   /** parameter key name */
   name: string
   /** type of parameter to create the form */
-  type?: 'text' | 'password' | 'number' | 'image' | 'select'
+  type?: CredentialType
   /** If parameter is used for MFA. */
   mfa?: boolean
   /** If parameter is image, base64 string is provided */
