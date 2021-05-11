@@ -33,7 +33,7 @@ void (async function(): Promise<void> {
   let item = await client.createItem(PLUGGY_BANK_CONNECTOR, PLUGGY_BANK_CREDENTIALS)
 
   while (!['LOGIN_ERROR', 'OUTDATED', 'UPDATED'].includes(item.status)) {
-    console.log(`Item ${item.id} its syncing with the institution`)
+    console.log(`Item ${item.id} is syncing with the institution`)
     await sleep(3000)
     item = await client.fetchItem(item.id)
   }

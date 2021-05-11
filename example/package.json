@@ -16,10 +16,11 @@
   },
   "dependencies": {
     "dotenv": "^8.2.0",
-    "pluggy-sdk": "^0.7.0",
-    "typescript": "^4.2.4"
+    "pluggy-sdk": "^0.7.0"
   },
   "devDependencies": {
-    "@types/node": "^14.6.0"
+    "@types/node": "^14.6.0",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4"
   }
 }
