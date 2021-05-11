@@ -1,17 +1,11 @@
 {
   "name": "pluggy-example",
-  "version": "0.1.0",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "prettier-fix": "prettier --write \"src/**/*.ts\"",
-    "lint": "npm run prettier-fix && eslint . --ext .ts",
-    "lint:fix": "npm run lint -- --fix",
     "start": "ts-node src/index.ts",
     "example:auth": "ts-node src/auth.ts",
     "example:mfa": "ts-node src/mfa.ts",
@@ -20,18 +14,12 @@
     "example:creditcards": "ts-node src/creditCards.ts",
     "example:connecttoken": "ts-node src/connectToken.ts"
   },
-  "repository": "https://github.com/pluggyai/pluggy-sdk-node",
   "dependencies": {
     "dotenv": "^8.2.0",
     "pluggy-sdk": "^0.7.0",
-    "ts-node": "^8.10.2",
     "typescript": "^4.2.4"
   },
   "devDependencies": {
-    "@types/node": "^14.6.0",
-    "@typescript-eslint/eslint-plugin": "^2.16.0",
-    "@typescript-eslint/parser": "^2.16.0",
-    "eslint": "^6.8.0",
-    "prettier": "^1.19.1"
+    "@types/node": "^14.6.0"
   }
 }
