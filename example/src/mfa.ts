@@ -18,20 +18,20 @@ void (async function(): Promise<void> {
   // Create a connection
   let item = await client.createItem(PLUGGY_BANK_CONNECTOR, {
     ...PLUGGY_BANK_CREDENTIALS,
-    user: 'user-mfa'
+    user: 'user-mfa',
   })
 
-  while (![ItemStatus.LOGIN_ERROR , ItemStatus.OUTDATED, ItemStatus.UPDATED].includes(item.status)) {
+  while (![ItemStatus.LOGIN_ERROR, ItemStatus.OUTDATED, ItemStatus.UPDATED].includes(item.status)) {
     console.log(`Item ${item.id} its syncing with the institution, current status ${item.status}`)
     await sleep(3000)
     item = await client.fetchItem(item.id)
     if (item.status === ItemStatus.WAITING_USER_INPUT) {
       const { parameter } = item
       console.log(`There is a MFA requested, ${parameter.name}, providing value.`)
-      try {
+      try {
         item = await client.updateItemMFA(item.id, {
-            [parameter.name]: DEFAULT_MFA_VALUE,
-          })
+          [parameter.name]: DEFAULT_MFA_VALUE,
+        })
       } catch (err) {
         console.error(err)
       }
