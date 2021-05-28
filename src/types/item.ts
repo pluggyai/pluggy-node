@@ -16,7 +16,14 @@ export enum ItemStatus {
   WAITING_USER_INPUT = 'WAITING_USER_INPUT',
 }
 
-export type Item = {
+export type CreateItemOptions = {
+  /** Url where notifications will be sent at any item's event */
+  webhookUrl?: string
+  /** An unique identifier of the user, usually used the UserId of your app */
+  clientUserId?: string
+}
+
+export type Item = CreateItemOptions & {
   /** primary identifier of the Item */
   id: string
   /** Connector's associated with item */
@@ -31,11 +38,4 @@ export type Item = {
   lastUpdatedAt?: Date
   /** In case of MFA connections, extra parameter will be available. */
   parameter?: ConnectorCredential
-}
-
-export type CreateItemOptions = {
-  /** Url where notifications will be sent at any item's event */
-  webhookUrl?: string
-  /** An unique identifier of the user, usually used the UserId of your app */
-  clientUserId?: string
 }
