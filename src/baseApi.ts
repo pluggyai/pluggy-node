@@ -1,4 +1,4 @@
-import fetch from 'node-fetch'
+import got, { Method } from 'got'
 
 type QueryParameters = { [key: string]: number | number[] | string | string[] | boolean }
 
@@ -37,21 +37,17 @@ export class BaseApi {
       return this.apiKey
     }
 
-    const response = await fetch(`${this.baseUrl}/auth`, {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    const response = await got.post<{ apiKey: string }>(`${this.baseUrl}/auth`, {
+      json: {
         clientId: this.clientId,
         clientSecret: this.clientSecret,
         nonExpiring: false,
-      }),
+      },
+      responseType: 'json',
     })
 
-    const { apiKey } = await response.json()
-    this.apiKey = apiKey
-    return apiKey
+    this.apiKey = response.body.apiKey
+    return this.apiKey
   }
 
   protected async createGetRequest<T>(endpoint: string, params?: QueryParameters): Promise<T> {
@@ -61,29 +57,23 @@ export class BaseApi {
       console.log(url)
     }
 
-    return fetch(url, {
-      method: 'get',
-      headers: {
-        'X-API-KEY': apiKey,
-      },
-    })
-      .then(async response => {
-        try {
-          const json = await response.json()
-          if (response.status !== 200) {
-            return Promise.reject(json)
-          } else {
-            return Promise.resolve(json)
-          }
-        } catch {
-          const message = await response.text()
-          return Promise.reject({ message })
-        }
+    try {
+      const { statusCode, body } = await got<T>(url, {
+        headers: {
+          'X-API-KEY': apiKey,
+        },
+        responseType: 'json',
       })
-      .catch(error => {
-        console.warn(`[API] HTTP request failed: ${error.message || ''}`, error)
-        return Promise.reject(error)
-      })
+
+      if (statusCode !== 200) {
+        return Promise.reject(body)
+      }
+
+      return Promise.resolve(body)
+    } catch (error) {
+      console.error(`[API] HTTP request failed: ${error.message || ''}`, error)
+      return Promise.reject(error)
+    }
   }
 
   protected createPostRequest<T>(
@@ -119,7 +109,7 @@ export class BaseApi {
   }
 
   protected async createMutationRequest<T>(
-    method: string,
+    method: Method,
     endpoint: string,
     params?: QueryParameters,
     body?: Record<string, unknown>
@@ -132,26 +122,26 @@ export class BaseApi {
     if (body) {
       Object.keys(body).forEach(key => (body[key] === undefined ? delete body[key] : {}))
     }
-    return fetch(url, {
-      method,
-      headers: {
-        'X-API-KEY': apiKey,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    }).then(async response => {
-      try {
-        const json = await response.json()
-        if (response.status !== 200) {
-          return Promise.reject(json)
-        } else {
-          return Promise.resolve(json)
-        }
-      } catch {
-        const message = await response.text()
-        return Promise.reject({ message })
+
+    try {
+      const { statusCode, body: responseBody } = await got<T>(url, {
+        method,
+        headers: {
+          'X-API-KEY': apiKey,
+        },
+        json: body,
+        responseType: 'json',
+      })
+
+      if (statusCode !== 200) {
+        return Promise.reject(responseBody)
       }
-    })
+
+      return Promise.resolve(responseBody)
+    } catch (error) {
+      console.error(`[API] HTTP request failed: ${error.message || ''}`, error)
+      return Promise.reject(error)
+    }
   }
 
   protected mapToQueryString(params: QueryParameters): string {

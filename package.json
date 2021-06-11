@@ -26,10 +26,10 @@
     "open banking"
   ],
   "dependencies": {
-    "node-fetch": "^2.6.1"
+    "got": "^11.8.2"
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.5.0",
+    "@types/node": "^15.12.2",
     "@typescript-eslint/eslint-plugin": "^2.16.0",
     "@typescript-eslint/parser": "^2.16.0",
     "eslint": "^6.8.0",
