@@ -1,5 +1,7 @@
 import dotenv from 'dotenv'
+import moment from 'moment'
 import { PluggyClient } from 'pluggy-sdk'
+
 import { sleep, PLUGGY_BANK_CREDENTIALS, PLUGGY_BANK_CONNECTOR } from './utils'
 
 dotenv.config()
@@ -10,12 +12,12 @@ void (async function(): Promise<void> {
   const client = new PluggyClient({
     clientId: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
-    baseUrl: process.env.URL
+    baseUrl: process.env.URL,
   })
 
   // Review connectors endpoint
   const response = await client.fetchConnectors({
-    sandbox: true
+    sandbox: true,
   })
   console.log('We support the following connectors: ')
   response.results.forEach(connector => {
@@ -53,7 +55,9 @@ void (async function(): Promise<void> {
     const transactions = await client.fetchTransactions(account.id)
     transactions.results.forEach(tx => {
       console.log(
-        `Transaction # ${tx.id} made at ${tx.date}, description: ${tx.description}, amount: ${tx.amount}`
+        `Transaction # ${tx.id} made at ${moment(tx.date).format('DD/MM/YYYY')}, description: ${
+          tx.description
+        }, amount: ${tx.amount}`
       )
     })
   }
