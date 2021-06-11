@@ -1,3 +1,4 @@
+import { DeserializedItem } from './types/deserialized'
 import { BaseApi } from './baseApi'
 import {
   TransactionFilters,
@@ -17,6 +18,7 @@ import {
   ConnectTokenOptions,
   CreateItemOptions,
 } from './types'
+import { transformItem, transformPageResponse, transformTransaction } from './transforms'
 
 /**
  * Creates a new client instance for interacting with Pluggy API
@@ -46,8 +48,12 @@ export class PluggyClient extends BaseApi {
    * Fetch all items from the client
    * @returns {Item[]} list of connected items
    */
-  async fetchItems(): Promise<Item[]> {
-    return this.createGetRequest(`items`)
+  async fetchItems(): Promise<PageResponse<Item>> {
+    return this.createGetRequest<PageResponse<Item>, PageResponse<DeserializedItem>>(
+      `items`,
+      null,
+      transformPageResponse(transformItem)
+    )
   }
 
   /**
@@ -56,7 +62,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Item} a item object
    */
   async fetchItem(id: string): Promise<Item> {
-    return this.createGetRequest(`items/${id}`)
+    return this.createGetRequest(`items/${id}`, null, transformItem)
   }
 
   /**
@@ -75,6 +81,7 @@ export class PluggyClient extends BaseApi {
       connectorId,
       parameters,
       ...(options || {}),
+      transformItem,
     })
   }
 
@@ -85,10 +92,15 @@ export class PluggyClient extends BaseApi {
    * @returns {Item} a item object
    */
   async updateItem(id: string, parameters: { [key: string]: string } = undefined): Promise<Item> {
-    return this.createPatchRequest(`items/${id}`, null, {
-      id,
-      parameters,
-    })
+    return this.createPatchRequest(
+      `items/${id}`,
+      null,
+      {
+        id,
+        parameters,
+      },
+      transformItem
+    )
   }
 
   /**
@@ -101,14 +113,14 @@ export class PluggyClient extends BaseApi {
     id: string,
     parameters: { [key: string]: string } = undefined
   ): Promise<Item> {
-    return this.createPostRequest(`items/${id}/mfa`, null, parameters)
+    return this.createPostRequest(`items/${id}/mfa`, null, parameters, transformItem)
   }
 
   /**
    * Deletes an item
    */
   async deleteItem(id: string): Promise<void> {
-    return this.createDeleteRequest(`items/${id}`)
+    await this.createDeleteRequest(`items/${id}`)
   }
 
   /**
@@ -138,7 +150,11 @@ export class PluggyClient extends BaseApi {
     accountId: string,
     options: TransactionFilters = {}
   ): Promise<PageResponse<Transaction>> {
-    return this.createGetRequest('transactions', { ...options, accountId })
+    return this.createGetRequest(
+      'transactions',
+      { ...options, accountId },
+      transformPageResponse(transformTransaction)
+    )
   }
 
   /**
@@ -146,7 +162,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Transaction} an transaction object
    */
   async fetchTransaction(id: string): Promise<Transaction> {
-    return this.createGetRequest(`transactions/${id}`)
+    return this.createGetRequest(`transactions/${id}`, null, transformTransaction)
   }
 
   /**
