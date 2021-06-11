@@ -68,3 +68,10 @@ export type CreditData = {
   /** Maximum credit card limit. */
   creditLimit?: number
 }
+
+export type DeserializedAccount = Omit<Account, 'creditData'> & {
+  creditData: Omit<CreditData, 'balanceCloseDate' | 'balanceDueDate'> & {
+    balanceCloseDate?: string
+    balanceDueDate?: string
+  }
+}

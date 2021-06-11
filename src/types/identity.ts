@@ -50,3 +50,7 @@ export type Address = {
   country?: string
   type?: 'Personal' | 'Work'
 }
+
+export type DeserializedIdentityResponse = Omit<IdentityResponse, 'birthDate'> & {
+  birthDate?: string
+}

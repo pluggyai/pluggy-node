@@ -99,3 +99,21 @@ export type Investment = {
   /** Transactions made related to the investment, like adquisitions (BUY) or withdrawals (SELL). */
   transactions?: InvestmentTransaction[]
 }
+
+export type DeserializedInvestmentTransaction = Omit<
+  InvestmentTransaction,
+  'date' | 'tradeDate'
+> & {
+  date: string
+  tradeDate: string
+}
+
+export type DeserializedInvestment = Omit<
+  Investment,
+  'date' | 'dueDate' | 'issueDate' | 'transactions'
+> & {
+  date?: string
+  dueDate?: string
+  issueDate?: string
+  transactions: DeserializedInvestmentTransaction[]
+}

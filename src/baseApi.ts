@@ -50,7 +50,11 @@ export class BaseApi {
     return this.apiKey
   }
 
-  protected async createGetRequest<T>(endpoint: string, params?: QueryParameters): Promise<T> {
+  protected async createGetRequest<T, K>(
+    endpoint: string,
+    params?: QueryParameters,
+    transformCb?: (response: K) => T
+  ): Promise<T> {
     const apiKey = await this.getApiKey()
     const url = `${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`
     if (this.showUrls) {
@@ -58,7 +62,7 @@ export class BaseApi {
     }
 
     try {
-      const { statusCode, body } = await got<T>(url, {
+      const { statusCode, body } = await got<K>(url, {
         headers: {
           'X-API-KEY': apiKey,
         },
@@ -69,50 +73,61 @@ export class BaseApi {
         return Promise.reject(body)
       }
 
-      return Promise.resolve(body)
+      try {
+        let obj = transformCb ? transformCb(body) : ((body as unknown) as T)
+        return Promise.resolve(obj)
+      } catch (error) {
+        console.error(`[Pluggy SDK] JSON parsing failed: ${error.message || ''}`, error)
+        console.warn(`[Pluggy SDK] Are you sure you are using the latest version of "pluggy-sdk"?`)
+      }
     } catch (error) {
-      console.error(`[API] HTTP request failed: ${error.message || ''}`, error)
+      console.error(`[Pluggy SDK] HTTP request failed: ${error.message || ''}`, error)
       return Promise.reject(error)
     }
   }
 
-  protected createPostRequest<T>(
+  protected createPostRequest<T, K>(
     endpoint: string,
     params?: QueryParameters,
-    body?: Record<string, unknown>
+    body?: Record<string, unknown>,
+    transformCb?: (response: K) => T
   ): Promise<T> {
-    return this.createMutationRequest('post', endpoint, params, body)
+    return this.createMutationRequest('post', endpoint, params, body, transformCb)
   }
 
-  protected createPutRequest<T>(
+  protected createPutRequest<T, K>(
     endpoint: string,
     params?: QueryParameters,
-    body?: Record<string, unknown>
+    body?: Record<string, unknown>,
+    transformCb?: (response: K) => T
   ): Promise<T> {
-    return this.createMutationRequest('put', endpoint, params, body)
+    return this.createMutationRequest('put', endpoint, params, body, transformCb)
   }
 
-  protected createPatchRequest<T>(
+  protected createPatchRequest<T, K>(
     endpoint: string,
     params?: QueryParameters,
-    body?: Record<string, unknown>
+    body?: Record<string, unknown>,
+    transformCb?: (response: K) => T
   ): Promise<T> {
-    return this.createMutationRequest('patch', endpoint, params, body)
+    return this.createMutationRequest('patch', endpoint, params, body, transformCb)
   }
 
-  protected createDeleteRequest<T>(
+  protected createDeleteRequest<T, K>(
     endpoint: string,
     params?: QueryParameters,
-    body?: Record<string, unknown>
+    body?: Record<string, unknown>,
+    transformCb?: (response: K) => T
   ): Promise<T> {
-    return this.createMutationRequest('delete', endpoint, params, body)
+    return this.createMutationRequest('delete', endpoint, params, body, transformCb)
   }
 
-  protected async createMutationRequest<T>(
+  protected async createMutationRequest<T, K>(
     method: Method,
     endpoint: string,
     params?: QueryParameters,
-    body?: Record<string, unknown>
+    body?: Record<string, unknown>,
+    transformCb?: (response: K) => T
   ): Promise<T> {
     const apiKey = await this.getApiKey()
     const url = `${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`
@@ -124,7 +139,7 @@ export class BaseApi {
     }
 
     try {
-      const { statusCode, body: responseBody } = await got<T>(url, {
+      const { statusCode, body: responseBody } = await got<K>(url, {
         method,
         headers: {
           'X-API-KEY': apiKey,
@@ -134,12 +149,18 @@ export class BaseApi {
       })
 
       if (statusCode !== 200) {
-        return Promise.reject(responseBody)
+        return Promise.reject(body)
       }
 
-      return Promise.resolve(responseBody)
+      try {
+        let obj = transformCb ? transformCb(responseBody) : ((responseBody as unknown) as T)
+        return Promise.resolve(obj)
+      } catch (error) {
+        console.error(`[Pluggy SDK] JSON parsing failed: ${error.message || ''}`, error)
+        console.warn(`[Pluggy SDK] Are you sure you are using the latest version of "pluggy-sdk"?`)
+      }
     } catch (error) {
-      console.error(`[API] HTTP request failed: ${error.message || ''}`, error)
+      console.error(`[Pluggy SDK] HTTP request failed: ${error.message || ''}`, error)
       return Promise.reject(error)
     }
   }

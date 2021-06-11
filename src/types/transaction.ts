@@ -66,3 +66,7 @@ export type Transaction = {
   /** Additional data related to payment or transfers */
   paymentData?: TransactionPaymentData
 }
+
+export type DeserializedTransaction = Omit<Transaction, 'date'> & {
+  date: string
+}
