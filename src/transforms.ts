@@ -1,9 +1,16 @@
+import {
+  DeserializedAccount,
+  DeserializedIdentityResponse,
+  DeserializedInvestment,
+  DeserializedItem,
+  DeserializedTransaction,
+} from './types/deserialized'
 import { PageResponse } from './types/common'
-import { Account, DeserializedAccount } from './types/account'
-import { DeserializedIdentityResponse, IdentityResponse } from './types/identity'
-import { DeserializedItem, Item } from './types/item'
-import { DeserializedInvestment, Investment } from './types/investment'
-import { DeserializedTransaction, Transaction } from './types/transaction'
+import { Account } from './types/account'
+import { IdentityResponse } from './types/identity'
+import { Item } from './types/item'
+import { Investment } from './types/investment'
+import { Transaction } from './types/transaction'
 
 // these functions works very similar to React/Redux Reducers, it transform a remote response to a typed object instances
 

@@ -1,3 +1,4 @@
+import { DeserializedItem } from './types/deserialized'
 import { BaseApi } from './baseApi'
 import {
   TransactionFilters,
@@ -16,7 +17,6 @@ import {
   IdentityResponse,
   ConnectTokenOptions,
   CreateItemOptions,
-  DeserializedItem,
 } from './types'
 import { transformItem, transformPageResponse, transformTransaction } from './transforms'
 

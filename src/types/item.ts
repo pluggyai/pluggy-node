@@ -39,9 +39,3 @@ export type Item = CreateItemOptions & {
   /** In case of MFA connections, extra parameter will be available. */
   parameter?: ConnectorCredential
 }
-
-export type DeserializedItem = CreateItemOptions &
-  Omit<Item, 'createdAt' | 'lastUpdatedAt'> & {
-    createdAt: string
-    lastUpdatedAt?: string
-  }
