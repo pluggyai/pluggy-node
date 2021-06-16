@@ -10,8 +10,6 @@
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
-    "release": "npm i && npm run build && npm publish",
-    "release:next": "npm i && npm run build && npm publish --tag next",
     "prettier-fix": "prettier --write \"src/**/*.ts\"",
     "lint": "npm run prettier-fix && eslint . --ext .ts",
     "lint:fix": "npm run lint -- --fix",
