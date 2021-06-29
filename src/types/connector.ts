@@ -66,7 +66,7 @@ export type Connector = {
   /** List of parameters needed to execute the connector */
   credentials: ConnectorCredential[]
   /** Has MFA steps */
-  hasMfa: boolean
+  hasMFA: boolean
 }
 
 export type ConnectorFilters = {
