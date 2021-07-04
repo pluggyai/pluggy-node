@@ -88,6 +88,8 @@ export type Investment = {
   rate?: number
   /** Fixed rate type for the investment, ie. CDI. (Normally only available in FIXED_INCOME types) */
   rateType?: string
+  /** Fixed annual rate for the investment, ie. 10.5. (Normally only available in FIXED_INCOME types) */
+  fixedAnnualRate?: number
   /** Previous months rate value of the investment */
   lastMonthRate?: number
   /** Calendar annual rate, is a percentage of how it performed. (Normally only available in MUTUAL_FUNDS or ETF types) */
