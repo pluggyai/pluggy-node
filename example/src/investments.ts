@@ -24,5 +24,7 @@ void (async function(): Promise<void> {
 
   // Once the connection was done successfully, lets review its investments
   const investments = await client.fetchInvestments(item.id)
-  console.log(investments.results[0])
+  console.log(investments.results)
+
+  await client.deleteItem(item.id)
 })()
