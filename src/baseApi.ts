@@ -1,11 +1,12 @@
 import got, { Method } from 'got'
+import * as jwt from 'jsonwebtoken'
 
 type QueryParameters = { [key: string]: number | number[] | string | string[] | boolean }
 
 export type ClientParams = {
-  /** primary client identifier */
+  /** Pluggy Client ID */
   clientId: string
-  /** client password secret */
+  /** Pluggy Client Secret */
   clientSecret: string
   baseUrl?: string
   showUrls?: boolean
@@ -33,7 +34,7 @@ export class BaseApi {
   }
 
   private async getApiKey(): Promise<string> {
-    if (this.apiKey) {
+    if (this.apiKey && !this.isJwtExpired(this.apiKey)) {
       return this.apiKey
     }
 
@@ -175,5 +176,10 @@ export class BaseApi {
       .map(key => key + '=' + params[key])
       .join('&')
     return `?${query}`
+  }
+
+  protected isJwtExpired(token: string): boolean {
+    const decoded = jwt.decode(token, { complete: true })
+    return decoded.payload.exp <= Math.floor(Date.now() / 1000)
   }
 }
