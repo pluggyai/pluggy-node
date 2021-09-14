@@ -2,7 +2,11 @@ import dotenv from 'dotenv'
 import moment from 'moment'
 import { PluggyClient } from 'pluggy-sdk'
 
-import { sleep, PLUGGY_BANK_CREDENTIALS, PLUGGY_BANK_CONNECTOR } from './utils'
+import {
+  sleep,
+  PLUGGY_BANK_CREDENTIALS,
+  PLUGGY_BANK_CONNECTOR as PLUGGY_BANK_CONNECTOR_ID,
+} from './utils'
 
 dotenv.config()
 
@@ -25,14 +29,21 @@ void (async function(): Promise<void> {
   })
 
   // View credentials
-  const connector = await client.fetchConnector(PLUGGY_BANK_CONNECTOR)
+  const connector = await client.fetchConnector(PLUGGY_BANK_CONNECTOR_ID)
   console.log(`We are going to connect with ${connector.name}`)
 
   console.log('We will send the parameters that are OK.')
   console.log(PLUGGY_BANK_CREDENTIALS)
 
+  // Validate connector parameters
+  const validation = await client.validateParameters(
+    PLUGGY_BANK_CONNECTOR_ID,
+    PLUGGY_BANK_CREDENTIALS
+  )
+  console.log(`Connector parameter validation: `, validation)
+
   // Create a connection
-  let item = await client.createItem(PLUGGY_BANK_CONNECTOR, PLUGGY_BANK_CREDENTIALS)
+  let item = await client.createItem(PLUGGY_BANK_CONNECTOR_ID, PLUGGY_BANK_CREDENTIALS)
 
   while (!['LOGIN_ERROR', 'OUTDATED', 'UPDATED'].includes(item.status)) {
     console.log(`Item ${item.id} is syncing with the institution`)
