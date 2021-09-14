@@ -19,6 +19,7 @@ import {
   CreateItemOptions,
 } from './types'
 import { transformItem, transformPageResponse, transformTransaction } from './transforms'
+import { ValidationResult } from './types/validation'
 
 /**
  * Creates a new client instance for interacting with Pluggy API
@@ -63,6 +64,19 @@ export class PluggyClient extends BaseApi {
    */
   async fetchItem(id: string): Promise<Item> {
     return this.createGetRequest(`items/${id}`, null, transformItem)
+  }
+
+  /**
+   * Check that connector parameters are valid
+   * @param id The Connector ID
+   * @param parameters A map of name and value for the credentials to be validated
+   * @returns {ValidationResult} an object with the info of which parameters are wrong
+   */
+  async validateParameters(
+    id: number,
+    parameters: Record<string, string>
+  ): Promise<ValidationResult> {
+    return this.createPostRequest(`connectors/${id}/validate`, null, parameters)
   }
 
   /**
