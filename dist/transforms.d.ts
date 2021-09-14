@@ -1,0 +1,13 @@
+import { DeserializedAccount, DeserializedIdentityResponse, DeserializedInvestment, DeserializedItem, DeserializedTransaction } from './types/deserialized';
+import { PageResponse } from './types/common';
+import { Account } from './types/account';
+import { IdentityResponse } from './types/identity';
+import { Item } from './types/item';
+import { Investment } from './types/investment';
+import { Transaction } from './types/transaction';
+export declare function transformAccount(account: DeserializedAccount): Account;
+export declare function transformIdentity(identity: DeserializedIdentityResponse): IdentityResponse;
+export declare function transformInvestment(investment: DeserializedInvestment): Investment;
+export declare function transformItem(item: DeserializedItem): Item;
+export declare function transformTransaction(transaction: DeserializedTransaction): Transaction;
+export declare function transformPageResponse<T, K>(transformCb: (data: T) => K): (response: PageResponse<T>) => PageResponse<K>;
