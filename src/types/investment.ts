@@ -4,6 +4,7 @@ export const INVESTMENT_TYPES = [
   'MUTUAL_FUND',
   'SECURITY',
   'EQUITY',
+  'REAL_ESTATE_FUND',
   'FIXED_INCOME',
   'ETF',
   'OTHER',
