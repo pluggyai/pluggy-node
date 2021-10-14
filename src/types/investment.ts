@@ -36,7 +36,7 @@ export type InvestmentTransaction = {
   /** Value of the purchased quotas */
   value?: number
   /** Amount spent or withrawaled from the investment. */
-  amount: number
+  amount?: number
   /** Date the transaction was placed. */
   date: Date
   /** Date the transaction was confirmed */
