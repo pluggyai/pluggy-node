@@ -29,6 +29,8 @@ export type InvestmentTransaction = {
   type: string
   /** Identifier of the related operation */
   operationId?: string
+  /** Description of the transaction*/
+  description?: string
   /** Investment identifier related to the transaction */
   investmentId?: string
   /** Quantity of quotas purchased */
