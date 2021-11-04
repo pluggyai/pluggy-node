@@ -1,4 +1,4 @@
-import got, { Method } from 'got'
+import got, { HTTPError, Method } from 'got'
 import * as jwt from 'jsonwebtoken'
 
 type QueryParameters = { [key: string]: number | number[] | string | string[] | boolean }
@@ -70,7 +70,7 @@ export class BaseApi {
         responseType: 'json',
       })
 
-      if (statusCode !== 200) {
+      if (statusCode < 200 || statusCode >= 300) {
         return Promise.reject(body)
       }
 
@@ -82,7 +82,10 @@ export class BaseApi {
         console.warn(`[Pluggy SDK] Are you sure you are using the latest version of "pluggy-sdk"?`)
       }
     } catch (error) {
-      console.error(`[Pluggy SDK] HTTP request failed: ${error.message || ''}`, error)
+      if (error instanceof HTTPError) {
+        console.error(`[Pluggy SDK] HTTP request failed: ${error.message || ''}`, error.response.body)
+        return Promise.reject(error.response.body)
+      }
       return Promise.reject(error)
     }
   }
@@ -161,7 +164,10 @@ export class BaseApi {
         console.warn(`[Pluggy SDK] Are you sure you are using the latest version of "pluggy-sdk"?`)
       }
     } catch (error) {
-      console.error(`[Pluggy SDK] HTTP request failed: ${error.message || ''}`, error)
+      if (error instanceof HTTPError) {
+        console.error(`[Pluggy SDK] HTTP request failed: ${error.message || ''}`, error.response.body)
+        return Promise.reject(error.response.body)
+      }
       return Promise.reject(error)
     }
   }
