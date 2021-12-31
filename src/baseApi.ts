@@ -75,7 +75,7 @@ export class BaseApi {
       }
 
       try {
-        let obj = transformCb ? transformCb(body) : ((body as unknown) as T)
+        const obj = transformCb ? transformCb(body) : ((body as unknown) as T)
         return Promise.resolve(obj)
       } catch (error) {
         console.error(`[Pluggy SDK] JSON parsing failed: ${error.message || ''}`, error)
@@ -154,7 +154,7 @@ export class BaseApi {
       }
 
       try {
-        let obj = transformCb ? transformCb(responseBody) : ((responseBody as unknown) as T)
+        const obj = transformCb ? transformCb(responseBody) : ((responseBody as unknown) as T)
         return Promise.resolve(obj)
       } catch (error) {
         console.error(`[Pluggy SDK] JSON parsing failed: ${error.message || ''}`, error)

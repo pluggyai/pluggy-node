@@ -1,4 +1,3 @@
-import { DeserializedItem } from './types/deserialized'
 import { BaseApi } from './baseApi'
 import {
   TransactionFilters,
@@ -43,18 +42,6 @@ export class PluggyClient extends BaseApi {
    */
   async fetchConnector(id: number): Promise<Connector> {
     return this.createGetRequest(`connectors/${id}`)
-  }
-
-  /**
-   * Fetch all items from the client
-   * @returns {Item[]} list of connected items
-   */
-  async fetchItems(): Promise<PageResponse<Item>> {
-    return this.createGetRequest<PageResponse<Item>, PageResponse<DeserializedItem>>(
-      `items`,
-      null,
-      transformPageResponse(transformItem)
-    )
   }
 
   /**
