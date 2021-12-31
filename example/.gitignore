@@ -1,3 +1,6 @@
 .env
 dist
 node_modules
+
+# so it always install "latest" version
+package-lock.json
