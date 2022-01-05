@@ -1,5 +1,15 @@
 import { CurrencyCode } from './common'
 
+export const TRANSACTION_TYPES = ['DEBIT', 'CREDIT'] as const
+
+/**
+ * @typedef TransactionType
+ * The direction of the transaction.
+ * If DEBIT money going out of the account.
+ * If CREDIT money going into the account.
+ */
+export type TransactionType = typeof TRANSACTION_TYPES[number]
+
 export type TransactionPaymentParticipantDocument = {
   /** document number */
   value?: string
@@ -53,6 +63,8 @@ export type Transaction = {
   date: Date
   /** Transaction original description */
   description: string
+  /** Transation type of movement */
+  type: TransactionType
   /** Amount of the transaction */
   amount: number
   /** Current balance of the trasaction, after transaction was made. */

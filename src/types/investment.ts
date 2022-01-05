@@ -4,7 +4,7 @@ export const INVESTMENT_TYPES = [
   'MUTUAL_FUND',
   'SECURITY',
   'EQUITY',
-  'REAL_ESTATE_FUND',
+  'COE',
   'FIXED_INCOME',
   'ETF',
   'OTHER',
@@ -22,11 +22,76 @@ export const INVESTMENT_STATUS = ['ACTIVE', 'PENDING', 'TOTAL_WITHDRAWAL'] as co
  */
 export type InvestmentStatus = typeof INVESTMENT_STATUS[number]
 
+export const COE_INVESTMENT_SUBTYPES = [
+  /*! COE */
+  'STRUCTURED_NOTE',
+] as const
+export type CoeInvestmentSubtype = typeof COE_INVESTMENT_SUBTYPES[number]
+
+export const MUTUAL_FUND_INVESTMENT_SUBTYPES = [
+  'INVESTMENT_FUND', 
+] as const
+export type MutualFundInvestmentSubtype = typeof MUTUAL_FUND_INVESTMENT_SUBTYPES[number]
+
+export const SECURITY_INVESTMENT_SUBTYPES = [
+  'RETIREMENT',
+] as const
+export type SecurityInvestmentSubtype = typeof SECURITY_INVESTMENT_SUBTYPES[number]
+
+export const EQUITY_INVESTMENT_SUBTYPES = [
+  'STOCK',
+  'ETF',
+  'REAL_STATE_FUND',
+  /*! BRAZILIAN_DEPOSITARY_RECEIPT */
+  'BDR',
+  'DERIVATIVES',
+] as const
+export type EquityInvestmentSubtype = typeof EQUITY_INVESTMENT_SUBTYPES[number]
+
+export const FIXED_INCOME_INVESTMENT_SUBTYPES = [
+  /*! FIXED_INCOME */
+  'TREASURY',
+  /*! Real State Credit Bill */
+  'LCI',
+  /*! AGRICULTURAL_CREDIT_BILL */
+  'LCA',
+  /*! CERTIFICATE_OF_DEPOSIT */
+  'CDB',
+  /*! REAL_STATE_RECEIVABLE_CERTIFICATE */
+  'CRI',
+  /*! AGRICULTURAL_RECEIVABLE_CERTIFICATE */
+  'CRA',
+  'CORPORATE_DEBT',
+  /*! BILL_OF_EXCHANGE */
+  'LC',
+] as const
+export type FixedIncomeInvestmentSubtype = typeof FIXED_INCOME_INVESTMENT_SUBTYPES[number]
+
+export const INVESTMENT_SUBTYPES = [
+  ...MUTUAL_FUND_INVESTMENT_SUBTYPES,
+  ...SECURITY_INVESTMENT_SUBTYPES,
+  ...EQUITY_INVESTMENT_SUBTYPES,
+  ...FIXED_INCOME_INVESTMENT_SUBTYPES,
+  ...COE_INVESTMENT_SUBTYPES,
+  'OTHER',
+] as const
+
+export type InvestmentSubtype = typeof INVESTMENT_SUBTYPES[number]
+
+export const INVESTMENT_TRANSACTION_TYPE = [
+  'BUY',
+  'SELL',
+  /*! Tax applied to the investment ie. "Come Contas" */
+  'TAX',
+  'TRANSFER',
+] as const
+export type InvestmentTransactionType = typeof INVESTMENT_TRANSACTION_TYPE[number]
+
 export type InvestmentTransaction = {
   /** Primary identifier of the transacion */
   id: string
   /** Type of the transaction */
-  type: string
+  type: InvestmentTransactionType
   /** Identifier of the related operation */
   operationId?: string
   /** Description of the transaction*/
@@ -57,6 +122,8 @@ export type Investment = {
   itemId: string
   /** Type of investment associated. */
   type: InvestmentType
+  /** Subtype of investment */
+  subtype?: InvestmentSubtype
   /** Primary name for the investment */
   name: string
   /** Currency ISO code where amounts are shown */
