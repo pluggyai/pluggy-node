@@ -1,6 +1,7 @@
 import got, { Method } from 'got'
 import * as jwt from 'jsonwebtoken'
-import { version as libVersion } from '../package.json';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { version: libVersion } = require('../package.json')
 
 type QueryParameters = { [key: string]: number | number[] | string | string[] | boolean }
 
