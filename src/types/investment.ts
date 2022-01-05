@@ -64,6 +64,7 @@ export const FIXED_INCOME_INVESTMENT_SUBTYPES = [
   'CORPORATE_DEBT',
   /*! BILL_OF_EXCHANGE */
   'LC',
+  'DEBENTURES',
 ] as const
 export type FixedIncomeInvestmentSubtype = typeof FIXED_INCOME_INVESTMENT_SUBTYPES[number]
 
