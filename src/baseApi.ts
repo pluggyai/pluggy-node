@@ -1,5 +1,6 @@
 import got, { Method } from 'got'
 import * as jwt from 'jsonwebtoken'
+import { version as libVersion } from '../package.json';
 
 type QueryParameters = { [key: string]: number | number[] | string | string[] | boolean }
 
@@ -9,7 +10,6 @@ export type ClientParams = {
   /** Pluggy Client Secret */
   clientSecret: string
   baseUrl?: string
-  showUrls?: boolean
 }
 
 export class BaseApi {
@@ -17,19 +17,23 @@ export class BaseApi {
   private clientId: string
   private clientSecret: string
   private baseUrl?: string
-  private showUrls = false
+  private defaultHeaders: Record<string, string>
 
   constructor(params: ClientParams) {
-    const { clientId, clientSecret, baseUrl = 'https://api.pluggy.ai', showUrls = false } = params
-
-    this.baseUrl = baseUrl
-    this.showUrls = showUrls
+    const { clientId, clientSecret } = params
+    const { PLUGGY_API_URL } = process.env
+    this.baseUrl = PLUGGY_API_URL || 'https://api.pluggy.ai'
 
     if (clientSecret && clientId) {
       this.clientId = clientId
       this.clientSecret = clientSecret
     } else {
       throw new Error('Missing authorization for API communication')
+    }
+
+    this.defaultHeaders = {
+      'User-Agent': `PluggyNode/${libVersion} node.js/${process.version.replace('v', '')}`,
+      'Content-Type': 'application/json',
     }
   }
 
@@ -58,13 +62,11 @@ export class BaseApi {
   ): Promise<T> {
     const apiKey = await this.getApiKey()
     const url = `${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`
-    if (this.showUrls) {
-      console.log(url)
-    }
 
     try {
       const { statusCode, body } = await got<K>(url, {
         headers: {
+          ...this.defaultHeaders,
           'X-API-KEY': apiKey,
         },
         responseType: 'json',
@@ -132,9 +134,6 @@ export class BaseApi {
   ): Promise<T> {
     const apiKey = await this.getApiKey()
     const url = `${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`
-    if (this.showUrls) {
-      console.log(url)
-    }
     if (body) {
       Object.keys(body).forEach(key => (body[key] === undefined ? delete body[key] : {}))
     }
@@ -143,6 +142,7 @@ export class BaseApi {
       const { statusCode, body: responseBody } = await got<K>(url, {
         method,
         headers: {
+          ...this.defaultHeaders,
           'X-API-KEY': apiKey,
         },
         json: body,
