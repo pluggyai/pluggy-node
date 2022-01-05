@@ -38,7 +38,6 @@ export type ConnectorCredential = {
   /** Assistive information to help the user provide us the credential */
   assistiveText?: string
   /** Available options if credential is of type 'select' */
-
   options?: CredentialSelectOption[]
   /** Regex to validate input */
   validation?: string
@@ -46,6 +45,8 @@ export type ConnectorCredential = {
   validationMessage?: string
   /** Input's placeholder for help */
   placeholder?: string
+  /** Is this credential optional? */
+  optional?: boolean
 }
 
 export type Connector = {
@@ -75,7 +76,7 @@ export type ConnectorFilters = {
   /** list of countries to filter available connectors */
   countries?: string[]
   /** list of types to filter available connectors */
-  types?: string[]
+  types?: ConnectorType[]
   /** recovers sandbox connectors. Default: false */
   sandbox?: boolean
 }
