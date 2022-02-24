@@ -29,7 +29,22 @@ export const COE_INVESTMENT_SUBTYPES = [
 export type CoeInvestmentSubtype = typeof COE_INVESTMENT_SUBTYPES[number]
 
 export const MUTUAL_FUND_INVESTMENT_SUBTYPES = [
-  'INVESTMENT_FUND', 
+  /*! Default subtype */
+  'INVESTMENT_FUND',
+  /*! Multimercados */
+  'MULTIMARKET_FUND',
+  /*! Fundos de Renda Fixa */
+  'FIXED_INCOME_FUND',
+  /*! Fundos de Acoes */
+  'STOCK_FUND',
+  /*! Fundos de ETF */
+  'ETF_FUND',
+  /*! Fundos Offshores */
+  'OFFSHORE_FUND',
+  /*! Fundos de Multiestratégia */
+  'FIP_FUND',
+  /*! Fundos de Cambio/Cambial */
+  'EXCHANGE_FUND',
 ] as const
 export type MutualFundInvestmentSubtype = typeof MUTUAL_FUND_INVESTMENT_SUBTYPES[number]
 
@@ -45,6 +60,7 @@ export const EQUITY_INVESTMENT_SUBTYPES = [
   /*! BRAZILIAN_DEPOSITARY_RECEIPT */
   'BDR',
   'DERIVATIVES',
+  'OPTION',
 ] as const
 export type EquityInvestmentSubtype = typeof EQUITY_INVESTMENT_SUBTYPES[number]
 
