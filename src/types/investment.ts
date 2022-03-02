@@ -48,9 +48,7 @@ export const MUTUAL_FUND_INVESTMENT_SUBTYPES = [
 ] as const
 export type MutualFundInvestmentSubtype = typeof MUTUAL_FUND_INVESTMENT_SUBTYPES[number]
 
-export const SECURITY_INVESTMENT_SUBTYPES = [
-  'RETIREMENT',
-] as const
+export const SECURITY_INVESTMENT_SUBTYPES = ['RETIREMENT'] as const
 export type SecurityInvestmentSubtype = typeof SECURITY_INVESTMENT_SUBTYPES[number]
 
 export const EQUITY_INVESTMENT_SUBTYPES = [
