@@ -164,7 +164,7 @@ export class PluggyClient extends BaseApi {
    *
    * @returns {Transaction} updated transaction object
    */
-  async patchTransactionCategory(id: string, categoryId: string): Promise<Transaction> {
+  async updateTransactionCategory(id: string, categoryId: string): Promise<Transaction> {
     return this.createPatchRequest(
       `transactions/${id}`,
       null,
