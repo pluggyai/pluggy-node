@@ -38,7 +38,7 @@ export class BaseApi {
     }
   }
 
-  private async getApiKey(): Promise<string> {
+  protected async getApiKey(): Promise<string> {
     if (this.apiKey && !this.isJwtExpired(this.apiKey)) {
       return this.apiKey
     }
