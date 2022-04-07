@@ -74,12 +74,12 @@ void (async function(): Promise<void> {
   }
 
   // Update transaction category
-  if(accounts.results.length !== 0) {
+  if (accounts.results.length !== 0) {
     console.log(`Upadating transactions category to a random one`)
     const { id } = accounts.results[0]
     const { results: transactions } = await client.fetchTransactions(id)
 
-    if(transactions.length !== 0) {
+    if (transactions.length !== 0) {
       // Select random transaction
       const randomTransaction = transactions[Math.floor(Math.random() * transactions.length)]
 
