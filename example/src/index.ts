@@ -73,6 +73,27 @@ void (async function(): Promise<void> {
     })
   }
 
+  // Update transaction category
+  if (accounts.results.length !== 0) {
+    console.log(`Upadating transactions category to a random one`)
+    const { id } = accounts.results[0]
+    const { results: transactions } = await client.fetchTransactions(id)
+
+    if (transactions.length !== 0) {
+      // Select random transaction
+      const randomTransaction = transactions[Math.floor(Math.random() * transactions.length)]
+
+      // Get categories and select random one
+      const { results: categoryList } = await client.fetchCategories()
+      const randomCategory = categoryList[Math.floor(Math.random() * categoryList.length)]
+      console.log(`Random category: ${randomCategory.description}`)
+
+      // Update transaction usercategory
+      const updatedTransaction = await client.updateTransactionCategory(randomTransaction.id, randomCategory.id)
+      console.log(`Updated transaction # ${updatedTransaction.id} to category ${updatedTransaction.category}`)
+    }
+  }
+
   console.log(`Retrieving identity for item # ${item.id}`)
   const identity = await client.fetchIdentityByItemId(item.id)
   console.log(`Identity of the account name is ${identity.fullName}`)
