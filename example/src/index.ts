@@ -73,17 +73,22 @@ void (async function(): Promise<void> {
     })
   }
 
-  console.log(`Upadating transactions category to a random one`)
-  const { results: categoryList } = await client.fetchCategories()
-  const rndmCategory = categoryList[Math.floor(Math.random() * categoryList.length)]
-  console.log(`Random category: ${rndmCategory.description}`)
+  if(accounts.results.length !== 0) {
+    console.log(`Upadating transactions category to a random one`)
+    const { id } = accounts.results[0]
+    const { results: transactions } = await client.fetchTransactions(id)
 
-  const { id } = accounts[0]
-  const { results: transactions } = await client.fetchTransactions(id)
-  const rndTransaction = transactions[Math.floor(Math.random() * transactions.length)]
+    if(transactions.length !== 0) {
+      const rndTransaction = transactions[Math.floor(Math.random() * transactions.length)]
 
-  const updatedTransaction = await client.updateTransactionCategory(rndTransaction.id, rndmCategory.id)
-  console.log(`Updated transaction # ${updatedTransaction.id} to category ${updatedTransaction.category}`)
+      const { results: categoryList } = await client.fetchCategories()
+      const rndmCategory = categoryList[Math.floor(Math.random() * categoryList.length)]
+      console.log(`Random category: ${rndmCategory.description}`)
+
+      const updatedTransaction = await client.updateTransactionCategory(rndTransaction.id, rndmCategory.id)
+      console.log(`Updated transaction # ${updatedTransaction.id} to category ${updatedTransaction.category}`)
+    }
+  }
 
   console.log(`Retrieving identity for item # ${item.id}`)
   const identity = await client.fetchIdentityByItemId(item.id)
