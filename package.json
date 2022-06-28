@@ -25,7 +25,7 @@
     "open banking"
   ],
   "dependencies": {
-    "got": "^11.8.2",
+    "got": "^11.8.5",
     "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {
