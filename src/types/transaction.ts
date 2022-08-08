@@ -2,6 +2,11 @@ import { CurrencyCode } from './common'
 
 export const TRANSACTION_TYPES = ['DEBIT', 'CREDIT'] as const
 
+export enum TransactionStatus {
+  PENDING = 'PENDING',
+  POSTED = 'POSTED',
+}
+
 /**
  * @typedef TransactionType
  * The direction of the transaction.
@@ -73,6 +78,8 @@ export type Transaction = {
   currencyCode: CurrencyCode
   /** Assigned category of the transaction. */
   category?: string
+  /** Status of the transaction, default to `POSTED` */
+  status?: TransactionStatus
   /** Code provided by the financial institution for the transaction type, not unique. */
   providerCode?: string
   /** Additional data related to payment or transfers */

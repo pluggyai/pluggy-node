@@ -68,7 +68,7 @@ void (async function(): Promise<void> {
       console.log(
         `Transaction # ${tx.id} made at ${moment(tx.date).format('DD/MM/YYYY')}, description: ${
           tx.description
-        }, amount: ${tx.amount}`
+        }, amount: ${tx.amount}, status: ${tx.status}`
       )
     })
   }
