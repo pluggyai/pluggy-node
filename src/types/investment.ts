@@ -118,23 +118,23 @@ export const INVESTMENT_RATE_TYPES = [
 export type InvestmentRateType = typeof INVESTMENT_RATE_TYPES[number]
 
 export type Expenses = {
-  /** (ISS) Service tax that varies according to state */
+  /** Service tax that varies according to state */
   serviceTax?: number
   /** Commission charged by the brokerage for carrying out transactions on the stock market */
   brokerageFee?: number
-  /** (IRRF) Income Tax Withholding, amount paid to the Internal Revenue Service */
+  /** Income Tax Withholding, amount paid to the Internal Revenue Service */
   incomeTax?: number
   /** Sum of other not defined expenses */
   other?: number
-  /** (ANA) Fee of Notice of Trading in Assets */
+  /** Fee of Notice of Trading in Assets */
   tradingAssetsNoticeFee?: number
-  /** (termo/opções) Fees charged by BM&F Bovespa in negotiations */
+  /** Fees charged by BM&F Bovespa in negotiations */
   maintenanceFee?: number
   /** Liquidation fee for the settlement of a position on the expiration date or the financial settlement of physical delivery */
   settlementFee?: number
   /** Registration fee */
   clearingFee?: number
-  /** (Emolumentos) Fees charged by BM&F Bovespa as a source of operating income  */
+  /** Fees charged by BM&F Bovespa as a source of operating income  */
   stockExchangeFee?: number
   /** Fee by brokers to keep recordsin their home broker systems or on the trading desk */
   custodyFee?: number
