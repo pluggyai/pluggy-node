@@ -143,8 +143,11 @@ export type Expenses = {
 }
 
 export type InvestmentMetadata = {
+  /** Regime of the tax used for the asset */
   taxRegime?: string
+  /** Asset proposal number identification */
   proposalNumber?: string
+  /** Process identification number from the institution (susep) */
   processNumber?: string
 }
 
