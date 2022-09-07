@@ -102,6 +102,55 @@ export const INVESTMENT_TRANSACTION_TYPE = [
 ] as const
 export type InvestmentTransactionType = typeof INVESTMENT_TRANSACTION_TYPE[number]
 
+/*!
+  For extra details visit: https://docs.pluggy.ai/docs/investment-1
+  RateTypes represent the index from where the rate is based.
+*/
+export const INVESTMENT_RATE_TYPES = [
+  'SELIC',
+  'CDI',
+  'EURO',
+  'DOLAR',
+  'IGPM',
+  'IPCA',
+]
+
+export type InvestmentRateType = typeof INVESTMENT_RATE_TYPES[number]
+
+export type Expenses = {
+  /** Service tax that varies according to state */
+  serviceTax?: number
+  /** Commission charged by the brokerage for carrying out transactions on the stock market */
+  brokerageFee?: number
+  /** Income Tax Withholding, amount paid to the Internal Revenue Service */
+  incomeTax?: number
+  /** Sum of other not defined expenses */
+  other?: number
+  /** Fee of Notice of Trading in Assets */
+  tradingAssetsNoticeFee?: number
+  /** Fees charged by BM&F Bovespa in negotiations */
+  maintenanceFee?: number
+  /** Liquidation fee for the settlement of a position on the expiration date or the financial settlement of physical delivery */
+  settlementFee?: number
+  /** Registration fee */
+  clearingFee?: number
+  /** Fees charged by BM&F Bovespa as a source of operating income  */
+  stockExchangeFee?: number
+  /** Fee by brokers to keep recordsin their home broker systems or on the trading desk */
+  custodyFee?: number
+  /** Amount paid to the Operator for the intermediation service  */
+  operatingFee?: number
+}
+
+export type InvestmentMetadata = {
+  /** Regime of the tax used for the asset */
+  taxRegime?: string
+  /** Asset proposal number identification */
+  proposalNumber?: string
+  /** Process identification number from the institution (susep) */
+  processNumber?: string
+}
+
 export type InvestmentTransaction = {
   /** Primary identifier of the transacion */
   id: string
@@ -109,7 +158,7 @@ export type InvestmentTransaction = {
   type: InvestmentTransactionType
   /** Identifier of the related operation */
   operationId?: string
-  /** Description of the transaction*/
+  /** Description of the transaction */
   description?: string
   /** Investment identifier related to the transaction */
   investmentId?: string
@@ -123,6 +172,20 @@ export type InvestmentTransaction = {
   date: Date
   /** Date the transaction was confirmed */
   tradeDate: Date
+  /** Number of the corresponding brokerage note */
+  brokerageNumber?: string
+  /** Value including expenses */
+  netAmount?: number
+  /** Taxes and fees that apply */
+  expenses?: Expenses
+}
+
+/** institution holding the investment */
+export type InvestmentInstitution = {
+  /** Full name of the institution */
+  name?: string
+  /** Number identifier for the institution CNPJ / Other */
+  number?: string
 }
 
 export type Investment = {
@@ -172,7 +235,7 @@ export type Investment = {
   /** Fixed rate for the investment. (Normally only available in FIXED_INCOME types) */
   rate?: number
   /** Fixed rate type for the investment, ie. CDI. (Normally only available in FIXED_INCOME types) */
-  rateType?: string
+  rateType?: InvestmentRateType
   /** Fixed annual rate for the investment, ie. 10.5. (Normally only available in FIXED_INCOME types) */
   fixedAnnualRate?: number
   /** Previous months rate value of the investment */
@@ -185,4 +248,12 @@ export type Investment = {
   status?: InvestmentStatus
   /** Transactions made related to the investment, like adquisitions (BUY) or withdrawals (SELL). */
   transactions?: InvestmentTransaction[]
+  /** Investment tax information */
+  metadata?: InvestmentMetadata
+  /** Name of the owner */
+  owner?: string
+  /** Provider institution internal identifier for the investment */
+  providerId?: string
+  /** Financial institution holder  of the investment */
+  institution?: InvestmentInstitution
 }
