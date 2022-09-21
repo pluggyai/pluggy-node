@@ -48,6 +48,19 @@ export type TransactionPaymentData = {
   reason?: string
 }
 
+export type TransactionMerchantData = {
+  /** Internal id associated to the merchant */
+  id?: number;
+  /** Name of the merchant */
+  name?: string;
+  /** Legal business name of the merchant */
+  businessName?: string;
+  /** Cnpj number associated to the merchant */
+  cnpj?: string;
+  /** Category of the merchant */
+  category?: string;
+}
+
 export type TransactionFilters = {
   /** Filter greater than date. Format (ISO Date | yyyy-mm-dd) */
   to?: string
@@ -84,4 +97,6 @@ export type Transaction = {
   providerCode?: string
   /** Additional data related to payment or transfers */
   paymentData?: TransactionPaymentData
+  /** Additional data related to the merchant associated to the transaction */
+  merchantData?: TransactionMerchantData
 }
