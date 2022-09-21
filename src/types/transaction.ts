@@ -98,5 +98,5 @@ export type Transaction = {
   /** Additional data related to payment or transfers */
   paymentData?: TransactionPaymentData
   /** Additional data related to the merchant associated to the transaction */
-  merchantData?: TransactionMerchantData
+  merchant?: TransactionMerchantData
 }
