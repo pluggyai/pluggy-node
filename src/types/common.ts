@@ -7,4 +7,7 @@ export type CurrencyCode = typeof CURRENCY_CODES[number]
 
 export type PageResponse<T> = {
   results: T[]
+  page: number
+  total: number
+  totalPages: number
 }
