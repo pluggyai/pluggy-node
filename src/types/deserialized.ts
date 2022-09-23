@@ -11,8 +11,10 @@ export type DeserializedAccount = Omit<Account, 'creditData'> & {
   }
 }
 
-export type DeserializedIdentityResponse = Omit<IdentityResponse, 'birthDate'> & {
+export type DeserializedIdentityResponse = Omit<IdentityResponse, 'birthDate' | 'createdAt' | 'updatedAt'> & {
   birthDate?: string
+  createdAt: string
+  updatedAt: string
 }
 
 export type DeserializedInvestmentTransaction = Omit<

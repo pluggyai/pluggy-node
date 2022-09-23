@@ -1,6 +1,8 @@
 export type IdentityResponse = {
   /** Primary identifier of the entity */
   id: string
+  /** Primary identifier of the Item */
+  itemId: string
   /** Date of birth of the owner */
   birthDate?: Date
   /** Primary tax identifier (CNPJ or CUIT) */
@@ -23,6 +25,10 @@ export type IdentityResponse = {
   addresses?: Address[]
   /** List of associated personal relationships */
   relations?: IdentityRelation[]
+  /** Date of the first connection */
+  createdAt: Date
+  /** Last connection sync date with the institution. */
+  updatedAt: Date 
 }
 
 export type PhoneNumber = {
