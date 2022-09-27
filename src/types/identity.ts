@@ -25,10 +25,10 @@ export type IdentityResponse = {
   addresses?: Address[]
   /** List of associated personal relationships */
   relations?: IdentityRelation[]
-  /** Date of the first connection */
+  /** Date of the first time that the Identity was recovered */
   createdAt: Date
-  /** Last connection sync date with the institution. */
-  updatedAt: Date 
+  /** Last update of the Identity data (if the data never changes, updatedAt will be the same as createdAt) */
+  updatedAt: Date
 }
 
 export type PhoneNumber = {
