@@ -4,27 +4,27 @@ export type IdentityResponse = {
   /** Primary identifier of the Item */
   itemId: string
   /** Date of birth of the owner */
-  birthDate?: Date
+  birthDate: Date | null
   /** Primary tax identifier (CNPJ or CUIT) */
-  taxNumber?: string
+  taxNumber: string | null
   /** Primary ID (DNI or CPF) */
-  document?: string
+  document: string | null
   /** Type of ID (DNI, CPF, CNPJ) */
-  documentType?: string
+  documentType: string | null
   /** Title of the job position */
-  jobTitle?: string
+  jobTitle: string | null
   /** For business connection, the business's name. */
-  companyName?: string
+  companyName: string | null
   /** Complete name of the account owner */
-  fullName?: string
+  fullName: string | null
   /** List of associated phone numbers */
-  phoneNumbers?: PhoneNumber[]
+  phoneNumbers: PhoneNumber[] | null
   /** List of associated emails */
-  emails?: Email[]
+  emails: Email[] | null
   /** List of associated phisical addresses */
-  addresses?: Address[]
+  addresses: Address[] | null
   /** List of associated personal relationships */
-  relations?: IdentityRelation[]
+  relations: IdentityRelation[] | null
   /** Date of the first time that the Identity was recovered */
   createdAt: Date
   /** Last update of the Identity data (if the data never changes, updatedAt will be the same as createdAt) */
@@ -32,27 +32,27 @@ export type IdentityResponse = {
 }
 
 export type PhoneNumber = {
-  type?: 'Personal' | 'Work' | 'Residencial'
+  type: 'Personal' | 'Work' | 'Residencial' | null
   value: string
 }
 
 export type Email = {
-  type?: 'Personal' | 'Work'
+  type: 'Personal' | 'Work' | null
   value: string
 }
 
 export type IdentityRelation = {
-  type?: 'Mother' | 'Father' | 'Spouse'
-  name?: string
-  document?: string
+  type: 'Mother' | 'Father' | 'Spouse' | null
+  name: string | null
+  document: string | null
 }
 
 export type Address = {
-  fullAddress?: string
-  primaryAddress?: string
-  city?: string
-  postalCode?: string
-  state?: string
-  country?: string
-  type?: 'Personal' | 'Work'
+  fullAddress: string | null
+  primaryAddress: string | null
+  city: string | null
+  postalCode: string | null
+  state: string | null
+  country: string | null
+  type: 'Personal' | 'Work' | null
 }
