@@ -106,86 +106,79 @@ export type InvestmentTransactionType = typeof INVESTMENT_TRANSACTION_TYPE[numbe
   For extra details visit: https://docs.pluggy.ai/docs/investment-1
   RateTypes represent the index from where the rate is based.
 */
-export const INVESTMENT_RATE_TYPES = [
-  'SELIC',
-  'CDI',
-  'EURO',
-  'DOLAR',
-  'IGPM',
-  'IPCA',
-]
+export const INVESTMENT_RATE_TYPES = ['SELIC', 'CDI', 'EURO', 'DOLAR', 'IGPM', 'IPCA']
 
 export type InvestmentRateType = typeof INVESTMENT_RATE_TYPES[number]
 
 export type Expenses = {
   /** Service tax that varies according to state */
-  serviceTax?: number | null
+  serviceTax: number | null
   /** Commission charged by the brokerage for carrying out transactions on the stock market */
-  brokerageFee?: number | null
+  brokerageFee: number | null
   /** Income Tax Withholding, amount paid to the Internal Revenue Service */
-  incomeTax?: number | null
+  incomeTax: number | null
   /** Sum of other not defined expenses */
-  other?: number | null
+  other: number | null
   /** Fee of Notice of Trading in Assets */
-  tradingAssetsNoticeFee?: number | null
+  tradingAssetsNoticeFee: number | null
   /** Fees charged by BM&F Bovespa in negotiations */
-  maintenanceFee?: number | null
+  maintenanceFee: number | null
   /** Liquidation fee for the settlement of a position on the expiration date or the financial settlement of physical delivery */
-  settlementFee?: number | null
+  settlementFee: number | null
   /** Registration fee */
-  clearingFee?: number | null
+  clearingFee: number | null
   /** Fees charged by BM&F Bovespa as a source of operating income  */
-  stockExchangeFee?: number | null
+  stockExchangeFee: number | null
   /** Fee by brokers to keep recordsin their home broker systems or on the trading desk */
-  custodyFee?: number | null
+  custodyFee: number | null
   /** Amount paid to the Operator for the intermediation service  */
-  operatingFee?: number | null
+  operatingFee: number | null
 }
 
 export type InvestmentMetadata = {
   /** Regime of the tax used for the asset */
-  taxRegime?: string
+  taxRegime: string | null
   /** Asset proposal number identification */
-  proposalNumber?: string
+  proposalNumber: string | null
   /** Process identification number from the institution (susep) */
-  processNumber?: string
+  processNumber: string | null
 }
 
 export type InvestmentTransaction = {
   /** Primary identifier of the transacion */
   id: string
   /** Type of the transaction */
-  type?: InvestmentTransactionType
+  type: InvestmentTransactionType | null
   /** Identifier of the related operation */
-  operationId?: string
+  operationId: string | null
   /** Description of the transaction */
-  description?: string | null
+  description: string | null
   /** Investment identifier related to the transaction */
-  investmentId?: string
+  investmentId: string | null
   /** Quantity of quotas purchased */
-  quantity?: number | null
+  quantity: number | null
   /** Value of the purchased quotas */
-  value?: number | null
+  value: number | null
   /** Amount spent or withrawaled from the investment. */
-  amount?: number | null
+  amount: number | null
   /** Date the transaction was placed. */
   date: Date
   /** Date the transaction was confirmed */
-  tradeDate?: Date | null
+  tradeDate: Date | null
   /** Number of the corresponding brokerage note */
-  brokerageNumber?: string | null
+  brokerageNumber: string | null
   /** Value including expenses */
-  netAmount?: number | null
+  netAmount: number | null
   /** Taxes and fees that apply */
-  expenses?: Expenses | null
+  expenses: Expenses | null
 }
 
 /** institution holding the investment */
 export type InvestmentInstitution = {
   /** Full name of the institution */
-  name?: string
+  name: string | null
   /** Number identifier for the institution CNPJ / Other */
-  number?: string
+  number: string | null
 }
 
 export type Investment = {
@@ -209,7 +202,7 @@ export type Investment = {
   /** Quota's date | Value's Date. (Quota's are related to MUTUAL_FUNDS or ETF, others use the investment amount reference date) */
   date: Date | null
   /** Value of the adquired quantity. (Quota's are related to MUTUAL_FUNDS or ETF, others usually default to the amount) */
-  value: number |null
+  value: number | null
   /** Quota's quantity adquired. (Quota's are related to MUTUAL_FUNDS or ETF, others usually default to 1) */
   quantity: number | null
   /** Rent type taxes associated (I.R , Ingresos Brutos) */
@@ -247,7 +240,7 @@ export type Investment = {
   /** Current status of the investment */
   status: InvestmentStatus | null
   /** Transactions made related to the investment, like adquisitions (BUY) or withdrawals (SELL). */
-  transactions?: InvestmentTransaction[]
+  transactions: InvestmentTransaction[] | null
   /** Investment tax information */
   metadata: InvestmentMetadata | null
   /** Name of the owner */
