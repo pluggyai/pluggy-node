@@ -30,41 +30,41 @@ export type Account = {
   /** Account's name or description */
   name: string
   /** Account's name provided by the institution based on the level of client. */
-  marketingName?: string
+  marketingName: string | null
   /** Account's owner´s fullname */
-  owner?: string
+  owner: string | null
   /** Account's owner´s tax number */
-  taxNumber?: string
+  taxNumber: string | null
   /** ISO Currency code of the account's amounts */
   currencyCode: CurrencyCode
   /** Account related bank data, when account is BANK type */
-  bankData?: BankData
+  bankData: BankData | null
   /** Account related credit data, when account is CREDIT type */
-  creditData?: CreditData
+  creditData: CreditData | null
 }
 
 export type BankData = {
   /** primary identifier of the account to make bank transfers */
-  transferNumber?: string
+  transferNumber: string | null
   /** available balance of the account */
-  closingBalance?: number
+  closingBalance: number | null
 }
 
 export type CreditData = {
   /** Credit card end user's level */
-  level?: string
+  level: string | null
   /** Credit card brand, ie. Mastercard, Visa */
-  brand?: string
+  brand: string | null
   /** Current balance close date */
-  balanceCloseDate?: Date
+  balanceCloseDate: Date | null
   /** Current balance due date */
-  balanceDueDate?: Date
+  balanceDueDate: Date | null
   /** Available credit limit to use. */
-  availableCreditLimit?: number
+  availableCreditLimit: number | null
   /** Current balance in foreign currency */
-  balanceForeignCurrency?: number
+  balanceForeignCurrency: number | null
   /** Current balance minimum payment due */
-  minimumPayment?: number
+  minimumPayment: number | null
   /** Maximum credit card limit. */
-  creditLimit?: number
+  creditLimit: number | null
 }

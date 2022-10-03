@@ -31,6 +31,8 @@ export function transformIdentity(identity: DeserializedIdentityResponse): Ident
   return {
     ...identity,
     birthDate: identity.birthDate && new Date(identity.birthDate),
+    createdAt: new Date(identity.createdAt),
+    updatedAt: new Date(identity.updatedAt)
   }
 }
 

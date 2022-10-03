@@ -106,86 +106,79 @@ export type InvestmentTransactionType = typeof INVESTMENT_TRANSACTION_TYPE[numbe
   For extra details visit: https://docs.pluggy.ai/docs/investment-1
   RateTypes represent the index from where the rate is based.
 */
-export const INVESTMENT_RATE_TYPES = [
-  'SELIC',
-  'CDI',
-  'EURO',
-  'DOLAR',
-  'IGPM',
-  'IPCA',
-]
+export const INVESTMENT_RATE_TYPES = ['SELIC', 'CDI', 'EURO', 'DOLAR', 'IGPM', 'IPCA']
 
 export type InvestmentRateType = typeof INVESTMENT_RATE_TYPES[number]
 
 export type Expenses = {
   /** Service tax that varies according to state */
-  serviceTax?: number
+  serviceTax: number | null
   /** Commission charged by the brokerage for carrying out transactions on the stock market */
-  brokerageFee?: number
+  brokerageFee: number | null
   /** Income Tax Withholding, amount paid to the Internal Revenue Service */
-  incomeTax?: number
+  incomeTax: number | null
   /** Sum of other not defined expenses */
-  other?: number
+  other: number | null
   /** Fee of Notice of Trading in Assets */
-  tradingAssetsNoticeFee?: number
+  tradingAssetsNoticeFee: number | null
   /** Fees charged by BM&F Bovespa in negotiations */
-  maintenanceFee?: number
+  maintenanceFee: number | null
   /** Liquidation fee for the settlement of a position on the expiration date or the financial settlement of physical delivery */
-  settlementFee?: number
+  settlementFee: number | null
   /** Registration fee */
-  clearingFee?: number
+  clearingFee: number | null
   /** Fees charged by BM&F Bovespa as a source of operating income  */
-  stockExchangeFee?: number
+  stockExchangeFee: number | null
   /** Fee by brokers to keep recordsin their home broker systems or on the trading desk */
-  custodyFee?: number
+  custodyFee: number | null
   /** Amount paid to the Operator for the intermediation service  */
-  operatingFee?: number
+  operatingFee: number | null
 }
 
 export type InvestmentMetadata = {
   /** Regime of the tax used for the asset */
-  taxRegime?: string
+  taxRegime: string | null
   /** Asset proposal number identification */
-  proposalNumber?: string
+  proposalNumber: string | null
   /** Process identification number from the institution (susep) */
-  processNumber?: string
+  processNumber: string | null
 }
 
 export type InvestmentTransaction = {
   /** Primary identifier of the transacion */
   id: string
   /** Type of the transaction */
-  type: InvestmentTransactionType
+  type: InvestmentTransactionType | null
   /** Identifier of the related operation */
-  operationId?: string
+  operationId: string | null
   /** Description of the transaction */
-  description?: string
+  description: string | null
   /** Investment identifier related to the transaction */
-  investmentId?: string
+  investmentId: string | null
   /** Quantity of quotas purchased */
-  quantity?: number
+  quantity: number | null
   /** Value of the purchased quotas */
-  value?: number
+  value: number | null
   /** Amount spent or withrawaled from the investment. */
-  amount?: number
+  amount: number | null
   /** Date the transaction was placed. */
   date: Date
   /** Date the transaction was confirmed */
-  tradeDate: Date
+  tradeDate: Date | null
   /** Number of the corresponding brokerage note */
-  brokerageNumber?: string
+  brokerageNumber: string | null
   /** Value including expenses */
-  netAmount?: number
+  netAmount: number | null
   /** Taxes and fees that apply */
-  expenses?: Expenses
+  expenses: Expenses | null
 }
 
 /** institution holding the investment */
 export type InvestmentInstitution = {
   /** Full name of the institution */
-  name?: string
+  name: string | null
   /** Number identifier for the institution CNPJ / Other */
-  number?: string
+  number: string | null
 }
 
 export type Investment = {
@@ -195,65 +188,65 @@ export type Investment = {
   /** Unique FI provider identifier that attach's the owner to an investment and its available as a reference. */
   number: string
   /** 12-character ISIN, a globally unique identifier */
-  isin?: string
+  isin: string | null
   /** Item identifier asscoiated with the investment */
   itemId: string
   /** Type of investment associated. */
   type: InvestmentType
   /** Subtype of investment */
-  subtype?: InvestmentSubtype
+  subtype: InvestmentSubtype | null
   /** Primary name for the investment */
   name: string
   /** Currency ISO code where amounts are shown */
   currencyCode: CurrencyCode
   /** Quota's date | Value's Date. (Quota's are related to MUTUAL_FUNDS or ETF, others use the investment amount reference date) */
-  date?: Date
+  date: Date | null
   /** Value of the adquired quantity. (Quota's are related to MUTUAL_FUNDS or ETF, others usually default to the amount) */
-  value?: number
+  value: number | null
   /** Quota's quantity adquired. (Quota's are related to MUTUAL_FUNDS or ETF, others usually default to 1) */
-  quantity?: number
+  quantity: number | null
   /** Rent type taxes associated (I.R , Ingresos Brutos) */
-  taxes?: number
+  taxes: number | null
   /** Financial type taxes associated (Impuesto Operaciones Financieras) */
-  taxes2?: number
+  taxes2: number | null
   /** Net worth balance / amount of the investment. Is the real current value. */
   balance: number
   /** Current gross amount of the investment pre-taxes. (As a general rule, `Value` * `Quantity` = `Amount`) */
-  amount?: number
+  amount: number | null
   /** Available for withdraw balance. */
-  amountWithdrawal?: number
+  amountWithdrawal: number | null
   /** Amount that was gained / loss from the investment */
-  amountProfit?: number
+  amountProfit: number | null
   /** Original amount deposited in the investment */
-  amountOriginal?: number
+  amountOriginal: number | null
   /** Date when the investment is due. (Normally FIXED_INCOME investments have a dueDate) */
-  dueDate?: Date
+  dueDate: Date | null
   /** Entity name that issued the investment. (Normally FIXED_INCOME investments are issued by an entity) */
-  issuer?: string
+  issuer: string | null
   /** Date when the investment was issued. (Normally FIXED_INCOME investments are issued by an entity) */
-  issueDate?: Date
+  issueDate: Date | null
   /** Fixed rate for the investment. (Normally only available in FIXED_INCOME types) */
-  rate?: number
+  rate: number | null
   /** Fixed rate type for the investment, ie. CDI. (Normally only available in FIXED_INCOME types) */
-  rateType?: InvestmentRateType
+  rateType: InvestmentRateType | null
   /** Fixed annual rate for the investment, ie. 10.5. (Normally only available in FIXED_INCOME types) */
-  fixedAnnualRate?: number
+  fixedAnnualRate: number | null
   /** Previous months rate value of the investment */
-  lastMonthRate?: number
+  lastMonthRate: number | null
   /** Calendar annual rate, is a percentage of how it performed. (Normally only available in MUTUAL_FUNDS or ETF types) */
-  annualRate?: number
+  annualRate: number | null
   /**  Last 12 month rate, is a percentage of how it performed. (Normally only available in MUTUAL_FUNDS or ETF types) */
-  lastTwelveMonthsRate?: number
+  lastTwelveMonthsRate: number | null
   /** Current status of the investment */
-  status?: InvestmentStatus
+  status: InvestmentStatus | null
   /** Transactions made related to the investment, like adquisitions (BUY) or withdrawals (SELL). */
-  transactions?: InvestmentTransaction[]
+  transactions: InvestmentTransaction[] | null
   /** Investment tax information */
-  metadata?: InvestmentMetadata
+  metadata: InvestmentMetadata | null
   /** Name of the owner */
-  owner?: string
+  owner: string | null
   /** Provider institution internal identifier for the investment */
-  providerId?: string
+  providerId: string | null
   /** Financial institution holder  of the investment */
-  institution?: InvestmentInstitution
+  institution: InvestmentInstitution | null
 }
