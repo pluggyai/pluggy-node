@@ -7,7 +7,7 @@ export const ACCOUNT_TYPES = ['BANK', 'CREDIT'] as const
  */
 export type AccountType = typeof ACCOUNT_TYPES[number]
 
-export const ACCOUNT_SUBTYPES = ['SAVINGS_ACCOUNT', 'CHECKINGS_ACCOUNT', 'CREDIT_CARD'] as const
+export const ACCOUNT_SUBTYPES = ['SAVINGS_ACCOUNT', 'CHECKING_ACCOUNT', 'CREDIT_CARD'] as const
 /**
  * @typedef AccountSubType
  * Type of account
