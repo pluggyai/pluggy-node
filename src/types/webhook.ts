@@ -8,8 +8,12 @@ export type WebhookEvent = typeof WEBHOOK_EVENTS[number]
 export type Webhook = {
   /*! Primary identifier of the entity */
   id: string
-  /** Type of event subscribed */
+  /*! Type of event subscribed */
   event: WebhookEvent
-  /** Url where notifications of events will be sent */
+  /*! Url where notifications of events will be sent */
   url: string
+  /*! Object returned when is item/error webhook event */
+  error?: Record<string, unknown>
+  /*! Object to specify headers in your webhook notifications */
+  headers: Record<string, string>
 }
