@@ -1,7 +1,11 @@
 import got, { HTTPError, Method } from 'got'
 import * as jwt from 'jsonwebtoken'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { version: libVersion } = require('../package.json')
+
+const {
+  version: pluggyNodeVersion,
+  dependencies: { got: gotVersion },
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+} = require('../package.json')
 
 type QueryParameters = { [key: string]: number | number[] | string | string[] | boolean }
 
@@ -33,7 +37,10 @@ export class BaseApi {
     }
 
     this.defaultHeaders = {
-      'User-Agent': `PluggyNode/${libVersion} node.js/${process.version.replace('v', '')}`,
+      'User-Agent': `PluggyNode/${pluggyNodeVersion} node.js/${process.version.replace(
+        'v',
+        ''
+      )} Got/${gotVersion}`,
       'Content-Type': 'application/json',
     }
   }
@@ -86,7 +93,10 @@ export class BaseApi {
       }
     } catch (error) {
       if (error instanceof HTTPError) {
-        console.error(`[Pluggy SDK] HTTP request failed: ${error.message || ''}`, error.response.body)
+        console.error(
+          `[Pluggy SDK] HTTP request failed: ${error.message || ''}`,
+          error.response.body
+        )
         return Promise.reject(error.response.body)
       }
       return Promise.reject(error)
@@ -166,7 +176,10 @@ export class BaseApi {
       }
     } catch (error) {
       if (error instanceof HTTPError) {
-        console.error(`[Pluggy SDK] HTTP request failed: ${error.message || ''}`, error.response.body)
+        console.error(
+          `[Pluggy SDK] HTTP request failed: ${error.message || ''}`,
+          error.response.body
+        )
         return Promise.reject(error.response.body)
       }
       return Promise.reject(error)
