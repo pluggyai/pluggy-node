@@ -36,6 +36,6 @@ export type WebhookEventPayload = {
   itemId?: string
   /** Object related to item/error event */
   error?: Record<string, unknown>
-  /** Object to specify headers in webhook notifications */
-  headers?: Record<string, string>
+  /** Object with extra information such as the new Connector Status */
+  data: Record<string, unknown>
 }
