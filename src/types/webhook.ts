@@ -73,19 +73,4 @@ export type WebhookEventPayload = {
         status: string
       }
     }
-  | {
-      /** Type of event subscribed */
-      event: 'all'
-      /** Primary identifier of the item related to the event */
-      itemId?: string
-      /** Object with extra information of the connector updated */
-      data?: {
-        status: string
-      }
-      /** Object related to item/error event */
-      error?: {
-        code: string
-        message: string
-      }
-    }
 )
