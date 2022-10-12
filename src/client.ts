@@ -11,11 +11,12 @@ import {
   ConnectorFilters,
   Item,
   PageResponse,
-  Webhook,
+  CreateWebhook,
   WebhookEvent,
   IdentityResponse,
   ConnectTokenOptions,
   CreateItemOptions,
+  Webhook,
 } from './types'
 import { transformAccount, transformIdentity, transformInvestment, transformItem, transformPageResponse, transformTransaction } from './transforms'
 import { ValidationResult } from './types/validation'
@@ -265,9 +266,9 @@ export class PluggyClient extends BaseApi {
    * Updates a Webhook
    * @param id The Webhook ID
    * @param webhook The webhook params to update
-   * @returns {Item} a item object
+   * @returns {Webhook} The webhook updated
    */
-  async updateWebhook(id: string, webhook: Partial<Webhook>): Promise<Webhook> {
+  async updateWebhook(id: string, webhook: Partial<CreateWebhook>): Promise<Webhook> {
     return this.createPatchRequest(`webhooks/${id}`, null, webhook)
   }
 
