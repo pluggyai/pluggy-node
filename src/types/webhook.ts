@@ -44,6 +44,8 @@ export type CreateWebhook = {
 export type WebhookEventPayload = {
   /** Primary identifier of the resource that was notified */
   id: string
+  /**  */
+  triggerBy?: TriggeredBy | null
 } & (
   | {
       /** Type of event subscribed */
@@ -55,7 +57,6 @@ export type WebhookEventPayload = {
         | 'item/deleted'
       /** Primary identifier of the item related to the event */
       itemId: string
-      triggerBy?: TriggeredBy | null
     }
   | {
       /** Type of event subscribed */
@@ -67,7 +68,6 @@ export type WebhookEventPayload = {
         code: string
         message: string
       }
-      triggerBy?: TriggeredBy | null
     }
   | {
       /** Type of event subscribed */
