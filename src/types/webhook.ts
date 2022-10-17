@@ -1,3 +1,5 @@
+import { TriggeredBy } from './execution'
+
 export const WEBHOOK_EVENTS = [
   'item/created',
   'item/updated',
@@ -53,6 +55,8 @@ export type WebhookEventPayload = {
         | 'item/deleted'
       /** Primary identifier of the item related to the event */
       itemId: string
+      /** Who trigger the event */
+      triggeredBy?: TriggeredBy | null
     }
   | {
       /** Type of event subscribed */
@@ -64,6 +68,8 @@ export type WebhookEventPayload = {
         code: string
         message: string
       }
+      /** Who trigger the event */
+      triggeredBy?: TriggeredBy | null
     }
   | {
       /** Type of event subscribed */
