@@ -68,6 +68,8 @@ export type Connector = {
   credentials: ConnectorCredential[]
   /** Has MFA steps */
   hasMFA: boolean
+  /** Date of the connector creation */
+  createdAt: Date
 }
 
 export type ConnectorFilters = {
