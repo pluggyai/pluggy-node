@@ -1,4 +1,15 @@
-export const CURRENCY_CODES = ['USD', 'ARS', 'BRL', 'EUR', 'MXN','COP', 'CLP', 'UYU', 'PYG', 'PEN'] as const
+export const CURRENCY_CODES = [
+  'USD',
+  'ARS',
+  'BRL',
+  'EUR',
+  'MXN',
+  'COP',
+  'CLP',
+  'UYU',
+  'PYG',
+  'PEN',
+] as const
 /**
  * @typedef CurrencyCode
  * Supported currency ISO codes
