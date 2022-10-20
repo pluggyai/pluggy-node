@@ -18,7 +18,14 @@ import {
   CreateItemOptions,
   Webhook,
 } from './types'
-import { transformAccount, transformIdentity, transformInvestment, transformItem, transformPageResponse, transformTransaction } from './transforms'
+import {
+  transformAccount,
+  transformIdentity,
+  transformInvestment,
+  transformItem,
+  transformPageResponse,
+  transformTransaction,
+} from './transforms'
 import { ValidationResult } from './types/validation'
 
 /**
@@ -131,7 +138,11 @@ export class PluggyClient extends BaseApi {
    * @returns {Account[]} an array of accounts
    */
   async fetchAccounts(itemId: string, type?: AccountType): Promise<PageResponse<Account>> {
-    return this.createGetRequest('accounts', { itemId, type }, transformPageResponse(transformAccount))
+    return this.createGetRequest(
+      'accounts',
+      { itemId, type },
+      transformPageResponse(transformAccount)
+    )
   }
 
   /**
@@ -190,7 +201,11 @@ export class PluggyClient extends BaseApi {
    * @returns {Investment[]} an array of investments
    */
   async fetchInvestments(itemId: string, type?: InvestmentType): Promise<PageResponse<Investment>> {
-    return this.createGetRequest('investments', { itemId, type }, transformPageResponse(transformInvestment))
+    return this.createGetRequest(
+      'investments',
+      { itemId, type },
+      transformPageResponse(transformInvestment)
+    )
   }
 
   /**
