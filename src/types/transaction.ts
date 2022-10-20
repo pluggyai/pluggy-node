@@ -50,11 +50,11 @@ export type TransactionPaymentData = {
 
 export type TransactionMerchantData = {
   /** Name of the merchant */
-  name?: string
+  name: string
   /** Legal business name of the merchant */
-  businessName?: string
+  businessName: string
   /** Cnpj number associated to the merchant */
-  cnpj?: string
+  cnpj: string
   /** Cnae number associated to the merchant */
   cnae?: string
   /** Category of the merchant */
