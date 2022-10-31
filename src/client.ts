@@ -184,12 +184,12 @@ export class PluggyClient extends BaseApi {
 
     const transactions: Transaction[] = [...firstPageResults]
 
-    for (let i = 1; i <= totalPages; i++) {
-      if (i === 1) {
-        // first page already fetched
-        continue
-      }
-      const paginatedTransactions = await this.fetchTransactions(accountId, { page: i })
+    // first page already fetched
+    let page = 1
+
+    while (page < totalPages) {
+      page++
+      const paginatedTransactions = await this.fetchTransactions(accountId, { page })
       transactions.push(...paginatedTransactions.results)
     }
 
