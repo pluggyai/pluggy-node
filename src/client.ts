@@ -157,7 +157,7 @@ export class PluggyClient extends BaseApi {
    * Fetch transactions from an account
    * @param accountId The account id
    * @param {TransactionFilters} options Transaction options to filter
-   * @returns {Transaction[]} an array of transactions
+   * @returns {PageResponse<Transaction[]>} object which contains the transactions list and related paging data
    */
   async fetchTransactions(
     accountId: string,
@@ -168,6 +168,32 @@ export class PluggyClient extends BaseApi {
       { ...options, accountId },
       transformPageResponse(transformTransaction)
     )
+  }
+
+  /**
+   * Fetch all transactions from an account
+   * @param accountId The account id
+   * @returns {Transaction[]} an array of transactions
+   */
+  async fetchAllTransactions(accountId: string): Promise<Transaction[]> {
+    const { totalPages, results: firstPageResults } = await this.fetchTransactions(accountId)
+    if (totalPages === 1) {
+      // just one page return transactions
+      return firstPageResults
+    }
+
+    const transactions: Transaction[] = [...firstPageResults]
+
+    // first page already fetched
+    let page = 1
+
+    while (page < totalPages) {
+      page++
+      const paginatedTransactions = await this.fetchTransactions(accountId, { page })
+      transactions.push(...paginatedTransactions.results)
+    }
+
+    return transactions
   }
 
   /**
