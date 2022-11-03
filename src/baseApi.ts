@@ -18,11 +18,11 @@ export type ClientParams = {
 }
 
 export class BaseApi {
-  private apiKey: string
-  private clientId: string
-  private clientSecret: string
-  private baseUrl?: string
-  private defaultHeaders: Record<string, string>
+  protected apiKey: string
+  protected clientId: string
+  protected clientSecret: string
+  protected baseUrl?: string
+  protected defaultHeaders: Record<string, string>
 
   constructor(params: ClientParams) {
     const { clientId, clientSecret } = params
