@@ -66,9 +66,6 @@ export type ExecutionErrorResult = {
   code: ExecutionErrorCode
   /** A human-readable, short description of the error */
   message: string
-  /** Internal information used by Pluggy to help debug the execution error, only
-   * included when needed or considered relevant. */
-  internalMessage?: string
   /** The exact error message returned by the institution, if any was provided. */
   providerMessage?: string
   /** Only used in Caixa Connector, for the device authorization flow */
