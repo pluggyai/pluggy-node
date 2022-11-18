@@ -3,6 +3,7 @@ import { IdentityResponse } from './identity'
 import { Investment, InvestmentTransaction } from './investment'
 import { CreateItemOptions, Item } from './item'
 import { Transaction } from './transaction'
+import { Opportunity } from './opportunity'
 
 export type DeserializedAccount = Omit<Account, 'creditData'> & {
   creditData: Omit<CreditData, 'balanceCloseDate' | 'balanceDueDate'> & {
@@ -45,5 +46,9 @@ export type DeserializedItem = CreateItemOptions &
   }
 
 export type DeserializedTransaction = Omit<Transaction, 'date'> & {
+  date: string
+}
+
+export type DeserializedOpportunity = Omit<Opportunity, 'date'> & {
   date: string
 }
