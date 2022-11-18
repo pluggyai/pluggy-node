@@ -72,13 +72,13 @@ export type Item = {
   parameter: ConnectorCredential | null
   /** Url where notifications will be sent at any item's event */
   webhookUrl: string | null
-  /** An unique identifier for the User, to be able to identify it on your app */
+  /** A unique identifier for the User, to be able to identify it on your app */
   clientUserId: string | null
 }
 
 export type CreateItemOptions = {
   /** Url where notifications will be sent at any item's event */
   webhookUrl?: string
-  /** An unique identifier for the User, to be able to identify it on your app */
+  /** A unique identifier for the User, to be able to identify it on your app */
   clientUserId?: string
 }
