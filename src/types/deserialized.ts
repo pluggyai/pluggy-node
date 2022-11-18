@@ -39,11 +39,11 @@ export type DeserializedInvestment = Omit<
   transactions: DeserializedInvestmentTransaction[]
 }
 
-export type DeserializedItem = CreateItemOptions &
-  Omit<Item, 'createdAt' | 'lastUpdatedAt'> & {
-    createdAt: string
-    lastUpdatedAt?: string
-  }
+export type DeserializedItem = Omit<Item, 'createdAt' | 'updatedAt' | 'lastUpdatedAt'> & {
+  createdAt: string
+  updatedAt: string
+  lastUpdatedAt: string | null
+}
 
 export type DeserializedTransaction = Omit<Transaction, 'date'> & {
   date: string

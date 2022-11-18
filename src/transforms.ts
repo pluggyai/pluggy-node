@@ -6,12 +6,7 @@ import {
   DeserializedOpportunity,
   DeserializedTransaction,
 } from './types/deserialized'
-import { PageResponse } from './types/common'
-import { Account } from './types/account'
-import { IdentityResponse } from './types/identity'
-import { Item } from './types/item'
-import { Investment } from './types/investment'
-import { Transaction } from './types/transaction'
+import { Account, IdentityResponse, Investment, Item, PageResponse, Transaction } from './types'
 import { Opportunity } from './types/opportunity'
 
 // these functions works very similar to React/Redux Reducers, it transform a remote response to a typed object instances
@@ -56,7 +51,8 @@ export function transformItem(item: DeserializedItem): Item {
   return {
     ...item,
     createdAt: new Date(item.createdAt),
-    lastUpdatedAt: item.lastUpdatedAt && new Date(item.lastUpdatedAt),
+    updatedAt: new Date(item.updatedAt),
+    lastUpdatedAt: item.lastUpdatedAt ? new Date(item.lastUpdatedAt) : null,
   }
 }
 
