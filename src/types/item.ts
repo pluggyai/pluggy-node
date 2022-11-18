@@ -2,19 +2,21 @@ import { Connector, ConnectorCredential } from './connector'
 import { ExecutionErrorResult, ExecutionStatus } from './execution'
 
 const ITEM_STATUSES = [
-  'UPDATED',
   'UPDATING',
   'WAITING_USER_INPUT',
   'LOGIN_ERROR',
   'OUTDATED',
+  'MERGING',
+  'UPDATED',
 ] as const
 /**
  * The current Item status.
- *  UPDATED: The last sync process has completed successfully and all new data is available to collect.
  *  UPDATING: An update process is in progress and will be updated soon.
  *  WAITING_USER_INPUT: The connection requires user's input to continue the sync process, this is common for MFA authentication connectors
  *  LOGIN_ERROR: The connection must be updated to execute again, it won't trigger updates until the parameters are updated.
  *  OUTDATED: The parameters were correctly validated but there was an error in the last execution. It can be retried.
+ *  MERGING: The latest collected data is being processed and organized.
+ *  UPDATED: The last sync process has completed successfully and all new data is available to collect.
  */
 export type ItemStatus = typeof ITEM_STATUSES[number]
 
