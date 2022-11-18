@@ -4,10 +4,22 @@ import {
   DeserializedInvestment,
   DeserializedItem,
   DeserializedOpportunity,
+  DeserializedItemProductsStatusDetail,
   DeserializedTransaction,
+  DeserializedItemProductState,
 } from './types/deserialized'
-import { Account, IdentityResponse, Investment, Item, PageResponse, Transaction } from './types'
-import { Opportunity } from './types/opportunity'
+import {
+  Account,
+  Connector,
+  IdentityResponse,
+  Investment,
+  Item,
+  ItemProductsStatusDetail,
+  ItemProductState,
+  Opportunity,
+  PageResponse,
+  Transaction,
+} from './types'
 
 // these functions works very similar to React/Redux Reducers, it transform a remote response to a typed object instances
 
@@ -16,10 +28,12 @@ export function transformAccount(account: DeserializedAccount): Account {
     ...account,
     creditData: account.creditData && {
       ...account.creditData,
-      balanceCloseDate:
-        account.creditData.balanceCloseDate && new Date(account.creditData.balanceCloseDate),
-      balanceDueDate:
-        account.creditData.balanceDueDate && new Date(account.creditData.balanceDueDate),
+      balanceCloseDate: account.creditData.balanceCloseDate
+        ? new Date(account.creditData.balanceCloseDate)
+        : null,
+      balanceDueDate: account.creditData.balanceDueDate
+        ? new Date(account.creditData.balanceDueDate)
+        : null,
     },
   }
 }
@@ -27,7 +41,7 @@ export function transformAccount(account: DeserializedAccount): Account {
 export function transformIdentity(identity: DeserializedIdentityResponse): IdentityResponse {
   return {
     ...identity,
-    birthDate: identity.birthDate && new Date(identity.birthDate),
+    birthDate: identity.birthDate ? new Date(identity.birthDate) : null,
     createdAt: new Date(identity.createdAt),
     updatedAt: new Date(identity.updatedAt),
   }
@@ -36,9 +50,9 @@ export function transformIdentity(identity: DeserializedIdentityResponse): Ident
 export function transformInvestment(investment: DeserializedInvestment): Investment {
   return {
     ...investment,
-    date: investment.date && new Date(investment.date),
-    dueDate: investment.dueDate && new Date(investment.dueDate),
-    issueDate: investment.issueDate && new Date(investment.issueDate),
+    date: investment.date ? new Date(investment.date) : null,
+    dueDate: investment.dueDate ? new Date(investment.dueDate) : null,
+    issueDate: investment.issueDate ? new Date(investment.issueDate) : null,
     transactions: investment.transactions.map(transaction => ({
       ...transaction,
       date: new Date(transaction.date),
@@ -47,12 +61,43 @@ export function transformInvestment(investment: DeserializedInvestment): Investm
   }
 }
 
+function transformItemStatusDetailProductState(
+  itemProductState: DeserializedItemProductState
+): ItemProductState {
+  return {
+    ...itemProductState,
+    lastUpdatedAt: itemProductState.lastUpdatedAt ? new Date(itemProductState.lastUpdatedAt) : null,
+  }
+}
+
+function transformItemStatusDetail(
+  statusDetail: DeserializedItemProductsStatusDetail
+): ItemProductsStatusDetail {
+  const { accounts, creditCards, identity, investments, paymentData, transactions } = statusDetail
+
+  return {
+    accounts: accounts ? transformItemStatusDetailProductState(accounts) : null,
+    creditCards: creditCards ? transformItemStatusDetailProductState(creditCards) : null,
+    identity: identity ? transformItemStatusDetailProductState(identity) : null,
+    investments: investments ? transformItemStatusDetailProductState(investments) : null,
+    paymentData: paymentData ? transformItemStatusDetailProductState(paymentData) : null,
+    transactions: transactions ? transformItemStatusDetailProductState(transactions) : null,
+  }
+}
+
 export function transformItem(item: DeserializedItem): Item {
   return {
     ...item,
+    parameter: item.parameter
+      ? {
+          ...item.parameter,
+          expiresAt: item.parameter.expiresAt ? new Date(item.parameter.expiresAt) : undefined,
+        }
+      : null,
     createdAt: new Date(item.createdAt),
     updatedAt: new Date(item.updatedAt),
     lastUpdatedAt: item.lastUpdatedAt ? new Date(item.lastUpdatedAt) : null,
+    statusDetail: item.statusDetail ? transformItemStatusDetail(item.statusDetail) : null,
   }
 }
 
