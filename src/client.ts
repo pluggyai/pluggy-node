@@ -15,6 +15,7 @@ import {
   Opportunity,
   OpportunityFilters,
   PageResponse,
+  Parameters,
   Transaction,
   TransactionFilters,
   Webhook,
@@ -70,10 +71,7 @@ export class PluggyClient extends BaseApi {
    * @param parameters A map of name and value for the credentials to be validated
    * @returns {ValidationResult} an object with the info of which parameters are wrong
    */
-  async validateParameters(
-    id: number,
-    parameters: Record<string, string>
-  ): Promise<ValidationResult> {
+  async validateParameters(id: number, parameters: Parameters): Promise<ValidationResult> {
     return this.createPostRequest(`connectors/${id}/validate`, null, parameters)
   }
 
@@ -100,10 +98,11 @@ export class PluggyClient extends BaseApi {
   /**
    * Updates an item
    * @param id The Item ID
-   * @param parameters A map of name and value for the credentials to be updated
+   * @param parameters A map of name and value for the credentials to be updated.
+   *                   Optional; if none submitted, an Item update will be attempted with the latest used credentials.
    * @returns {Item} a item object
    */
-  async updateItem(id: string, parameters: { [key: string]: string } = undefined): Promise<Item> {
+  async updateItem(id: string, parameters?: Parameters): Promise<Item> {
     return this.createPatchRequest(
       `items/${id}`,
       null,
@@ -121,10 +120,7 @@ export class PluggyClient extends BaseApi {
    * @param parameters A map of name and value for the mfa requested
    * @returns {Item} a item object
    */
-  async updateItemMFA(
-    id: string,
-    parameters: { [key: string]: string } = undefined
-  ): Promise<Item> {
+  async updateItemMFA(id: string, parameters: Parameters = undefined): Promise<Item> {
     return this.createPostRequest(`items/${id}/mfa`, null, parameters, transformItem)
   }
 
