@@ -76,6 +76,11 @@ export type Item = {
   clientUserId: string | null
 }
 
+/**
+ * The Item Create/Update parameters object to submit, which contains the needed user credentials.
+ */
+export type Parameters = Record<string, string>
+
 export type CreateItemOptions = {
   /** Url where notifications will be sent at any item's event */
   webhookUrl?: string
