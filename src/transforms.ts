@@ -3,6 +3,7 @@ import {
   DeserializedIdentityResponse,
   DeserializedInvestment,
   DeserializedItem,
+  DeserializedOpportunity,
   DeserializedTransaction,
 } from './types/deserialized'
 import { PageResponse } from './types/common'
@@ -11,6 +12,7 @@ import { IdentityResponse } from './types/identity'
 import { Item } from './types/item'
 import { Investment } from './types/investment'
 import { Transaction } from './types/transaction'
+import { Opportunity } from './types/opportunity'
 
 // these functions works very similar to React/Redux Reducers, it transform a remote response to a typed object instances
 
@@ -65,11 +67,24 @@ export function transformTransaction(transaction: DeserializedTransaction): Tran
   }
 }
 
-export function transformPageResponse<T, K>(transformCb: (data: T) => K) {
-  const finalTransform = (response: PageResponse<T>): PageResponse<K> => ({
-    ...response,
-    results: response.results.map(transformCb),
-  })
+export function transformOpportunity(opportunity: DeserializedOpportunity): Opportunity {
+  return {
+    ...opportunity,
+    date: new Date(opportunity.date),
+  }
+}
 
-  return finalTransform
+/**
+ * Helper to apply data transform, onto PageResponse results values.
+ *
+ * @param {(pageResults: T) => K} transformPageResults
+ * @return {(response: PageResponse<T>) => PageResponse<K>}
+ */
+export function transformPageResponse<T, K>(
+  transformPageResults: (pageResults: T) => K
+): (response: PageResponse<T>) => PageResponse<K> {
+  return (response: PageResponse<T>): PageResponse<K> => ({
+    ...response,
+    results: response.results.map(transformPageResults),
+  })
 }

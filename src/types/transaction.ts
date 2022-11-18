@@ -1,4 +1,4 @@
-import { CurrencyCode } from './common'
+import { CurrencyCode, PageFilters } from './common'
 
 export const TRANSACTION_TYPES = ['DEBIT', 'CREDIT'] as const
 
@@ -61,15 +61,11 @@ export type TransactionMerchantData = {
   category?: string
 }
 
-export type TransactionFilters = {
-  /** Filter greater than date. Format (ISO Date | yyyy-mm-dd) */
+export type TransactionFilters = PageFilters & {
+  /** Filter less than date. Format can be ISO Date or 'YYYY-MM-dd' string. */
   to?: string
-  /** Filter greater than date. Format (ISO Date | yyyy-mm-dd) */
+  /** Filter greater than date. Format can be ISO Date, or 'YYYY-MM-dd' string. */
   from?: string
-  /** Amount of transactions to retrieve */
-  pageSize?: number
-  /** Page of transactions to retrieve, this calculates the offset */
-  page?: number
 }
 
 export type Transaction = {

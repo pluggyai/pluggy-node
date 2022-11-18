@@ -23,10 +23,12 @@ import {
   transformIdentity,
   transformInvestment,
   transformItem,
+  transformOpportunity,
   transformPageResponse,
   transformTransaction,
 } from './transforms'
 import { ValidationResult } from './types/validation'
+import { Opportunity, OpportunityFilters } from './types/opportunity'
 
 /**
  * Creates a new client instance for interacting with Pluggy API
@@ -37,7 +39,7 @@ import { ValidationResult } from './types/validation'
 export class PluggyClient extends BaseApi {
   /**
    * Fetch all available connectors
-   * @returns {Connector[]} an array of connectors
+   * @returns {PageResponse<Connector>} paged response of connectors
    */
   async fetchConnectors(options: ConnectorFilters = {}): Promise<PageResponse<Connector>> {
     return this.createGetRequest('connectors', { ...options })
@@ -135,7 +137,7 @@ export class PluggyClient extends BaseApi {
   /**
    * Fetch accounts from an Item
    * @param itemId The Item id
-   * @returns {Account[]} an array of accounts
+   * @returns {PageResponse<Account>} paged response of accounts
    */
   async fetchAccounts(itemId: string, type?: AccountType): Promise<PageResponse<Account>> {
     return this.createGetRequest(
@@ -224,7 +226,7 @@ export class PluggyClient extends BaseApi {
   /**
    * Fetch investments from an Item
    * @param itemId The Item id
-   * @returns {Investment[]} an array of investments
+   * @returns {PageResponse<Investment>} paged response of investments
    */
   async fetchInvestments(itemId: string, type?: InvestmentType): Promise<PageResponse<Investment>> {
     return this.createGetRequest(
@@ -240,6 +242,24 @@ export class PluggyClient extends BaseApi {
    */
   async fetchInvestment(id: string): Promise<Investment> {
     return this.createGetRequest(`investments/${id}`, null, transformInvestment)
+  }
+
+  /**
+   * Fetch opportunities from an Item
+   *
+   * @param itemId the Item id
+   * @param options - request search filters
+   * @returns {PageResponse<Opportunity>} paged response of opportunities
+   */
+  async fetchOpportunities(
+    itemId: string,
+    options: OpportunityFilters = {}
+  ): Promise<PageResponse<Opportunity>> {
+    return this.createGetRequest(
+      'opportunities',
+      { ...options, itemId },
+      transformPageResponse(transformOpportunity)
+    )
   }
 
   /**
