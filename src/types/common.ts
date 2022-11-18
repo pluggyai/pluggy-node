@@ -22,3 +22,10 @@ export type PageResponse<T> = {
   total: number
   totalPages: number
 }
+
+export type PageFilters = {
+  /** Page to retrieve, this calculates the offset */
+  page?: number
+  /** Amount of results to retrieve per page. Optional, default: 20. Maximum supported: 500. */
+  pageSize?: number
+}

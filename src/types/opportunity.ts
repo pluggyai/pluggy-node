@@ -1,4 +1,4 @@
-import { CurrencyCode } from './common'
+import { CurrencyCode, PageFilters } from './common'
 
 export const OPPORTUNITY_TYPES = [
   'CREDIT_CARD',
@@ -47,9 +47,4 @@ export type Opportunity = {
   id: string
 }
 
-export type OpportunityFilters = {
-  /** Amount of opportunities to retrieve */
-  pageSize?: number
-  /** Page of opportunities to retrieve, this calculates the offset */
-  page?: number
-}
+export type OpportunityFilters = PageFilters
