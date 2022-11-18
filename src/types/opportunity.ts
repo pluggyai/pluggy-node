@@ -9,34 +9,34 @@ export const OPPORTUNITY_TYPES = [
   'OVERDRAFT',
   'OTHER_LOAN',
   'OTHER',
-]
+] as const
 
 export type OpportunityType = typeof OPPORTUNITY_TYPES[number]
 
-export const OPPORTUNITY_DATE_TYPES = ['YEARLY', 'MONTHLY']
+export const OPPORTUNITY_DATE_TYPES = ['YEARLY', 'MONTHLY'] as const
 export type OpportunityDateType = typeof OPPORTUNITY_DATE_TYPES[number]
 
 export type Opportunity = {
   /* Total pre-approved money */
-  totalLimit?: number
+  totalLimit: number | null
   /* Money used to date */
-  usedLimit?: number
+  usedLimit: number | null
   /* Money available to ask at present */
-  availableLimit?: number
+  availableLimit: number | null
   /* Number of maximum quotes */
-  totalQuotas?: number
+  totalQuotas: number | null
   /* Type of annual or monthly quotas */
-  quotasType?: OpportunityDateType
+  quotasType: OpportunityDateType | null
   /* Rate of interest charged by the loan */
-  interestRate?: number
+  interestRate: number | null
   /* Type of annual or monthly taxa */
-  rateType?: OpportunityDateType
+  rateType: OpportunityDateType | null
   /* Type of product */
   type: OpportunityType
   /* Commercial name */
   name: string
   /* Additional description of product */
-  description?: string
+  description: string | null
   /* Date of extraction of the product */
   date: Date
   /* Currency code money */
