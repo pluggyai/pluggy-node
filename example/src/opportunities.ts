@@ -10,7 +10,6 @@ void (async function(): Promise<void> {
   const client = new PluggyClient({
     clientId: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
-    baseUrl: 'https://api.pluggy.dev',
   })
 
   // We create the sandbox item to review its data
