@@ -33,8 +33,8 @@ const EXECUTION_ERROR_CODES = [
 export type ExecutionErrorCode = typeof EXECUTION_ERROR_CODES[number]
 
 export const EXECUTION_FINISHED_STATUSES = [
-  'MERGE_ERROR',
   ...EXECUTION_ERROR_CODES,
+  'MERGE_ERROR',
   'ERROR',
   'SUCCESS',
   'PARTIAL_SUCCESS',
