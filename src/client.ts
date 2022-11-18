@@ -17,6 +17,8 @@ import {
   ConnectTokenOptions,
   CreateItemOptions,
   Webhook,
+  PaginationFilters,
+  Opportunity,
 } from './types'
 import {
   transformAccount,
@@ -256,6 +258,20 @@ export class PluggyClient extends BaseApi {
    */
   async fetchIdentityByItemId(itemId: string): Promise<IdentityResponse> {
     return this.createGetRequest(`identity?itemId=${itemId}`, null, transformIdentity)
+  }
+
+  /**
+   * Recovers opportunities of an item if available
+   * @param itemId primary identifier of the connection
+   * @param pageSize page size for the paging request, default: 20
+   * @param page page number for the paging request, default: 1
+   * @returns {PageResponse<Opportunity>} object which contains the opportunities list and related paging data
+   */
+  async fetchOpportunitiesByItemId(
+    itemId: Item['id'],
+    options: PaginationFilters = {}
+  ): Promise<PageResponse<Opportunity>> {
+    return this.createGetRequest('opportunities', { itemId, ...options })
   }
 
   /**

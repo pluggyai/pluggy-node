@@ -22,3 +22,8 @@ export type PageResponse<T> = {
   total: number
   totalPages: number
 }
+
+export type PaginationFilters = {
+  page?: number
+  pageSize?: number
+}
