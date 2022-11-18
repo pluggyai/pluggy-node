@@ -47,6 +47,8 @@ export type ConnectorCredential = {
   placeholder?: string
   /** Is this credential optional? */
   optional?: boolean
+  /** Parameter expiration date, input value should be submitted before this date. */
+  expiresAt?: Date
 }
 
 export type Connector = {

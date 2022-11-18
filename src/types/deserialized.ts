@@ -1,9 +1,10 @@
 import { Account, CreditData } from './account'
 import { IdentityResponse } from './identity'
 import { Investment, InvestmentTransaction } from './investment'
-import { CreateItemOptions, Item } from './item'
+import { CreateItemOptions, Item, ItemProductsStatusDetail, ItemProductState } from './item'
 import { Transaction } from './transaction'
 import { Opportunity } from './opportunity'
+import { ConnectorCredential } from './connector'
 
 export type DeserializedAccount = Omit<Account, 'creditData'> & {
   creditData: Omit<CreditData, 'balanceCloseDate' | 'balanceDueDate'> & {
@@ -39,11 +40,36 @@ export type DeserializedInvestment = Omit<
   transactions: DeserializedInvestmentTransaction[]
 }
 
-export type DeserializedItem = CreateItemOptions &
-  Omit<Item, 'createdAt' | 'lastUpdatedAt'> & {
-    createdAt: string
-    lastUpdatedAt?: string
-  }
+type DeserializedConnectorCredential = Omit<ConnectorCredential, 'expiresAt'> & {
+  expiresAt?: string
+}
+
+export type DeserializedItemProductState = Omit<ItemProductState, 'lastUpdatedAt'> & {
+  lastUpdatedAt: string | null
+}
+
+export type DeserializedItemProductsStatusDetail = Omit<
+  ItemProductsStatusDetail,
+  'accounts' | 'creditCards' | 'transactions' | 'investments' | 'identity' | 'paymentData'
+> & {
+  accounts: DeserializedItemProductState | null
+  creditCards: DeserializedItemProductState | null
+  transactions: DeserializedItemProductState | null
+  investments: DeserializedItemProductState | null
+  identity: DeserializedItemProductState | null
+  paymentData: DeserializedItemProductState | null
+}
+
+export type DeserializedItem = Omit<
+  Item,
+  'createdAt' | 'updatedAt' | 'lastUpdatedAt' | 'parameter' | 'statusDetail'
+> & {
+  parameter: DeserializedConnectorCredential | null
+  createdAt: string
+  updatedAt: string
+  lastUpdatedAt: string | null
+  statusDetail: DeserializedItemProductsStatusDetail | null
+}
 
 export type DeserializedTransaction = Omit<Transaction, 'date'> & {
   date: string
