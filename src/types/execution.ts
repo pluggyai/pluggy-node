@@ -14,7 +14,7 @@ const CONNECTOR_EXECUTION_STATUSES = [
   'IDENTITY_IN_PROGRESS',
 ] as const
 
-export type BaseExecutionStatus = typeof CONNECTOR_EXECUTION_STATUSES[number]
+export type ConnectorExecutionStatus = typeof CONNECTOR_EXECUTION_STATUSES[number]
 
 const EXECUTION_ERROR_CODES = [
   'INVALID_CREDENTIALS',
