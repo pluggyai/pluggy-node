@@ -6,6 +6,7 @@
     "lib": ["es2017", "dom"],
     "declaration": true,
     "esModuleInterop": true,
+    "strict": true,
     "outDir": "dist"
   },
   "include": ["**/*"],

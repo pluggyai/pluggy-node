@@ -12,12 +12,13 @@
     "example:webhooks": "ts-node src/webhooks.ts",
     "example:investments": "ts-node src/investments.ts",
     "example:creditcards": "ts-node src/creditCards.ts",
-    "example:connecttoken": "ts-node src/connectToken.ts"
+    "example:connecttoken": "ts-node src/connectToken.ts",
+    "example:opportunities": "ts-node src/opportunities.ts"
   },
   "dependencies": {
     "dotenv": "^8.2.0",
     "moment": "^2.29.1",
-    "pluggy-sdk": "^0.15.0"
+    "pluggy-sdk": "0.21.0"
   },
   "devDependencies": {
     "@types/node": "^14.6.0",
