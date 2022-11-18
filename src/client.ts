@@ -1,22 +1,24 @@
 import { BaseApi } from './baseApi'
 import {
-  TransactionFilters,
-  AccountType,
-  InvestmentType,
-  Category,
-  Investment,
-  Transaction,
   Account,
+  AccountType,
+  Category,
   Connector,
   ConnectorFilters,
-  Item,
-  PageResponse,
-  CreateWebhook,
-  WebhookEvent,
-  IdentityResponse,
   ConnectTokenOptions,
   CreateItemOptions,
+  CreateWebhook,
+  IdentityResponse,
+  Investment,
+  InvestmentType,
+  Item,
+  Opportunity,
+  OpportunityFilters,
+  PageResponse,
+  Transaction,
+  TransactionFilters,
   Webhook,
+  WebhookEvent,
 } from './types'
 import {
   transformAccount,
@@ -28,7 +30,6 @@ import {
   transformTransaction,
 } from './transforms'
 import { ValidationResult } from './types/validation'
-import { Opportunity, OpportunityFilters } from './types/opportunity'
 
 /**
  * Creates a new client instance for interacting with Pluggy API
