@@ -88,7 +88,11 @@ export type Connector = {
   hasMFA: boolean
   /** (only for OAuth connector) this URL is used to connect the user and on success it will redirect to create the new item */
   oauthUrl?: string
-  /** object with information that descirbes current state of the institution connector */
+  /** object with information that descirbes current state of the institution connector
+   * ONLINE - the connector is working as expected
+   * OFFLINE - the connector is not currently available (API will refuse all connections with 400 status error)
+   * UNSTABLE - the connector is working but with deegraded performance
+   */
   health?: {
     status: 'ONLINE' | 'OFFLINE' | 'UNSTABLE'
     stage: 'BETA' | null
