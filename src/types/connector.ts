@@ -61,7 +61,7 @@ export type ConnectorCredential = {
   placeholder?: string
   /** Is this credential optional? */
   optional?: boolean
-  /** Applies to MFA credential only - Detailed information that include details/hints that the user should be aware of */
+  /** Applies to MFA credential only - Detailed information that includes details/hints that the user should be aware of */
   instructions?: string
   /** Parameter expiration date, input value should be submitted before this date. */
   expiresAt?: Date
@@ -77,7 +77,7 @@ export type Connector = {
   /** Image url of the institution. */
   imageUrl: string
   /** Primary color of the institution */
-  primaryColor: string | null
+  primaryColor: string
   /** Type of the connector */
   type: ConnectorType
   /** Country of the institution */
@@ -91,7 +91,7 @@ export type Connector = {
   /** object with information that descirbes current state of the institution connector
    * ONLINE - the connector is working as expected
    * OFFLINE - the connector is not currently available (API will refuse all connections with 400 status error)
-   * UNSTABLE - the connector is working but with deegraded performance
+   * UNSTABLE - the connector is working but with degraded performance
    */
   health?: {
     status: 'ONLINE' | 'OFFLINE' | 'UNSTABLE'
