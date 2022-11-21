@@ -5,6 +5,20 @@ export const CONNECTOR_TYPES = ['PERSONAL_BANK', 'BUSINESS_BANK', 'INVESTMENT'] 
  */
 export type ConnectorType = typeof CONNECTOR_TYPES[number]
 
+export const PRODUCT_TYPES = [
+  'ACCOUNTS',
+  'CREDIT_CARDS',
+  'TRANSACTIONS',
+  'PAYMENT_DATA',
+  'INVESTMENTS',
+  'INVESTMENTS_TRANSACTIONS',
+  'IDENTITY',
+  'BROKERAGE_NOTE',
+  'OPPORTUNITIES',
+] as const
+
+export type ProductType = typeof PRODUCT_TYPES[number]
+
 export const CREDENTIAL_TYPES = ['number', 'password', 'text', 'image', 'select'] as const
 /**
  * @typedef CredentialType
@@ -47,6 +61,8 @@ export type ConnectorCredential = {
   placeholder?: string
   /** Is this credential optional? */
   optional?: boolean
+  /** Applies to MFA credential only - Detailed information that include details/hints that the user should be aware of */
+  instructions?: string
   /** Parameter expiration date, input value should be submitted before this date. */
   expiresAt?: Date
 }
@@ -61,7 +77,7 @@ export type Connector = {
   /** Image url of the institution. */
   imageUrl: string
   /** Primary color of the institution */
-  primaryColor: string
+  primaryColor: string | null
   /** Type of the connector */
   type: ConnectorType
   /** Country of the institution */
@@ -70,6 +86,15 @@ export type Connector = {
   credentials: ConnectorCredential[]
   /** Has MFA steps */
   hasMFA: boolean
+  /** (only for OAuth connector) this URL is used to connect the user and on success it will redirect to create the new item */
+  oauthUrl?: string
+  /** object with information that descirbes current state of the institution connector */
+  health?: {
+    status: 'ONLINE' | 'OFFLINE' | 'UNSTABLE'
+    stage: 'BETA' | null
+  }
+  /** list of products supported by the institution */
+  products: ProductType[]
   /** Connector creation date */
   createdAt: Date
 }
