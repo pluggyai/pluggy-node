@@ -38,7 +38,11 @@ export type CreateWebhook = {
   /** Url where notifications of events will be sent */
   url: string
   /** Object to specify headers in your webhook notifications */
-  headers: Record<string, string>
+  headers?: Record<string, string>
+}
+
+export type UpdateWebhook = Partial<CreateWebhook> & {
+  enabled?: boolean
 }
 
 export type WebhookEventPayload = {
