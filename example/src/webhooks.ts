@@ -16,7 +16,7 @@ void (async function(): Promise<void> {
   const webhooks = await client.fetchWebhooks()
   console.log(`Currently there are ${webhooks.results.length} webhook(s) configured.`)
 
-  let webhook = await client.createWebhook('all', WEBHOOK_URL)
+  let webhook = await client.createWebhook({ event: 'all', url: WEBHOOK_URL })
   const recoveredWebhook = await client.fetchWebhook(webhook.id)
   console.log(
     recoveredWebhook
