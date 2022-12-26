@@ -316,20 +316,26 @@ export class PluggyClient extends BaseApi {
    * - headers (optional): The headers to send with the webhook
    * @returns {Webhook} the created webhook object
    */
-  async createWebhook(webhookParams: CreateWebhook): Promise<Webhook> {
+  async createWebhook(
+    event: WebhookEvent,
+    url: string,
+    headers?: Record<string, string>
+  ): Promise<Webhook> {
     return this.createPostRequest(`webhooks`, null, {
-      ...webhookParams,
+      event,
+      url,
+      headers,
     })
   }
 
   /**
    * Updates a Webhook
    * @param id - The Webhook ID
-   * @param updatedWebhhokParams - The webhook params to update
+   * @param updatedWebhookParams - The webhook params to update
    * @returns {Webhook} The webhook updated
    */
-  async updateWebhook(id: string, updatedWebhhokParams: UpdateWebhook): Promise<Webhook> {
-    return this.createPatchRequest(`webhooks/${id}`, null, updatedWebhhokParams)
+  async updateWebhook(id: string, updatedWebhookParams: UpdateWebhook): Promise<Webhook> {
+    return this.createPatchRequest(`webhooks/${id}`, null, updatedWebhookParams)
   }
 
   /**
