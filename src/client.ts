@@ -7,7 +7,6 @@ import {
   ConnectorFilters,
   ConnectTokenOptions,
   CreateItemOptions,
-  CreateWebhook,
   IdentityResponse,
   Investment,
   InvestmentType,
