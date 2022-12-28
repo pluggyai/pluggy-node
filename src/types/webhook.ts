@@ -38,7 +38,7 @@ export type UpdateWebhook = {
   /** Url where notifications of events will be sent */
   url?: string
   /** Object to specify headers in your webhook notifications */
-  headers?: Record<string, string>
+  headers?: Record<string, string> | null
   /** Boolean to enable or disable the webhook */
   enabled?: boolean
 }
