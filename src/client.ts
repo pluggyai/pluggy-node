@@ -7,6 +7,7 @@ import {
   ConnectorFilters,
   ConnectTokenOptions,
   CreateItemOptions,
+  CreateWebhook,
   IdentityResponse,
   Investment,
   InvestmentType,
@@ -19,7 +20,6 @@ import {
   TransactionFilters,
   UpdateWebhook,
   Webhook,
-  WebhookEvent,
 } from './types'
 import {
   transformAccount,
@@ -316,9 +316,9 @@ export class PluggyClient extends BaseApi {
    * @returns {Webhook} the created webhook object
    */
   async createWebhook(
-    event: WebhookEvent,
-    url: string,
-    headers?: Record<string, string>
+    event: CreateWebhook['event'],
+    url: CreateWebhook['url'],
+    headers?: CreateWebhook['headers']
   ): Promise<Webhook> {
     return this.createPostRequest(`webhooks`, null, {
       event,

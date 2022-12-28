@@ -32,13 +32,16 @@ export type Webhook = {
   disabledAt: Date | null
 }
 
-export type UpdateWebhook = {
+export type CreateWebhook = {
   /** Type of event subscribed */
-  event?: WebhookEvent
+  event: WebhookEvent
   /** Url where notifications of events will be sent */
-  url?: string
+  url: string
   /** Object to specify headers in your webhook notifications */
   headers?: Record<string, string> | null
+}
+
+export type UpdateWebhook = Partial<CreateWebhook> & {
   /** Boolean to enable or disable the webhook */
   enabled?: boolean
 }
