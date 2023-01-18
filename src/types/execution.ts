@@ -59,6 +59,8 @@ export type ExecutionErrorResultMetadata = {
   hasMFA?: boolean
   /** Credentials to be used in future executions. May differ or expand from the current execution credentials */
   credentials?: Record<string, string>
+  /** Device nickname used when device authorization is pending */
+  deviceNickname: string
 }
 
 export type ExecutionErrorResult = {
