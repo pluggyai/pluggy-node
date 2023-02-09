@@ -25,6 +25,8 @@ export type IdentityResponse = {
   addresses: Address[] | null
   /** List of associated personal relationships */
   relations: IdentityRelation[] | null
+  /** The investor's personality and motivation for investing  */
+  investorProfile: 'Conservative' | 'Moderate' | 'Aggressive' | null
   /** Date of the first time that the Identity was recovered */
   createdAt: Date
   /** Last update of the Identity data (if the data never changes, updatedAt will be the same as createdAt) */
