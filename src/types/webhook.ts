@@ -8,6 +8,7 @@ export const WEBHOOK_EVENTS = [
   'item/waiting_user_input',
   'item/login_succeeded',
   'connector/status_updated',
+  'transactions/deleted',
   'all',
 ] as const
 /**
@@ -58,6 +59,7 @@ export type WebhookEventPayload = {
         | 'item/waiting_user_input'
         | 'item/login_succeeded'
         | 'item/deleted'
+        | 'transactions/deleted	'
       /** Primary identifier of the item related to the event */
       itemId: string
       /** Who trigger the event */
