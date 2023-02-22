@@ -59,7 +59,6 @@ export type WebhookEventPayload = {
         | 'item/waiting_user_input'
         | 'item/login_succeeded'
         | 'item/deleted'
-        | 'transactions/deleted	'
       /** Primary identifier of the item related to the event */
       itemId: string
       /** Who trigger the event */
@@ -85,5 +84,17 @@ export type WebhookEventPayload = {
       data: {
         status: string
       }
+    }
+  | {
+      /** Type of event subscribed */
+      event: 'transactions/deleted'
+      /** Primary identifier of the item related to the event */
+      itemId: string
+      /** Primary identifier of the client related to the event */
+      clientId: string
+      /** Primary identifier of the account related to the event */
+      accountId: string
+      /** Primary identifier of the transactions related to the event */
+      transactionIds: string[]
     }
 )
