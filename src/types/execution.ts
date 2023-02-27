@@ -53,17 +53,6 @@ const EXECUTION_STATUSES = [
 
 export type ExecutionStatus = typeof EXECUTION_STATUSES[number]
 
-export type ExecutionErrorResultMetadata = {
-  /** a provider id to relate the execution with an item, for example 'user_id'. useful to match webhook notifications with items */
-  providerId?: string
-  /** if the connector is MFA, this indicates if MFA credentials are required or not to continue the current execution */
-  hasMFA?: boolean
-  /** Credentials to be used in future executions. May differ or expand from the current execution credentials */
-  credentials?: Record<string, string>
-  /** Device nickname used when device authorization is pending */
-  deviceNickname?: string
-}
-
 export type ExecutionErrorResult = {
   /** The specific execution error code */
   code: ExecutionErrorCode
@@ -71,8 +60,6 @@ export type ExecutionErrorResult = {
   message: string
   /** The exact error message returned by the institution, if any was provided. */
   providerMessage?: string
-  /** Only used in Caixa Connector, for the device authorization flow */
-  metadata?: ExecutionErrorResultMetadata
   /** Unstructured properties that provide additional context/information of the error.
    * Used for some specific cases only, such as Caixa PF & PJ.
    * @see https://docs.pluggy.ai/docs/errors-validations for more info. */
