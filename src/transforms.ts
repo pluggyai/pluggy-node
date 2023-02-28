@@ -7,10 +7,10 @@ import {
   DeserializedItemProductsStatusDetail,
   DeserializedTransaction,
   DeserializedItemProductState,
+  DeserializedUserAction,
 } from './types/deserialized'
 import {
   Account,
-  Connector,
   IdentityResponse,
   Investment,
   Item,
@@ -19,6 +19,7 @@ import {
   Opportunity,
   PageResponse,
   Transaction,
+  UserAction,
 } from './types'
 
 // these functions works very similar to React/Redux Reducers, it transform a remote response to a typed object instances
@@ -85,6 +86,13 @@ function transformItemStatusDetail(
   }
 }
 
+function transformUserAction(userAction: DeserializedUserAction): UserAction {
+  return {
+    ...userAction,
+    expiresAt: new Date(userAction.expiresAt),
+  }
+}
+
 export function transformItem(item: DeserializedItem): Item {
   return {
     ...item,
@@ -98,6 +106,7 @@ export function transformItem(item: DeserializedItem): Item {
     updatedAt: new Date(item.updatedAt),
     lastUpdatedAt: item.lastUpdatedAt ? new Date(item.lastUpdatedAt) : null,
     statusDetail: item.statusDetail ? transformItemStatusDetail(item.statusDetail) : null,
+    userAction: item.userAction ? transformUserAction(item.userAction) : null,
   }
 }
 

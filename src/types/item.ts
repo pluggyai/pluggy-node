@@ -49,6 +49,15 @@ export type ItemProductsStatusDetail = {
   paymentData: ItemProductState | null
 }
 
+export type UserAction = {
+  /** Human readble instructions that explains the user action to be done. */
+  instructions: string
+  /** Unstructured properties that provide additional context of the user action. */
+  attributes?: Record<string, string>
+  /** Parameter expiration date, action should be done before this time. */
+  expiresAt?: Date
+}
+
 export type Item = {
   /** primary identifier of the Item */
   id: string
@@ -74,6 +83,8 @@ export type Item = {
   webhookUrl: string | null
   /** A unique identifier for the User, to be able to identify it on your app */
   clientUserId: string | null
+  /** Useful info when item execution status is "WAITING_USER_ACTION" */
+  userAction: UserAction | null
 }
 
 /**
