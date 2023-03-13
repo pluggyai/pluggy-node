@@ -149,8 +149,6 @@ export type InvestmentTransaction = {
   id: string
   /** Type of the transaction */
   type: InvestmentTransactionType | null
-  /** Identifier of the related operation */
-  operationId: string | null
   /** Description of the transaction */
   description: string | null
   /** Investment identifier related to the transaction */
@@ -249,8 +247,6 @@ export type Investment = {
   metadata: InvestmentMetadata | null
   /** Name of the owner */
   owner: string | null
-  /** Provider institution internal identifier for the investment */
-  providerId: string | null
   /** Financial institution holder  of the investment */
   institution: InvestmentInstitution | null
 }

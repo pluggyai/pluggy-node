@@ -8,6 +8,7 @@ export const WEBHOOK_EVENTS = [
   'item/waiting_user_input',
   'item/login_succeeded',
   'connector/status_updated',
+  'transactions/deleted',
   'all',
 ] as const
 /**
@@ -38,7 +39,12 @@ export type CreateWebhook = {
   /** Url where notifications of events will be sent */
   url: string
   /** Object to specify headers in your webhook notifications */
-  headers: Record<string, string>
+  headers?: Record<string, string> | null
+}
+
+export type UpdateWebhook = Partial<CreateWebhook> & {
+  /** Boolean to enable or disable the webhook */
+  enabled?: boolean
 }
 
 export type WebhookEventPayload = {
@@ -78,5 +84,17 @@ export type WebhookEventPayload = {
       data: {
         status: string
       }
+    }
+  | {
+      /** Type of event subscribed */
+      event: 'transactions/deleted'
+      /** Primary identifier of the item related to the event */
+      itemId: string
+      /** Primary identifier of the client related to the event */
+      clientId: string
+      /** Primary identifier of the account related to the event */
+      accountId: string
+      /** Primary identifier of the transactions related to the event */
+      transactionIds: string[]
     }
 )

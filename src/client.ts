@@ -19,8 +19,8 @@ import {
   Parameters,
   Transaction,
   TransactionFilters,
+  UpdateWebhook,
   Webhook,
-  WebhookEvent,
 } from './types'
 import {
   transformAccount,
@@ -328,25 +328,32 @@ export class PluggyClient extends BaseApi {
 
   /**
    * Creates a Webhook
-   * @param event The type of event to listen
-   * @param url The url where will receive notifications
-   * @returns {Webhook} a webhook object
+   * @param webhookParams - The webhook params to create, this includes:
+   * - url: The url where will receive notifications
+   * - event: The event to listen for
+   * - headers (optional): The headers to send with the webhook
+   * @returns {Webhook} the created webhook object
    */
-  async createWebhook(event: WebhookEvent, url: string): Promise<Webhook> {
+  async createWebhook(
+    event: CreateWebhook['event'],
+    url: CreateWebhook['url'],
+    headers?: CreateWebhook['headers']
+  ): Promise<Webhook> {
     return this.createPostRequest(`webhooks`, null, {
       event,
       url,
+      headers,
     })
   }
 
   /**
    * Updates a Webhook
-   * @param id The Webhook ID
-   * @param webhook The webhook params to update
+   * @param id - The Webhook ID
+   * @param updatedWebhookParams - The webhook params to update
    * @returns {Webhook} The webhook updated
    */
-  async updateWebhook(id: string, webhook: Partial<CreateWebhook>): Promise<Webhook> {
-    return this.createPatchRequest(`webhooks/${id}`, null, webhook)
+  async updateWebhook(id: string, updatedWebhookParams: UpdateWebhook): Promise<Webhook> {
+    return this.createPatchRequest(`webhooks/${id}`, null, updatedWebhookParams)
   }
 
   /**
