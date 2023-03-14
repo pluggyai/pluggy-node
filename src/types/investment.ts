@@ -237,7 +237,11 @@ export type Investment = {
   lastTwelveMonthsRate: number | null
   /** Current status of the investment */
   status: InvestmentStatus | null
-  /** Transactions made related to the investment, like adquisitions (BUY) or withdrawals (SELL). */
+  /**
+   * Transactions made related to the investment, like adquisitions (BUY) or withdrawals (SELL).
+   * @deprecated use `client.fetchInvestmentTransactions(investmentId, searchFilters)` instead
+   * this field is going to stop working on 15th April 2023 for performance reasons
+   *  */
   transactions: InvestmentTransaction[] | null
   /** Investment tax information */
   metadata: InvestmentMetadata | null

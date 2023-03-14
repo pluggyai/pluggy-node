@@ -10,6 +10,7 @@ import {
   CreateWebhook,
   IdentityResponse,
   Investment,
+  InvestmentTransaction,
   InvestmentType,
   Item,
   Opportunity,
@@ -25,6 +26,7 @@ import {
   transformAccount,
   transformIdentity,
   transformInvestment,
+  transformInvestmentTransaction,
   transformItem,
   transformOpportunity,
   transformPageResponse,
@@ -239,6 +241,23 @@ export class PluggyClient extends BaseApi {
    */
   async fetchInvestment(id: string): Promise<Investment> {
     return this.createGetRequest(`investments/${id}`, null, transformInvestment)
+  }
+
+  /**
+   * Fetch transactions from an investment
+   * @param investmentId The investment id
+   * @param {TransactionFilters} options Transaction options to filter
+   * @returns {PageResponse<InvestmentTransaction[]>} object which contains the transactions list and related paging data
+   */
+  async fetchInvestmentTransactions(
+    investmentId: string,
+    options: TransactionFilters = {}
+  ): Promise<PageResponse<InvestmentTransaction>> {
+    return this.createGetRequest(
+      `investments/${investmentId}/transactions`,
+      { ...options, investmentId },
+      transformPageResponse(transformInvestmentTransaction)
+    )
   }
 
   /**

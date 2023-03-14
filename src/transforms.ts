@@ -7,12 +7,14 @@ import {
   DeserializedItemProductsStatusDetail,
   DeserializedTransaction,
   DeserializedItemProductState,
+  DeserializedInvestmentTransaction,
   DeserializedUserAction,
 } from './types/deserialized'
 import {
   Account,
   IdentityResponse,
   Investment,
+  InvestmentTransaction,
   Item,
   ItemProductsStatusDetail,
   ItemProductState,
@@ -114,6 +116,16 @@ export function transformTransaction(transaction: DeserializedTransaction): Tran
   return {
     ...transaction,
     date: new Date(transaction.date),
+  }
+}
+
+export function transformInvestmentTransaction(
+  transaction: DeserializedInvestmentTransaction
+): InvestmentTransaction {
+  return {
+    ...transaction,
+    date: new Date(transaction.date),
+    tradeDate: new Date(transaction.tradeDate),
   }
 }
 
