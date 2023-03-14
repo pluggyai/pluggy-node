@@ -61,6 +61,15 @@ export type TransactionMerchantData = {
   category?: string
 }
 
+export type CreditCardMetadata = {
+  /** The number of the installment */
+  installmentNumber?: number
+  /** The total number of installments */
+  totalInstallments?: number
+  /** The amount of the installment */
+  totalAmount?: number
+}
+
 export type TransactionFilters = PageFilters & {
   /** Filter less than date. Format can be ISO Date or 'YYYY-MM-dd' string. */
   to?: string
@@ -86,13 +95,15 @@ export type Transaction = {
   /** ISO Currency code of the Transaction */
   currencyCode: CurrencyCode
   /** Assigned category of the transaction. */
-  category?: string
+  category: string | null
   /** Status of the transaction, default to `POSTED` */
   status?: TransactionStatus
   /** Code provided by the financial institution for the transaction type, not unique. */
   providerCode?: string
   /** Additional data related to payment or transfers */
   paymentData?: TransactionPaymentData
+  /** Additional data related to credit card transaction */
+  creditCardMetadata: CreditCardMetadata | null
   /** Additional data related to the merchant associated to the transaction */
   merchant?: TransactionMerchantData
 }
