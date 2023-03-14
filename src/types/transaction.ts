@@ -86,6 +86,8 @@ export type Transaction = {
   date: Date
   /** Transaction original description */
   description: string
+  /** If available, raw description provided by the financial institution */
+  descriptionRaw: string | null
   /** Transation type of movement */
   type: TransactionType
   /** Amount of the transaction */
