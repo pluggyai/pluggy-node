@@ -240,7 +240,7 @@ export type Investment = {
   /**
    * Transactions made related to the investment, like adquisitions (BUY) or withdrawals (SELL).
    * @deprecated use `client.fetchInvestmentTransactions(investmentId, searchFilters)` instead
-   * this field is going to stop working on 15th April 2023 for performance reasons
+   * this field is null unless the application was created before 2023-03-20
    *  */
   transactions: InvestmentTransaction[] | null
   /** Investment tax information */
