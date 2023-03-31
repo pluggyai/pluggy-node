@@ -48,8 +48,10 @@ export type UpdateWebhook = Partial<CreateWebhook> & {
 }
 
 export type WebhookEventPayload = {
-  /** Primary identifier of the resource that was notified */
+  /** @deprecated id of the entity related to the event (use eventId to uniquely identify a webhook event)*/
   id: string
+  /** Primary identifier of the event that was notified */
+  eventId: string
 } & (
   | {
       /** Type of event subscribed */

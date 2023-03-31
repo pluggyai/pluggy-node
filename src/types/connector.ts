@@ -1,4 +1,11 @@
-export const CONNECTOR_TYPES = ['PERSONAL_BANK', 'BUSINESS_BANK', 'INVESTMENT'] as const
+export const CONNECTOR_TYPES = [
+  'PERSONAL_BANK',
+  'BUSINESS_BANK',
+  'INVOICE',
+  'INVESTMENT',
+  'TELECOMMUNICATION',
+  'OTHER',
+] as const
 /**
  * @typedef ConnectorType
  * Type of connectors available
