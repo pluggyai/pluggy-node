@@ -50,7 +50,7 @@ export type UpdateWebhook = Partial<CreateWebhook> & {
 export type WebhookEventPayload = {
   /** @deprecated id of the entity related to the event (use eventId to uniquely identify a webhook event)*/
   id: string
-  /** Primary identifier of the resource that was notified */
+  /** Primary identifier of the event that was notified */
   eventId: string
 } & (
   | {
