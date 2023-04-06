@@ -16,13 +16,13 @@
     "example:opportunities": "ts-node src/opportunities.ts"
   },
   "dependencies": {
-    "dotenv": "^8.2.0",
-    "moment": "^2.29.1",
-    "pluggy-sdk": "^0.22.1"
+    "dotenv": "^16.0.3",
+    "moment": "^2.29.4",
+    "pluggy-sdk": "^0.27.1"
   },
   "devDependencies": {
-    "@types/node": "^14.6.0",
+    "@types/node": "^18.15.11",
     "ts-node": "^10.9.1",
-    "typescript": "^4.7.4"
+    "typescript": "^5.0.3"
   }
 }
