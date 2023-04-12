@@ -26,5 +26,11 @@ void (async function(): Promise<void> {
   const investments = await client.fetchInvestments(item.id)
   console.log(investments.results)
 
+  for (const investment of investments.results) {
+    const transactions = await client.fetchInvestmentTransactions(investment.id)
+    console.log('Transactions for investment', investment.id)
+    console.log(transactions.results)
+  }
+
   await client.deleteItem(item.id)
 })()
