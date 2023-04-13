@@ -85,6 +85,8 @@ export type Item = {
   clientUserId: string | null
   /** Useful info when item execution status is "WAITING_USER_ACTION" */
   userAction: UserAction | null
+  /** The number of consecutive failed login attempts for this item. */
+  consecutiveFailedLoginAttempts: number
 }
 
 /**
