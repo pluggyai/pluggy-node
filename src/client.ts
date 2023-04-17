@@ -21,6 +21,7 @@ import {
   TransactionFilters,
   UpdateWebhook,
   Webhook,
+  IncomeReport,
 } from './types'
 import {
   transformAccount,
@@ -46,7 +47,7 @@ export class PluggyClient extends BaseApi {
    * @returns {PageResponse<Connector>} paged response of connectors
    */
   async fetchConnectors(options: ConnectorFilters = {}): Promise<PageResponse<Connector>> {
-    return this.createGetRequest('connectors', { ...options })
+    return this.createGetRequest('connectors', options)
   }
 
   /**
@@ -361,6 +362,15 @@ export class PluggyClient extends BaseApi {
    */
   async deleteWebhook(id: string): Promise<void> {
     return this.createDeleteRequest(`webhooks/${id}`)
+  }
+
+  /**
+   * Fetch all income reports for the last years that the Financial Institution provides
+   * @param {string} itemId - The Item ID to fetch income reports for
+   * @returns {PageResponse<IncomeReport>} paged response of income reports
+   */
+  async fetchIncomeReports(itemId: string): Promise<PageResponse<IncomeReport>> {
+    return this.createGetRequest('income-reports', { itemId })
   }
 
   /**
