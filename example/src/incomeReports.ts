@@ -24,7 +24,6 @@ void (async function(): Promise<void> {
   if (['LOGIN_ERROR', 'OUTDATED'].includes(item.status)) return
 
   // Once the connection was done successfully, get the income reports
-
   const incomeReports = await client.fetchIncomeReports(item.id)
 
   console.log(`There is a total of ${incomeReports.total} income reports`)
