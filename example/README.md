@@ -4,6 +4,8 @@ The following project underlines the key features of Pluggy API and how to use t
 
 ## Installation
 
+First, you need to run `npm run build` on the top-level project `pluggy-sdk`. This will generate a dist directory with the built project. You will need this to use the latest changes of `pluggy-sdk` (including your own changes, if any) and to make the `npm install` command in the next step work. 
+
 From the root of this project you can just `npm install` the dependencies and run any example you want.
 
 Examples review each flow and ouputs the different steps made, this is meant as a basic example to understand how to use each method.
