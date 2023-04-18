@@ -56,11 +56,13 @@ export function transformInvestment(investment: DeserializedInvestment): Investm
     date: investment.date ? new Date(investment.date) : null,
     dueDate: investment.dueDate ? new Date(investment.dueDate) : null,
     issueDate: investment.issueDate ? new Date(investment.issueDate) : null,
-    transactions: investment.transactions.map(transaction => ({
-      ...transaction,
-      date: new Date(transaction.date),
-      tradeDate: new Date(transaction.tradeDate),
-    })),
+    transactions: investment.transactions
+      ? investment.transactions.map(transaction => ({
+          ...transaction,
+          date: new Date(transaction.date),
+          tradeDate: new Date(transaction.tradeDate),
+        }))
+      : null,
   }
 }
 
