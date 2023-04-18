@@ -11,6 +11,7 @@
     "example:mfa": "ts-node src/mfa.ts",
     "example:webhooks": "ts-node src/webhooks.ts",
     "example:investments": "ts-node src/investments.ts",
+    "examle:incomereports": "ts-node src/incomeReports.ts",
     "example:creditcards": "ts-node src/creditCards.ts",
     "example:connecttoken": "ts-node src/connectToken.ts",
     "example:opportunities": "ts-node src/opportunities.ts"
@@ -18,7 +19,7 @@
   "dependencies": {
     "dotenv": "^16.0.3",
     "moment": "^2.29.4",
-    "pluggy-sdk": "^0.27.1"
+    "pluggy-sdk": "../"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",
