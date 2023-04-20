@@ -95,6 +95,8 @@ export type Connector = {
   credentials: ConnectorCredential[]
   /** Has MFA steps */
   hasMFA: boolean
+  /** If true, connector has an Oauth login */
+  oauth?: boolean
   /** (only for OAuth connector) this URL is used to connect the user and on success it will redirect to create the new item */
   oauthUrl?: string
   /** object with information that descirbes current state of the institution connector
@@ -106,6 +108,8 @@ export type Connector = {
     status: 'ONLINE' | 'OFFLINE' | 'UNSTABLE'
     stage: 'BETA' | null
   }
+  /** Url where user can reset their account password */
+  resetPasswordUrl?: string
   /** list of products supported by the institution */
   products: ProductType[]
   /** Connector creation date */
