@@ -1,4 +1,4 @@
-import { Connector, ConnectorCredential } from './connector'
+import { Connector, ConnectorCredential, ProductType } from './connector'
 import { ExecutionErrorResult, ExecutionStatus } from './execution'
 
 const ITEM_STATUSES = [
@@ -99,4 +99,9 @@ export type CreateItemOptions = {
   webhookUrl?: string
   /** A unique identifier for the User, to be able to identify it on your app */
   clientUserId?: string
+  /**
+   * Products to include in item execution and collection steps. Optional.
+   * If not specified, all products available to your subscription level will be collected.
+   */
+  products?: ProductType[]
 }
