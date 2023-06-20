@@ -87,6 +87,8 @@ export type Item = {
   userAction: UserAction | null
   /** The number of consecutive failed login attempts for this item. */
   consecutiveFailedLoginAttempts: number
+  /** The date when the next Pluggy's auto-sync update will be attempted (if item is updatable). */
+  nextAutoSyncAt: Date | null
 }
 
 /**
