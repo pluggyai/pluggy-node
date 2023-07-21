@@ -22,17 +22,9 @@ import {
   UpdateWebhook,
   Webhook,
   IncomeReport,
+  Loan,
+  PageFilters,
 } from './types'
-import {
-  transformAccount,
-  transformIdentity,
-  transformInvestment,
-  transformInvestmentTransaction,
-  transformItem,
-  transformOpportunity,
-  transformPageResponse,
-  transformTransaction,
-} from './transforms'
 import { ValidationResult } from './types/validation'
 
 /**
@@ -65,7 +57,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Item} a item object
    */
   async fetchItem(id: string): Promise<Item> {
-    return this.createGetRequest(`items/${id}`, null, transformItem)
+    return this.createGetRequest(`items/${id}`)
   }
 
   /**
@@ -94,7 +86,6 @@ export class PluggyClient extends BaseApi {
       connectorId,
       parameters,
       ...(options || {}),
-      transformItem,
     })
   }
 
@@ -106,15 +97,10 @@ export class PluggyClient extends BaseApi {
    * @returns {Item} a item object
    */
   async updateItem(id: string, parameters?: Parameters): Promise<Item> {
-    return this.createPatchRequest(
-      `items/${id}`,
-      null,
-      {
-        id,
-        parameters,
-      },
-      transformItem
-    )
+    return this.createPatchRequest(`items/${id}`, null, {
+      id,
+      parameters,
+    })
   }
 
   /**
@@ -124,7 +110,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Item} a item object
    */
   async updateItemMFA(id: string, parameters: Parameters = undefined): Promise<Item> {
-    return this.createPostRequest(`items/${id}/mfa`, null, parameters, transformItem)
+    return this.createPostRequest(`items/${id}/mfa`, null, parameters)
   }
 
   /**
@@ -140,11 +126,7 @@ export class PluggyClient extends BaseApi {
    * @returns {PageResponse<Account>} paged response of accounts
    */
   async fetchAccounts(itemId: string, type?: AccountType): Promise<PageResponse<Account>> {
-    return this.createGetRequest(
-      'accounts',
-      { itemId, type },
-      transformPageResponse(transformAccount)
-    )
+    return this.createGetRequest('accounts', { itemId, type })
   }
 
   /**
@@ -152,7 +134,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Account} an account object
    */
   async fetchAccount(id: string): Promise<Account> {
-    return this.createGetRequest(`accounts/${id}`, null, transformAccount)
+    return this.createGetRequest(`accounts/${id}`)
   }
 
   /**
@@ -165,11 +147,7 @@ export class PluggyClient extends BaseApi {
     accountId: string,
     options: TransactionFilters = {}
   ): Promise<PageResponse<Transaction>> {
-    return this.createGetRequest(
-      'transactions',
-      { ...options, accountId },
-      transformPageResponse(transformTransaction)
-    )
+    return this.createGetRequest('transactions', { ...options, accountId })
   }
 
   /**
@@ -211,47 +189,42 @@ export class PluggyClient extends BaseApi {
    * @returns {Transaction} updated transaction object
    */
   async updateTransactionCategory(id: string, categoryId: string): Promise<Transaction> {
-    return this.createPatchRequest(
-      `transactions/${id}`,
-      null,
-      {
-        categoryId,
-      },
-      transformTransaction
-    )
+    return this.createPatchRequest(`transactions/${id}`, null, {
+      categoryId,
+    })
   }
 
   /**
    * Fetch a single transaction
+   *
    * @returns {Transaction} an transaction object
    */
   async fetchTransaction(id: string): Promise<Transaction> {
-    return this.createGetRequest(`transactions/${id}`, null, transformTransaction)
+    return this.createGetRequest(`transactions/${id}`)
   }
 
   /**
    * Fetch investments from an Item
+   *
    * @param itemId The Item id
    * @returns {PageResponse<Investment>} paged response of investments
    */
   async fetchInvestments(itemId: string, type?: InvestmentType): Promise<PageResponse<Investment>> {
-    return this.createGetRequest(
-      'investments',
-      { itemId, type },
-      transformPageResponse(transformInvestment)
-    )
+    return this.createGetRequest('investments', { itemId, type })
   }
 
   /**
    * Fetch a single investment
+   *
    * @returns {Investment} an investment object
    */
   async fetchInvestment(id: string): Promise<Investment> {
-    return this.createGetRequest(`investments/${id}`, null, transformInvestment)
+    return this.createGetRequest(`investments/${id}`)
   }
 
   /**
    * Fetch transactions from an investment
+   *
    * @param investmentId The investment id
    * @param {TransactionFilters} options Transaction options to filter
    * @returns {PageResponse<InvestmentTransaction[]>} object which contains the transactions list and related paging data
@@ -260,11 +233,10 @@ export class PluggyClient extends BaseApi {
     investmentId: string,
     options: TransactionFilters = {}
   ): Promise<PageResponse<InvestmentTransaction>> {
-    return this.createGetRequest(
-      `investments/${investmentId}/transactions`,
-      { ...options, investmentId },
-      transformPageResponse(transformInvestmentTransaction)
-    )
+    return this.createGetRequest(`investments/${investmentId}/transactions`, {
+      ...options,
+      investmentId,
+    })
   }
 
   /**
@@ -278,11 +250,28 @@ export class PluggyClient extends BaseApi {
     itemId: string,
     options: OpportunityFilters = {}
   ): Promise<PageResponse<Opportunity>> {
-    return this.createGetRequest(
-      'opportunities',
-      { ...options, itemId },
-      transformPageResponse(transformOpportunity)
-    )
+    return this.createGetRequest('opportunities', { ...options, itemId })
+  }
+
+  /**
+   * Fetch loans from an Item
+   *
+   * @param {string} itemId
+   * @param {PageFilters} options - request search filters
+   * @returns {Promise<PageResponse<Loan>>} - paged response of loans
+   */
+  async fetchLoans(itemId: string, options: PageFilters = {}): Promise<PageResponse<Loan>> {
+    return this.createGetRequest('loans', { ...options, itemId })
+  }
+
+  /**
+   * Fetch loan by id
+   *
+   * @param {string} id - the loan id
+   * @returns {Promise<Loan>} - loan object, if found
+   */
+  async fetchLoan(id: string): Promise<Loan> {
+    return this.createGetRequest(`loans/${id}`)
   }
 
   /**
@@ -290,7 +279,7 @@ export class PluggyClient extends BaseApi {
    * @returns {IdentityResponse} an identity object
    */
   async fetchIdentity(id: string): Promise<IdentityResponse> {
-    return this.createGetRequest(`identity/${id}`, null, transformIdentity)
+    return this.createGetRequest(`identity/${id}`)
   }
 
   /**
@@ -298,7 +287,7 @@ export class PluggyClient extends BaseApi {
    * @returns {IdentityResponse} an identity object
    */
   async fetchIdentityByItemId(itemId: string): Promise<IdentityResponse> {
-    return this.createGetRequest(`identity?itemId=${itemId}`, null, transformIdentity)
+    return this.createGetRequest(`identity?itemId=${itemId}`)
   }
 
   /**
