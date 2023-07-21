@@ -1,5 +1,6 @@
 import got, { HTTPError, Method } from 'got'
 import * as jwt from 'jsonwebtoken'
+import { deserializeJSONWithDates } from './transforms'
 
 const {
   version: pluggyNodeVersion,
@@ -78,6 +79,7 @@ export class BaseApi {
           'X-API-KEY': apiKey,
         },
         responseType: 'json',
+        parseJson: deserializeJSONWithDates,
       })
 
       if (statusCode < 200 || statusCode >= 300) {
@@ -161,6 +163,7 @@ export class BaseApi {
         },
         json: body,
         responseType: 'json',
+        parseJson: deserializeJSONWithDates,
       })
 
       if (statusCode !== 200) {
