@@ -22,6 +22,8 @@ import {
   UpdateWebhook,
   Webhook,
   IncomeReport,
+  Loan,
+  PageFilters,
 } from './types'
 import {
   transformAccount,
@@ -223,6 +225,7 @@ export class PluggyClient extends BaseApi {
 
   /**
    * Fetch a single transaction
+   *
    * @returns {Transaction} an transaction object
    */
   async fetchTransaction(id: string): Promise<Transaction> {
@@ -231,6 +234,7 @@ export class PluggyClient extends BaseApi {
 
   /**
    * Fetch investments from an Item
+   *
    * @param itemId The Item id
    * @returns {PageResponse<Investment>} paged response of investments
    */
@@ -244,6 +248,7 @@ export class PluggyClient extends BaseApi {
 
   /**
    * Fetch a single investment
+   *
    * @returns {Investment} an investment object
    */
   async fetchInvestment(id: string): Promise<Investment> {
@@ -252,6 +257,7 @@ export class PluggyClient extends BaseApi {
 
   /**
    * Fetch transactions from an investment
+   *
    * @param investmentId The investment id
    * @param {TransactionFilters} options Transaction options to filter
    * @returns {PageResponse<InvestmentTransaction[]>} object which contains the transactions list and related paging data
@@ -283,6 +289,27 @@ export class PluggyClient extends BaseApi {
       { ...options, itemId },
       transformPageResponse(transformOpportunity)
     )
+  }
+
+  /**
+   * Fetch loans from an Item
+   *
+   * @param {string} itemId
+   * @param {PageFilters} options - request search filters
+   * @returns {Promise<PageResponse<Loan>>} - paged response of loans
+   */
+  async fetchLoans(itemId: string, options: PageFilters = {}): Promise<PageResponse<Loan>> {
+    return this.createGetRequest('loans', { ...options, itemId })
+  }
+
+  /**
+   * Fetch loan by id
+   *
+   * @param {string} id - the loan id
+   * @returns {Promise<Loan>} - loan object, if found
+   */
+  async fetchLoan(id: string): Promise<Loan> {
+    return this.createGetRequest(`loans/${id}`)
   }
 
   /**
