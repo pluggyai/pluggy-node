@@ -64,16 +64,12 @@ export class BaseApi {
     return this.apiKey
   }
 
-  protected async createGetRequest<T, K>(
-    endpoint: string,
-    params?: QueryParameters,
-    transformCb?: (response: K) => T
-  ): Promise<T> {
+  protected async createGetRequest<T>(endpoint: string, params?: QueryParameters): Promise<T> {
     const apiKey = await this.getApiKey()
     const url = `${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`
 
     try {
-      const { statusCode, body } = await got<K>(url, {
+      const { statusCode, body } = await got<T>(url, {
         headers: {
           ...this.defaultHeaders,
           'X-API-KEY': apiKey,
@@ -86,13 +82,7 @@ export class BaseApi {
         return Promise.reject(body)
       }
 
-      try {
-        const obj = transformCb ? transformCb(body) : ((body as unknown) as T)
-        return Promise.resolve(obj)
-      } catch (error) {
-        console.error(`[Pluggy SDK] JSON parsing failed: ${error.message || ''}`, error)
-        console.warn(`[Pluggy SDK] Are you sure you are using the latest version of "pluggy-sdk"?`)
-      }
+      return body
     } catch (error) {
       if (error instanceof HTTPError) {
         console.error(
@@ -105,48 +95,43 @@ export class BaseApi {
     }
   }
 
-  protected createPostRequest<T, K>(
+  protected createPostRequest<T>(
     endpoint: string,
     params?: QueryParameters,
-    body?: Record<string, unknown>,
-    transformCb?: (response: K) => T
+    body?: Record<string, unknown>
   ): Promise<T> {
-    return this.createMutationRequest('post', endpoint, params, body, transformCb)
+    return this.createMutationRequest('post', endpoint, params, body)
   }
 
-  protected createPutRequest<T, K>(
+  protected createPutRequest<T>(
     endpoint: string,
     params?: QueryParameters,
-    body?: Record<string, unknown>,
-    transformCb?: (response: K) => T
+    body?: Record<string, unknown>
   ): Promise<T> {
-    return this.createMutationRequest('put', endpoint, params, body, transformCb)
+    return this.createMutationRequest('put', endpoint, params, body)
   }
 
-  protected createPatchRequest<T, K>(
+  protected createPatchRequest<T>(
     endpoint: string,
     params?: QueryParameters,
-    body?: Record<string, unknown>,
-    transformCb?: (response: K) => T
+    body?: Record<string, unknown>
   ): Promise<T> {
-    return this.createMutationRequest('patch', endpoint, params, body, transformCb)
+    return this.createMutationRequest('patch', endpoint, params, body)
   }
 
-  protected createDeleteRequest<T, K>(
+  protected createDeleteRequest<T>(
     endpoint: string,
     params?: QueryParameters,
-    body?: Record<string, unknown>,
-    transformCb?: (response: K) => T
+    body?: Record<string, unknown>
   ): Promise<T> {
-    return this.createMutationRequest('delete', endpoint, params, body, transformCb)
+    return this.createMutationRequest('delete', endpoint, params, body)
   }
 
-  protected async createMutationRequest<T, K>(
+  protected async createMutationRequest<T>(
     method: Method,
     endpoint: string,
     params?: QueryParameters,
-    body?: Record<string, unknown>,
-    transformCb?: (response: K) => T
+    body?: Record<string, unknown>
   ): Promise<T> {
     const apiKey = await this.getApiKey()
     const url = `${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`
@@ -155,7 +140,7 @@ export class BaseApi {
     }
 
     try {
-      const { statusCode, body: responseBody } = await got<K>(url, {
+      const { statusCode, body: responseBody } = await got<T>(url, {
         method,
         headers: {
           ...this.defaultHeaders,
@@ -170,13 +155,7 @@ export class BaseApi {
         return Promise.reject(body)
       }
 
-      try {
-        const obj = transformCb ? transformCb(responseBody) : ((responseBody as unknown) as T)
-        return Promise.resolve(obj)
-      } catch (error) {
-        console.error(`[Pluggy SDK] JSON parsing failed: ${error.message || ''}`, error)
-        console.warn(`[Pluggy SDK] Are you sure you are using the latest version of "pluggy-sdk"?`)
-      }
+      return responseBody
     } catch (error) {
       if (error instanceof HTTPError) {
         console.error(
