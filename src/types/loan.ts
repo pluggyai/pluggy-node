@@ -216,6 +216,10 @@ export type LoanPayments = {
 }
 
 export type Loan = {
+  /*! Primary identifier of the entity */
+  id: string
+  /*! Related item id */
+  itemId: string
   /*! Contract number given by the contracting institution */
   contractNumber: string | null
   /*! Standard contract number - IPOC (Identificação Padronizada da Operação de Crédito) */
