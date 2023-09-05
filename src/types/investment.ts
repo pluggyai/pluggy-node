@@ -183,6 +183,8 @@ export type Investment = {
   id: string
   /** Unique primary identifier for the investment available for the hole country. In brazil is CNPJ. */
   code: string
+  /** CNPJ of the issuer behind the investment. */
+  issuerCNPJ: string | null
   /** Unique FI provider identifier that attach's the owner to an investment and its available as a reference. */
   number: string
   /** 12-character ISIN, a globally unique identifier */
