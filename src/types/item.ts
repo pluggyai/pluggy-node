@@ -54,6 +54,8 @@ export type ItemProductsStatusDetail = {
 export type UserAction = {
   /** Human readble instructions that explains the user action to be done. */
   instructions: string
+  /** Type of user action to be done */
+  type: 'qr' | 'authorize-access'
   /** Unstructured properties that provide additional context of the user action. */
   attributes?: Record<string, string>
   /** Parameter expiration date, action should be done before this time. */
