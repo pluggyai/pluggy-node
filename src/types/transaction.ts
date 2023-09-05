@@ -40,6 +40,12 @@ export type TransactionPaymentData = {
   payer?: TransactionPaymentParticipant
   /** The identity of the receiver of the transfer */
   receiver?: TransactionPaymentParticipant
+  /**
+   * String submitted by the receiver associated with the payment when generating the payment request.
+   * ie. When generating a Pix QR code, the receiver creates the request with their internal reference identifier.
+   * This way when the payment its done, they can map the payment to their internal reference.
+   */
+  receiverReferenceId?: string
   /** Identifier for the transaction provided by the institution */
   paymentMethod?: string
   /** The type of transfer used "PIX", "TED", "DOC". */
