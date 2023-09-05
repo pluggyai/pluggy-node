@@ -16,7 +16,9 @@ void (async function(): Promise<void> {
   const webhooks = await client.fetchWebhooks()
   console.log(`Currently there are ${webhooks.results.length} webhook(s) configured.`)
 
-  let webhook = await client.createWebhook('all', WEBHOOK_URL)
+  let webhook = await client.createWebhook('all', WEBHOOK_URL, {
+    'x-custom-header': 'custom-value',
+  })
   const recoveredWebhook = await client.fetchWebhook(webhook.id)
   console.log(
     recoveredWebhook
@@ -33,7 +35,7 @@ void (async function(): Promise<void> {
   await sleep(10000)
 
   console.log('You can update the webhook for specific events or url')
-  webhook = await client.updateWebhook(webhook.id, { event: 'item/updated' })
+  webhook = await client.updateWebhook(webhook.id, { event: 'item/created' })
 
   console.log('If the webhook is not needed anymore, you can delete it.')
   await client.deleteWebhook(webhook.id)
