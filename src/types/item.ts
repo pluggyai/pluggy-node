@@ -5,6 +5,8 @@ const ITEM_STATUSES = [
   'UPDATED',
   'UPDATING',
   'WAITING_USER_INPUT',
+  'WAITING_USER_ACTION',
+  'MERGING',
   'LOGIN_ERROR',
   'OUTDATED',
 ] as const
