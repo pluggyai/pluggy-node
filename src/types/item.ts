@@ -20,11 +20,25 @@ const ITEM_STATUSES = [
  */
 export type ItemStatus = typeof ITEM_STATUSES[number]
 
+export const ITEM_PRODUCT_STEP_WARNING_CODES = ['001'] as const
+export type ItemProductStepWarningCode = typeof ITEM_PRODUCT_STEP_WARNING_CODES[number]
+
+export type ItemProductStepWarning = {
+  /** The specific warning code */
+  code: ItemProductStepWarningCode
+  /** Human readable message that explains the warning */
+  message: string
+  /** Related error message exactly as found in the institution (if any). */
+  providerMessage?: string
+}
+
 export type ItemProductState = {
   /** Whether product was collected in this last execution or not */
   isUpdated: boolean
   /** Date when product was last collected for this Item, null if it has never been. */
   lastUpdatedAt: Date | null
+  /** If product was not collected, this field will provide more detailed info about the reason. */
+  warnings?: ItemProductStepWarning[]
 }
 
 /**
@@ -49,6 +63,14 @@ export type ItemProductsStatusDetail = {
   identity: ItemProductState | null
   /** Collection details for 'PAYMENT_DATA' product, or null if it was not requested at all. */
   paymentData: ItemProductState | null
+  /** Collection details for 'INCOME_REPORT' product, or null if it was not requested at all. */
+  incomeReports: ItemProductState | null
+  /** Collection details for 'PORTFOLIO' product, or null if it was not requested at all. */
+  portfolio: ItemProductState | null
+  /** Collection details for 'LOAN' product, or null if it was not requested at all. */
+  loans: ItemProductState | null
+  /** Collection details for 'MOVE_SECURITY' product, or null if it was not requested at all. */
+  opportunities: ItemProductState | null
 }
 
 export type UserAction = {
