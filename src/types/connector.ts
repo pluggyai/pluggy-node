@@ -133,6 +133,10 @@ export type Connector = {
      */
     details?: ConnectorHealthDetails
   }
+  /** Indicates that the connector is Open Finance */
+  isOpenFinance: boolean
+  /** Indicates that the connector is sandbox */
+  isSandbox: boolean
   /** Url where user can reset their account password */
   resetPasswordUrl?: string
   /** list of products supported by the institution */
