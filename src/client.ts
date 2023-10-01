@@ -24,6 +24,7 @@ import {
   IncomeReport,
   Loan,
   PageFilters,
+  InvestmentsFilters,
 } from './types'
 import { ValidationResult } from './types/validation'
 
@@ -209,8 +210,16 @@ export class PluggyClient extends BaseApi {
    * @param itemId The Item id
    * @returns {PageResponse<Investment>} paged response of investments
    */
-  async fetchInvestments(itemId: string, type?: InvestmentType): Promise<PageResponse<Investment>> {
-    return this.createGetRequest('investments', { itemId, type })
+  async fetchInvestments(
+    itemId: string,
+    type?: InvestmentType,
+    options: InvestmentsFilters = {}
+  ): Promise<PageResponse<Investment>> {
+    return this.createGetRequest('investments', {
+      ...options,
+      itemId,
+      type,
+    })
   }
 
   /**

@@ -1,4 +1,4 @@
-import { CurrencyCode } from './common'
+import { CurrencyCode, PageFilters } from './common'
 
 export const INVESTMENT_TYPES = [
   'MUTUAL_FUND',
@@ -252,3 +252,5 @@ export type Investment = {
   /** Financial institution holder  of the investment */
   institution: InvestmentInstitution | null
 }
+
+export type InvestmentsFilters = PageFilters

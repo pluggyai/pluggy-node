@@ -74,6 +74,10 @@ export type CreditCardMetadata = {
   totalInstallments?: number
   /** The amount of the installment */
   totalAmount?: number
+  /** The MCC code of the counterpart */
+  payeeMCC?: number
+  /** The original date of the purchase */
+  purchaseDate?: Date
 }
 
 export type TransactionFilters = PageFilters & {
@@ -98,6 +102,8 @@ export type Transaction = {
   type: TransactionType
   /** Amount of the transaction */
   amount: number
+  /** Amount of the transaction in account's currency */
+  amountInAccountCurrency: number | null
   /** Current balance of the trasaction, after transaction was made. */
   balance: number
   /** ISO Currency code of the Transaction */

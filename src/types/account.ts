@@ -48,6 +48,8 @@ export type BankData = {
   transferNumber: string | null
   /** available balance of the account */
   closingBalance: number | null
+  /** Automatically invested balance */
+  automaticallyInvestedBalance: number | null
 }
 
 export type CreditData = {
