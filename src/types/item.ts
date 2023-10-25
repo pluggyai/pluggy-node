@@ -59,6 +59,8 @@ export type ItemProductsStatusDetail = {
   transactions: ItemProductState | null
   /** Collection details for 'INVESTMENTS' product, or null if it was not requested at all. */
   investments: ItemProductState | null
+  /** Collection details for 'INESTMENT_TRANSACTIONS' product, or null if it was not requested at all. */
+  investmentTransactions: ItemProductState | null
   /** Collection details for 'IDENTITY' product, or null if it was not requested at all. */
   identity: ItemProductState | null
   /** Collection details for 'PAYMENT_DATA' product, or null if it was not requested at all. */
@@ -69,7 +71,7 @@ export type ItemProductsStatusDetail = {
   portfolio: ItemProductState | null
   /** Collection details for 'LOAN' product, or null if it was not requested at all. */
   loans: ItemProductState | null
-  /** Collection details for 'MOVE_SECURITY' product, or null if it was not requested at all. */
+  /** Collection details for 'OPPORTUNITIES' product, or null if it was not requested at all. */
   opportunities: ItemProductState | null
 }
 
