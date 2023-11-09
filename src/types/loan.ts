@@ -24,40 +24,26 @@ const LOAN_AMORTIZATION_TYPES = [
 
 export type LoanAmortizationScheduled = typeof LOAN_AMORTIZATION_TYPES[number]
 
-const LOAN_TAX_TYPES = [
-  'NOMINAL',
-  'EFFECTIVE',
-] as const
+const LOAN_TAX_TYPES = ['NOMINAL', 'EFFECTIVE'] as const
 
 export type LoanTaxType = typeof LOAN_TAX_TYPES[number]
 
-const LOAN_INTEREST_RATE_TYPES = [
-  'SIMPLE',
-  'COMPOUND',
-] as const
+const LOAN_INTEREST_RATE_TYPES = ['SIMPLE', 'COMPOUND'] as const
 
 export type LoanInterestRateType = typeof LOAN_INTEREST_RATE_TYPES[number]
 
 const LOAN_TAX_PERIODICITIES = [
   'MONTHLY', // a.m - ao mês
-  'YEARLY' // a.a. - ao ano
+  'YEARLY', // a.a. - ao ano
 ] as const
 
 export type LoanTaxPeriodicity = typeof LOAN_TAX_PERIODICITIES[number]
 
-const LOAN_FEE_CHARGE_TYPES = [
-  'UNIQUE',
-  'BY_INSTALLMENT',
-] as const
+const LOAN_FEE_CHARGE_TYPES = ['UNIQUE', 'BY_INSTALLMENT'] as const
 
 export type LoanFeeChargeType = typeof LOAN_FEE_CHARGE_TYPES[number]
 
-const LOAN_FEE_CHARGES = [
-  'MINIMUM',
-  'MAXIMUM',
-  'FIXED',
-  'PERCENTAGE',
-] as const
+const LOAN_FEE_CHARGES = ['MINIMUM', 'MAXIMUM', 'FIXED', 'PERCENTAGE'] as const
 
 export type LoanFeeCharge = typeof LOAN_FEE_CHARGES[number]
 
@@ -66,7 +52,7 @@ const LOAN_NUMBER_OF_INSTALLMENTS_TYPES = [
   'WEEK',
   'MONTH',
   'YEAR',
-  'WITHOUT_TOTAL_PERIOD'
+  'WITHOUT_TOTAL_PERIOD',
 ] as const
 
 export type LoanNumberOfInstallmentsType = typeof LOAN_NUMBER_OF_INSTALLMENTS_TYPES[number]
@@ -192,8 +178,6 @@ export type LoanPaymentReleaseOverParcel = {
 }
 
 export type LoanPaymentRelease = {
-  /*! Payment identifier under the responsibility of each transmitting Institution */
-  providerId: string | null
   /*! Identifies whether it is an agreed payment (false) or a one-time payment (true) */
   isOverParcelPayment: boolean | null
   /*! Installment identifier, responsibility of each transmitting Institution */
@@ -226,8 +210,6 @@ export type Loan = {
   ipocCode: string | null
   /*! Denomination/Identification of the name of the credit operation disclosed to the customer */
   productName: string
-  /*! Loan identifier under the responsibility of each transmitting Institution */
-  providerId: string | null
   /*! Loan type (https://openbanking-brasil.github.io/openapi/swagger-apis/loans/?urls.primaryName=2.0.1#model-EnumContractProductSubTypeLoans) */
   type: string | null
   /*! Date when the loan data was collected */
