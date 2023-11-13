@@ -37,3 +37,10 @@ export type PageFilters = {
   /** Amount of results to retrieve per page. Optional, default: 20. Maximum supported: 500. */
   pageSize?: number
 }
+
+export type DateFilters = {
+  /** Filter less than date. Format can be ISO Date or 'YYYY-MM-dd' string. */
+  to?: string
+  /** Filter greater than date. Format can be ISO Date, or 'YYYY-MM-dd' string. */
+  from?: string
+}
