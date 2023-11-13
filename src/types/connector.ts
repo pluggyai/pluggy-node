@@ -137,6 +137,8 @@ export type Connector = {
   isOpenFinance: boolean
   /** Indicates that the connector is sandbox */
   isSandbox: boolean
+  /** Indicates that the connector supports Payment Initiation */
+  supportsPaymentInitiation: boolean
   /** Url where user can reset their account password */
   resetPasswordUrl?: string
   /** list of products supported by the institution */
