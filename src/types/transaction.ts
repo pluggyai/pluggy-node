@@ -1,19 +1,18 @@
 import { CurrencyCode, PageFilters } from './common'
 
-export const TRANSACTION_TYPES = ['DEBIT', 'CREDIT'] as const
-
-export enum TransactionStatus {
-  PENDING = 'PENDING',
-  POSTED = 'POSTED',
-}
-
 /**
  * @typedef TransactionType
  * The direction of the transaction.
  * If DEBIT money going out of the account.
  * If CREDIT money going into the account.
  */
+export const TRANSACTION_TYPES = ['DEBIT', 'CREDIT'] as const
 export type TransactionType = typeof TRANSACTION_TYPES[number]
+
+export enum TransactionStatus {
+  PENDING = 'PENDING',
+  POSTED = 'POSTED',
+}
 
 export type TransactionPaymentParticipantDocument = {
   /** document number */

@@ -110,6 +110,15 @@ export const INVESTMENT_RATE_TYPES = ['SELIC', 'CDI', 'EURO', 'DOLAR', 'IGPM', '
 
 export type InvestmentRateType = typeof INVESTMENT_RATE_TYPES[number]
 
+/**
+ * @typedef MovementType
+ * The direction of the transaction.
+ * If DEBIT, balance decreasing from the investment.
+ * If CREDIT, balance increasing on the investment.
+ */
+export const MOVEMENT_TYPES = ['DEBIT', 'CREDIT'] as const
+export type MovementType = typeof MOVEMENT_TYPES[number]
+
 export type Expenses = {
   /** Service tax that varies according to state */
   serviceTax: number | null
@@ -169,6 +178,8 @@ export type InvestmentTransaction = {
   netAmount: number | null
   /** Taxes and fees that apply */
   expenses: Expenses | null
+  /** Type of movement */
+  movementType: MovementType
 }
 
 /** institution holding the investment */
