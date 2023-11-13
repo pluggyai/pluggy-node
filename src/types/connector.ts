@@ -156,4 +156,8 @@ export type ConnectorFilters = {
   types?: ConnectorType[]
   /** recovers sandbox connectors. Default: false */
   sandbox?: boolean
+  /** filters in (true) or out (false) open finance connectors. Default: undefined */
+  isOpenFinance?: boolean
+  /** filters in (true) or out (false) payment initiation connectors. Default: undefined */
+  supportsPaymentInitiation?: boolean
 }
