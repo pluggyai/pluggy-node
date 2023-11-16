@@ -35,7 +35,7 @@ export type PaymentIntentStatus = typeof PAYMENT_INTENT_STATUSES[number]
 
 export type CreatePaymentRequest = {
   amount: number
-  callbackUrls: CallbackUrls | null
+  callbackUrls?: CallbackUrls
   description: string
 }
 
