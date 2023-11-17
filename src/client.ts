@@ -399,7 +399,7 @@ export class PluggyClient extends BaseApi {
    * @returns {PaymentRequest} PaymentRequest object
    */
   async createPaymentRequest(paymentRequest: CreatePaymentRequest): Promise<PaymentRequest> {
-    return this.createPostRequest(`payment-requests`, null, paymentRequest)
+    return this.createPostRequest(`payments/requests`, null, paymentRequest)
   }
 
   /**
@@ -407,7 +407,7 @@ export class PluggyClient extends BaseApi {
    * @returns {PaymentRequest} PaymentRequest object
    */
   async fetchPaymentRequest(id: string): Promise<PaymentRequest> {
-    return this.createGetRequest(`payment-requests/${id}`)
+    return this.createGetRequest(`payments/requests/${id}`)
   }
 
   /**
@@ -417,14 +417,14 @@ export class PluggyClient extends BaseApi {
   async fetchPaymentRequests(
     options: PaymentRequestsFilters = {}
   ): Promise<PageResponse<PaymentRequest>> {
-    return this.createGetRequest('payment-requests', { ...options })
+    return this.createGetRequest('payments/requests', { ...options })
   }
 
   /**
    * Delete a payment request
    */
   async deletePaymentRequest(id: string): Promise<void> {
-    await this.createDeleteRequest(`payment-requests/${id}`)
+    await this.createDeleteRequest(`payments/requests/${id}`)
   }
 
   /**
@@ -432,7 +432,7 @@ export class PluggyClient extends BaseApi {
    * @returns {PaymentIntent} PaymentIntent object
    */
   async createPaymentIntent(paymentIntent: CreatePaymentIntent): Promise<PaymentIntent> {
-    return this.createPostRequest(`payment-intents`, null, paymentIntent)
+    return this.createPostRequest(`payments/intents`, null, paymentIntent)
   }
 
   /**
@@ -440,7 +440,7 @@ export class PluggyClient extends BaseApi {
    * @returns {PaymentIntent} PaymentIntent object
    */
   async fetchPaymentIntent(id: string): Promise<PaymentIntent> {
-    return this.createGetRequest(`payment-intents/${id}`)
+    return this.createGetRequest(`payments/intents/${id}`)
   }
 
   /**
@@ -450,6 +450,6 @@ export class PluggyClient extends BaseApi {
   async fetchPaymentIntents(
     options: PaymentIntentsFilters = {}
   ): Promise<PageResponse<PaymentIntent>> {
-    return this.createGetRequest('payment-intents', { ...options })
+    return this.createGetRequest('payments/intents', { ...options })
   }
 }
