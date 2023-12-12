@@ -1,4 +1,5 @@
-import { BaseApi } from './baseApi'
+import { BaseApi, ClientParams } from './baseApi'
+import { PluggyPaymentsClient } from './paymentsClient'
 import {
   Account,
   AccountType,
@@ -25,12 +26,6 @@ import {
   Loan,
   PageFilters,
   InvestmentsFilters,
-  CreatePaymentIntent,
-  CreatePaymentRequest,
-  PaymentIntent,
-  PaymentIntentsFilters,
-  PaymentRequest,
-  PaymentRequestsFilters,
 } from './types'
 import { ValidationResult } from './types/validation'
 
@@ -41,6 +36,13 @@ import { ValidationResult } from './types/validation'
  * @returns {PluggyClient} a client for making requests
  */
 export class PluggyClient extends BaseApi {
+  public payments: PluggyPaymentsClient
+
+  constructor(params: ClientParams) {
+    super(params)
+    this.payments = new PluggyPaymentsClient(params)
+  }
+
   /**
    * Fetch all available connectors
    * @returns {PageResponse<Connector>} paged response of connectors
@@ -397,64 +399,5 @@ export class PluggyClient extends BaseApi {
     options?: ConnectTokenOptions
   ): Promise<{ accessToken: string }> {
     return this.createPostRequest(`connect_token`, null, { itemId, options })
-  }
-
-  /**
-   * Creates a payment request
-   * @returns {PaymentRequest} PaymentRequest object
-   */
-  async createPaymentRequest(paymentRequest: CreatePaymentRequest): Promise<PaymentRequest> {
-    return this.createPostRequest(`payments/requests`, null, paymentRequest)
-  }
-
-  /**
-   * Fetch a single payment request
-   * @returns {PaymentRequest} PaymentRequest object
-   */
-  async fetchPaymentRequest(id: string): Promise<PaymentRequest> {
-    return this.createGetRequest(`payments/requests/${id}`)
-  }
-
-  /**
-   * Fetch all payment requests
-   * @returns {PageResponse<PaymentRequest>} paged response of payment requests
-   */
-  async fetchPaymentRequests(
-    options: PaymentRequestsFilters = {}
-  ): Promise<PageResponse<PaymentRequest>> {
-    return this.createGetRequest('payments/requests', { ...options })
-  }
-
-  /**
-   * Delete a payment request
-   */
-  async deletePaymentRequest(id: string): Promise<void> {
-    await this.createDeleteRequest(`payments/requests/${id}`)
-  }
-
-  /**
-   * Creates a payment intent
-   * @returns {PaymentIntent} PaymentIntent object
-   */
-  async createPaymentIntent(paymentIntent: CreatePaymentIntent): Promise<PaymentIntent> {
-    return this.createPostRequest(`payments/intents`, null, paymentIntent)
-  }
-
-  /**
-   * Fetch a single payment intent
-   * @returns {PaymentIntent} PaymentIntent object
-   */
-  async fetchPaymentIntent(id: string): Promise<PaymentIntent> {
-    return this.createGetRequest(`payments/intents/${id}`)
-  }
-
-  /**
-   * Fetch all payment intents
-   * @returns {PageResponse<PaymentIntent>} paged response of payment intents
-   */
-  async fetchPaymentIntents(
-    options: PaymentIntentsFilters = {}
-  ): Promise<PageResponse<PaymentIntent>> {
-    return this.createGetRequest('payments/intents', { ...options })
   }
 }
