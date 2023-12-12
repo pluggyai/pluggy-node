@@ -1,4 +1,3 @@
-import { AccountType } from './account'
 import { DateFilters, PageFilters } from './common'
 import { Connector } from './connector'
 
