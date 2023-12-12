@@ -103,10 +103,15 @@ export class PluggyClient extends BaseApi {
    *                   Optional; if none submitted, an Item update will be attempted with the latest used credentials.
    * @returns {Item} a item object
    */
-  async updateItem(id: string, parameters?: Parameters): Promise<Item> {
+  async updateItem(
+    id: string,
+    parameters?: Parameters,
+    options?: CreateItemOptions
+  ): Promise<Item> {
     return this.createPatchRequest(`items/${id}`, null, {
       id,
       parameters,
+      ...(options || {}),
     })
   }
 
