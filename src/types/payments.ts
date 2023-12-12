@@ -1,3 +1,4 @@
+import { AccountType } from './account'
 import { DateFilters, PageFilters } from './common'
 import { Connector } from './connector'
 
@@ -32,6 +33,18 @@ export const PAYMENT_INTENT_STATUSES = [
   'PAYMENT_COMPLETED',
 ] as const
 export type PaymentIntentStatus = typeof PAYMENT_INTENT_STATUSES[number]
+
+export const PAYMENT_RECIPIENT_BANK_ACCOUNT_TYPES = [
+  'SAVINGS_ACCOUNT',
+  'CHECKING_ACCOUNT',
+  'GUARANTEED_ACCOUNT',
+] as const
+
+/**
+ * @typedef PaymentRecipientBankAccountType
+ * Type of Bank Account for the Recipient
+ */
+export type PaymentRecipientBankAccountType = typeof PAYMENT_RECIPIENT_BANK_ACCOUNT_TYPES[number]
 
 export type CreatePaymentRequest = {
   amount: number
@@ -69,6 +82,71 @@ export type CreatePaymentIntent = {
   paymentRequestId: string
 }
 
+export type PaymentRecipientAccount = {
+  type: PaymentRecipientBankAccountType
+  number: string
+  branch: string
+}
+
+export type CreatePaymentRecipient = {
+  name: string
+  taxNumber: string
+  paymentInstitutionId: string
+  isDefault?: boolean
+  account: PaymentRecipientAccount
+}
+
+export type UpdatePaymentRecipient = {
+  name: string
+  taxNumber: string
+  isDefault?: boolean
+  account?: PaymentRecipientAccount
+}
+
+export type CreatePaymentCustomer = {
+  name: string
+  email: string
+  cpf: string
+  cnpj: string
+  type: 'INDIVIDUAL' | 'BUSINESS'
+}
+
+export type PaymentInstitution = {
+  id: string
+  name: string
+  tradeName: string
+  ispb: string
+  compe: string | null
+  createdAt: Date
+  updatedAt: Date
+}
+
+export type PaymentRecipient = {
+  id: string
+  name: string
+  taxNumber: string
+  isDefault: boolean
+  paymentInstitution: PaymentInstitution
+  account: PaymentRecipientAccount
+  createdAt: Date
+  updatedAt: Date
+}
+
+export type PaymentCustomer = {
+  id: string
+  name: string
+  email: string
+  cpf: string
+  cnpj: string
+  type: 'INDIVIDUAL' | 'BUSINESS'
+  createdAt: Date
+  updatedAt: Date
+}
+
 export type PaymentRequestsFilters = PageFilters & DateFilters
 
 export type PaymentIntentsFilters = PageFilters & DateFilters
+
+export type PaymentRecipientsFilters = PageFilters
+
+export type PaymentCustomersFilters = PageFilters
