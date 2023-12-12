@@ -37,6 +37,7 @@ export type CreatePaymentRequest = {
   amount: number
   callbackUrls?: CallbackUrls
   description: string
+  recipientId?: string
 }
 
 export type PaymentRequest = CreatePaymentRequest & {
