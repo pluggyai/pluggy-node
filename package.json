@@ -1,6 +1,6 @@
 {
   "name": "pluggy-sdk",
-  "version": "0.46.1",
+  "version": "0.46.2",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
