@@ -62,8 +62,8 @@ export type PaymentRequest = CreatePaymentRequest & {
 }
 
 export type CallbackUrls = {
-  success: string | null
-  error: string | null
+  success?: string
+  error?: string
 }
 
 export type PaymentIntent = {
