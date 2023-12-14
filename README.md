@@ -8,4 +8,4 @@ Official Node SDK for Pluggy API.
 
 ## Documentation
 
-For most up-to-date and accurate documentation, please see our [API Reference](https://docs.pluggy.ai) page
+For most up-to-date and accurate documentation, please see our [API Reference](https://docs.pluggy.ai) page.
