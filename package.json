@@ -15,7 +15,7 @@
     "lint:fix": "npm run lint -- --fix",
     "semantic-release": "semantic-release"
   },
-  "repository": "https://github.com/pluggyai/pluggy-sdk-node",
+  "repository": "https://github.com/pluggyai/pluggy-node",
   "keywords": [
     "pluggy",
     "pluggy.ai",
