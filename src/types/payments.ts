@@ -45,6 +45,13 @@ export const PAYMENT_RECIPIENT_BANK_ACCOUNT_TYPES = [
  */
 export type PaymentRecipientBankAccountType = typeof PAYMENT_RECIPIENT_BANK_ACCOUNT_TYPES[number]
 
+export const PAYMENT_CUSTOMER_TYPE = ['INDIVIDUAL', 'BUSINESS'] as const
+/**
+ * @typedef PaymentCustomerType
+ * Types of customers
+ */
+export type PaymentCustomerType = typeof PAYMENT_CUSTOMER_TYPE[number]
+
 export type CreatePaymentRequest = {
   amount: number
   callbackUrls?: CallbackUrls
@@ -108,7 +115,7 @@ export type CreatePaymentCustomer = {
   email: string
   cpf: string
   cnpj: string
-  type: 'INDIVIDUAL' | 'BUSINESS'
+  type: PaymentCustomerType
 }
 
 export type PaymentInstitution = {
@@ -138,7 +145,7 @@ export type PaymentCustomer = {
   email: string
   cpf: string
   cnpj: string
-  type: 'INDIVIDUAL' | 'BUSINESS'
+  type: PaymentCustomerType
   createdAt: Date
   updatedAt: Date
 }
