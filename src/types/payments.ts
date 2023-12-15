@@ -64,6 +64,7 @@ export type PaymentRequest = CreatePaymentRequest & {
   id: string
   paymentUrl: string
   status: PaymentRequestStatus
+  recipient?: PaymentRecipient
   createdAt: Date
   updatedAt: Date
 }
