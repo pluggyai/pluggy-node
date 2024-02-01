@@ -1,3 +1,4 @@
+import { PluggyAcquirerClient } from './acquirerClient'
 import { BaseApi, ClientParams } from './baseApi'
 import { PluggyPaymentsClient } from './paymentsClient'
 import {
@@ -37,10 +38,12 @@ import { ValidationResult } from './types/validation'
  */
 export class PluggyClient extends BaseApi {
   public payments: PluggyPaymentsClient
+  public acquirer: PluggyAcquirerClient
 
   constructor(params: ClientParams) {
     super(params)
     this.payments = new PluggyPaymentsClient(params)
+    this.acquirer = new PluggyAcquirerClient(params)
   }
 
   /**
@@ -338,7 +341,7 @@ export class PluggyClient extends BaseApi {
 
   /**
    * Fetch all available webhooks
-   * @returns {Webhook[]} an paging response of webhooks
+   * @returns {Webhook[]} a paging response of webhooks
    */
   async fetchWebhooks(): Promise<PageResponse<Webhook>> {
     return this.createGetRequest('webhooks')

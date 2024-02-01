@@ -15,7 +15,8 @@
     "example:creditcards": "ts-node src/creditCards.ts",
     "example:connecttoken": "ts-node src/connectToken.ts",
     "example:payments": "ts-node src/payments.ts",
-    "example:opportunities": "ts-node src/opportunities.ts"
+    "example:opportunities": "ts-node src/opportunities.ts",
+    "example:acquirers": "ts-node src/acquirers.ts"
   },
   "dependencies": {
     "dotenv": "^16.0.3",
