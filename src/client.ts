@@ -27,6 +27,7 @@ import {
   PageFilters,
   InvestmentsFilters,
 } from './types'
+import { AcquirerAnticipation, AcquirerReceivable, AcquirerSale } from './types/acquirerOperations'
 import { ValidationResult } from './types/validation'
 
 /**
@@ -338,7 +339,7 @@ export class PluggyClient extends BaseApi {
 
   /**
    * Fetch all available webhooks
-   * @returns {Webhook[]} an paging response of webhooks
+   * @returns {Webhook[]} a paging response of webhooks
    */
   async fetchWebhooks(): Promise<PageResponse<Webhook>> {
     return this.createGetRequest('webhooks')
@@ -388,6 +389,31 @@ export class PluggyClient extends BaseApi {
    */
   async fetchIncomeReports(itemId: string): Promise<PageResponse<IncomeReport>> {
     return this.createGetRequest('income-reports', { itemId })
+  }
+
+
+  /**
+   * Fetch acquirer sale operations
+   * @returns {PageResponse<AcquirerSale>} a paging response of AcquirerSale
+   */
+  async fetchAcquirerSales(itemId: string): Promise<PageResponse<AcquirerSale>> {
+    return this.createGetRequest('acquirer-sales', { itemId })
+  }
+
+    /**
+   * Fetch acquirer sale receivables
+   * @returns {PageResponse<AcquirerReceivable>} a paging response of AcquirerReceivable
+   */
+    async fetchAcquirerReceivables(itemId: string): Promise<PageResponse<AcquirerReceivable>> {
+      return this.createGetRequest('acquirer-receivables', { itemId })
+    }
+
+  /**
+   * Fetch acquirer sale anticipations
+   * @returns {PageResponse<AcquirerAnticipation>} a paging response of AcquirerAnticipation
+   */
+  async fetchAcquirerSaleAnticipations(itemId: string): Promise<PageResponse<AcquirerAnticipation>> {
+    return this.createGetRequest('acquirer-anticipations', { itemId })
   }
 
   /**

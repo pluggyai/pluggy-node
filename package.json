@@ -35,7 +35,7 @@
     "@semantic-release/npm": "^11.0.2",
     "@semantic-release/release-notes-generator": "^12.1.0",
     "@types/jsonwebtoken": "^8.5.4",
-    "@types/node": "^15.12.2",
+    "@types/node": "^16.11.7",
     "@typescript-eslint/eslint-plugin": "^2.16.0",
     "@typescript-eslint/parser": "^2.16.0",
     "eslint": "^6.8.0",
