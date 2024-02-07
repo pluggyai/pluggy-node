@@ -50,6 +50,8 @@ export type DestinationAccount = {
 }
 
 export type AcquirerSale = {
+  id: string
+  itemId: string
   description: string
   date: Date
   currencyCode: CurrencyCode
@@ -71,6 +73,8 @@ export type AcquirerSale = {
 }
 
 export type AcquirerReceivable = {
+  id: string
+  itemId: string
   description: string
   date: Date
   currencyCode: CurrencyCode
@@ -84,6 +88,8 @@ export type AcquirerReceivable = {
 }
 
 export type AcquirerAnticipation = {
+  id: string
+  itemId: string
   description: string
   date: Date
   currencyCode: CurrencyCode
