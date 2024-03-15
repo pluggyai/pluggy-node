@@ -13,14 +13,11 @@ export const PAYMENT_INTENT_ERROR_STATUSES = [
   'ERROR',
   'CANCELED',
   'CONSENT_REJECTED',
+  'EXPIRED',
 ] as const
-export type PaymentIntentErrorStatus = typeof PAYMENT_INTENT_ERROR_STATUSES[number]
 
 export const PAYMENT_INTENT_STATUSES = [
-  'PAYMENT_REJECTED',
-  'ERROR',
-  'CANCELED',
-  'CONSENT_REJECTED',
+  ...PAYMENT_INTENT_ERROR_STATUSES,
   'STARTED',
   'ENQUEUED',
   'CONSENT_AWAITING_AUTHORIZATION',
@@ -31,6 +28,9 @@ export const PAYMENT_INTENT_STATUSES = [
   'PAYMENT_SETTLEMENT_DEBTOR_ACCOUNT',
   'PAYMENT_COMPLETED',
 ] as const
+
+export type PaymentIntentErrorStatus = typeof PAYMENT_INTENT_ERROR_STATUSES[number]
+
 export type PaymentIntentStatus = typeof PAYMENT_INTENT_STATUSES[number]
 
 export const PAYMENT_RECIPIENT_BANK_ACCOUNT_TYPES = [
@@ -46,6 +46,7 @@ export const PAYMENT_RECIPIENT_BANK_ACCOUNT_TYPES = [
 export type PaymentRecipientBankAccountType = typeof PAYMENT_RECIPIENT_BANK_ACCOUNT_TYPES[number]
 
 export const PAYMENT_CUSTOMER_TYPE = ['INDIVIDUAL', 'BUSINESS'] as const
+
 /**
  * @typedef PaymentCustomerType
  * Types of customers
