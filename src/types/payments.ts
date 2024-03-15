@@ -1,10 +1,21 @@
 import { DateFilters, PageFilters } from './common'
 import { Connector } from './connector'
 
-export const PAYMENT_REQUEST_STATUS = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'ERROR'] as const
+export const PAYMENT_REQUEST_STATUS = [
+  'CREATED',
+  'IN_PROGRESS',
+  'WAITING_PAYER_AUTHORIZATION',
+  'COMPLETED',
+  'ERROR',
+] as const
 /**
  * @typedef PaymentRequestStatus
- * Status of payment request
+ * Status of payment request where:
+ * CREATED - Payment request was created
+ * IN_PROGRESS - User started the payment process
+ * WAITING_PAYER_AUTHORIZATION - User needs to authorize the payment in the payment institution
+ * COMPLETED - Payment request was completed
+ * ERROR - Payment request has an error
  */
 export type PaymentRequestStatus = typeof PAYMENT_REQUEST_STATUS[number]
 
