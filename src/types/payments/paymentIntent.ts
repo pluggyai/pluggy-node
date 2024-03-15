@@ -1,4 +1,5 @@
 import { Connector } from '../connector'
+import { BulkPayment } from './bulkPayment'
 import { PaymentRequest } from './paymentRequest'
 
 export const PAYMENT_INTENT_ERROR_STATUSES = [
@@ -30,7 +31,8 @@ export type PaymentIntent = {
   id: string
   connector: Connector
   consentUrl: string | null
-  paymentRequest: PaymentRequest
+  paymentRequest: PaymentRequest | null
+  bulkPayment: Omit<BulkPayment, 'smartAccount' | 'paymentRequests'> | null
   status: PaymentIntentStatus
   createdAt: Date
   updatedAt: Date
