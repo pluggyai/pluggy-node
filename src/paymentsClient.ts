@@ -16,6 +16,11 @@ import {
   UpdatePaymentRecipient,
   PaymentInstitution,
   PaymentInstitutionsFilters,
+  CreateBulkPaymentFields,
+  BulkPayment,
+  CreateSmartAccount,
+  SmartAccount,
+  SmartAccountBalance,
 } from './types'
 /**
  * Creates a new client instance for interacting with Pluggy API for the Payments API
@@ -185,5 +190,70 @@ export class PluggyPaymentsClient extends BaseApi {
     options: PaymentInstitutionsFilters
   ): Promise<PageResponse<PaymentInstitution>> {
     return this.createGetRequest('payments/recipients/institutions', { ...options })
+  }
+
+  /**
+   * Create a bulk payment
+   * @returns {BulkPayment} BulkPayment object
+   */
+  async createBulkPayment(payload: CreateBulkPaymentFields): Promise<BulkPayment> {
+    return this.createPostRequest(`payments/bulk`, null, payload)
+  }
+
+  /**
+   * Fetch a single bulk payment
+   * @returns {BulkPayment} BulkPayment object
+   */
+  async fetchBulkPayment(id: string): Promise<BulkPayment> {
+    return this.createGetRequest(`payments/bulk/${id}`)
+  }
+
+  /**
+   * Fetch all bulk payments
+   * @returns {PageResponse<BulkPayment>} paged response of bulk payments
+   */
+  async fetchBulkPayments(
+    options: PaymentCustomersFilters = {}
+  ): Promise<PageResponse<BulkPayment>> {
+    return this.createGetRequest('payments/bulk', options)
+  }
+
+  /** Deletes the bulk payment */
+  async deleteBulkPayment(id: string): Promise<void> {
+    await this.createDeleteRequest(`payments/bulk/${id}`)
+  }
+
+  /**
+   * Creates a smart account
+   * @returns {SmartAccount} SmartAccount object
+   */
+  async createSmartAccount(payload: CreateSmartAccount): Promise<SmartAccount> {
+    return this.createPostRequest(`payments/smart-accounts`, null, payload)
+  }
+
+  /**
+   * Fetch a single smart account
+   * @returns {SmartAccount} SmartAccount object
+   */
+  async fetchSmartAccount(id: string): Promise<SmartAccount> {
+    return this.createGetRequest(`payments/smart-accounts/${id}`)
+  }
+
+  /**
+   * Fetch a smart account current balance
+   * @returns {SmartAccountBalance} SmartAccountBalance object
+   */
+  async fetchSmartAccountBalance(id: string): Promise<SmartAccountBalance> {
+    return this.createGetRequest(`payments/smart-accounts/${id}/balance`)
+  }
+
+  /**
+   * Fetch all smart accounts
+   * @returns {PageResponse<SmartAccount>} paged response of smart accounts
+   */
+  async fetchSmartAccounts(
+    options: PaymentCustomersFilters = {}
+  ): Promise<PageResponse<SmartAccount>> {
+    return this.createGetRequest('payments/smart-accounts', options)
   }
 }
