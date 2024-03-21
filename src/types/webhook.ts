@@ -99,4 +99,9 @@ export type WebhookEventPayload = {
       /** Primary identifier of the transactions related to the event */
       transactionIds: string[]
     }
+  | {
+      event: 'payment_intent/created' | 'payment_intent/completed' | 'payment_intent/error'
+      paymentIntentId: string
+      paymentRequestId: string
+    }
 )
