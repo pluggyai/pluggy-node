@@ -26,5 +26,5 @@ export type BulkPayment = {
 
 export type CreateBulkPaymentFields = {
   smartAccountId: string
-  paymentRequestsIds: string[]
+  paymentRequestIds: string[]
 }
