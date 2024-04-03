@@ -31,6 +31,7 @@ export type PaymentRequest = CreatePaymentRequest & {
   id: string
   paymentUrl: string
   status: PaymentRequestStatus
+  bulkPaymentId: string | null
   recipient?: PaymentRecipient
   customer?: PaymentCustomer
   createdAt: Date
