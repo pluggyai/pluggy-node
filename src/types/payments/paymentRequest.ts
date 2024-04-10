@@ -22,18 +22,32 @@ export type PaymentRequestStatus = typeof PAYMENT_REQUEST_STATUS[number]
 export type CreatePaymentRequest = {
   amount: number
   callbackUrls?: CallbackUrls
-  description: string
+  description?: string
   recipientId?: string
   customerId?: string
 }
 
-export type PaymentRequest = CreatePaymentRequest & {
+export type PaymentRequest = {
+  /**! primary identifier */
   id: string
+  /**! payment to send the user to pay */
   paymentUrl: string
+  /**! amount to be paid */
+  amount: number
+  /**! description of the payment */
+  description: string | null
+  /**! status of the payment request */
   status: PaymentRequestStatus
+  /**! where the user will be redirected when the payment finishes */
+  callbackUrls: CallbackUrls | null
+  /** if the payment request is inside a bulk payment, primary identifier of the bulk */
   bulkPaymentId: string | null
-  recipient?: PaymentRecipient
-  customer?: PaymentCustomer
+  /**! recipient of the payment */
+  recipient: PaymentRecipient | null
+  /**! customer that will pay the payment */
+  customer: PaymentCustomer | null
+  /**! fees that will be charged to the customer (related to bulk) */
+  fees: number | null
   createdAt: Date
   updatedAt: Date
 }
