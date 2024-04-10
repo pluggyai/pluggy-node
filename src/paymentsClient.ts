@@ -21,8 +21,9 @@ import {
   CreateSmartAccount,
   SmartAccount,
   SmartAccountBalance,
+  PaymentReceipt,
 } from './types'
-import { PaymentReceipt } from './types/payments/paymentReceipt'
+
 /**
  * Creates a new client instance for interacting with Pluggy API for the Payments API
  * @constructor

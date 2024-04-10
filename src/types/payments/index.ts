@@ -6,4 +6,4 @@ export * from './paymentRecipient'
 export * from './paymentInstitution'
 export * from './smartAccount'
 export * from './bulkPayment'
-  
+export * from './paymentReceipt'
