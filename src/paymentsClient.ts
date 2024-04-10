@@ -22,6 +22,7 @@ import {
   SmartAccount,
   SmartAccountBalance,
 } from './types'
+import { PaymentReceipt } from './types/payments/paymentReceipt'
 /**
  * Creates a new client instance for interacting with Pluggy API for the Payments API
  * @constructor
@@ -255,5 +256,30 @@ export class PluggyPaymentsClient extends BaseApi {
     options: PaymentCustomersFilters = {}
   ): Promise<PageResponse<SmartAccount>> {
     return this.createGetRequest('payments/smart-accounts', options)
+  }
+
+  /**
+   * Creates a payment request receipt
+   * @param id ID of the payment request
+   */
+  async createPaymentRequestReceipt(id: string): Promise<PaymentReceipt> {
+    return await this.createPostRequest(`payments/requests/${id}/receipt`)
+  }
+
+  /**
+   * Fetch all payment request receipts
+   * @param id ID of the payment request
+   */
+  async fetchPaymentRequestReceipts(id: string): Promise<PageResponse<PaymentReceipt>> {
+    return this.createGetRequest(`payments/requests/${id}/receipts`)
+  }
+
+  /**
+   * Fetch a single payment request receipt
+   * @param requestId ID of the payment request
+   * @param receiptId ID of the payment request receipt
+   */
+  async fetchPaymentRequestReceipt(requestId: string, receiptId: string): Promise<PaymentReceipt> {
+    return this.createGetRequest(`payments/requests/${requestId}/receipts/${receiptId}`)
   }
 }
