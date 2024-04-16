@@ -24,9 +24,19 @@ export type BulkPayment = {
   smartAccount: SmartAccount
   feesAmount: number
   grossAmount: number
+  callbackUrls: {
+    success?: string
+    error?: string
+    pending?: string
+  } | null
 }
 
 export type CreateBulkPaymentFields = {
   smartAccountId: string
   paymentRequestIds: string[]
+  callbackUrls?: {
+    success?: string
+    error?: string
+    pending?: string
+  }
 }
