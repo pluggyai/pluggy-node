@@ -1,7 +1,6 @@
 import { BaseApi } from './baseApi'
 import {
   PageResponse,
-  CreatePaymentIntent,
   CreatePaymentRequest,
   PaymentIntent,
   PaymentIntentsFilters,
@@ -22,6 +21,7 @@ import {
   SmartAccount,
   SmartAccountBalance,
   PaymentReceipt,
+  CreatePaymentIntent,
 } from './types'
 
 /**
@@ -68,8 +68,8 @@ export class PluggyPaymentsClient extends BaseApi {
    * Creates a payment intent
    * @returns {PaymentIntent} PaymentIntent object
    */
-  async createPaymentIntent(paymentIntent: CreatePaymentIntent): Promise<PaymentIntent> {
-    return this.createPostRequest(`payments/intents`, null, paymentIntent)
+  async createPaymentIntent(params: CreatePaymentIntent): Promise<PaymentIntent> {
+    return this.createPostRequest(`payments/intents`, null, params)
   }
 
   /**

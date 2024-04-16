@@ -27,10 +27,16 @@ export type PaymentIntentErrorStatus = typeof PAYMENT_INTENT_ERROR_STATUSES[numb
 
 export type PaymentIntentStatus = typeof PAYMENT_INTENT_STATUSES[number]
 
+export type PaymentIntentPixQrData = {
+  qr: string
+  value: string
+}
+
 export type PaymentIntent = {
   id: string
-  connector: Connector
+  connector: Connector | null
   consentUrl: string | null
+  pixData: PaymentIntentPixQrData | null
   paymentRequest: PaymentRequest | null
   bulkPayment: Omit<BulkPayment, 'smartAccount' | 'paymentRequests'> | null
   status: PaymentIntentStatus
@@ -38,8 +44,28 @@ export type PaymentIntent = {
   updatedAt: Date
 }
 
-export type CreatePaymentIntent = {
+type BaseCreatePaymentIntentParams = {
   connectorId: number
-  parameters: Record<string, string>
+  parameters: {
+    cpf: string
+    cnpj?: string
+  }
+}
+
+export type CreatePaymentIntentPaymentRequestsParams = BaseCreatePaymentIntentParams & {
   paymentRequestId: string
 }
+
+export type CreatePaymentIntentBulkParmas = BaseCreatePaymentIntentParams & {
+  bulkPaymentId: string
+}
+
+export type CreatePaymentIntentBulkPixQrParams = {
+  bulkPaymentId: string
+  paymentMethod: 'PIX'
+}
+
+export type CreatePaymentIntent =
+  | CreatePaymentIntentPaymentRequestsParams
+  | CreatePaymentIntentBulkParmas
+  | CreatePaymentIntentBulkPixQrParams
