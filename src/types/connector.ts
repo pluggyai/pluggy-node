@@ -32,7 +32,7 @@ export const PRODUCT_TYPES = [
 
 export type ProductType = typeof PRODUCT_TYPES[number]
 
-export const CREDENTIAL_TYPES = ['number', 'password', 'text', 'image', 'select'] as const
+export const CREDENTIAL_TYPES = ['number', 'password', 'text', 'image', 'select', 'ethaddress', 'hcaptcha'] as const
 /**
  * @typedef CredentialType
  * credential type, used to show a proper form input to the user
