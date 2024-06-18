@@ -4,9 +4,13 @@ import { PaymentRecipient } from './paymentRecipient'
 export const PAYMENT_REQUEST_STATUS = [
   'CREATED',
   'IN_PROGRESS',
-  'WAITING_PAYER_AUTHORIZATION',
   'COMPLETED',
+  'SCHEDULED',
+  'WAITING_PAYER_AUTHORIZATION',
   'ERROR',
+  'REFUND_IN_PROGRESS',
+  'REFUNDED',
+  'REFUND_ERROR',
 ] as const
 /**
  * @typedef PaymentRequestStatus
