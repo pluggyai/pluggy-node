@@ -15,12 +15,12 @@ export type Benefit = {
   usedMarginValue?: number
   /*! Reserved margin value */
   reservedMarginValue?: number
-  /*! Available margin value for take new payroll deductible credits */
-  payrollDeductibleAvailableMarginValue?: number
+  /*! Available margin value for take new deductible loans */
+  deductibleAvailableMarginValue?: number
   /*! Paying institution */
   payingInstitution?: BenefitPayingInstitution
-  /*! payroll loans asociated to the benefit */
-  payrollLoans?: PayrollLoan[]
+  /*! Loans asociated to the benefit */
+  loans?: BenefitLoan[]
 }
 
 export type BenefitPayingInstitution = {
@@ -34,7 +34,7 @@ export type BenefitPayingInstitution = {
   account?: string
 }
 
-export type PayrollLoan = {
+export type BenefitLoan = {
   /*! Unique identifier for the contract */
   contractCode: string
   /*! CNPJ (Brazilian company ID) of the original contract creditor */
@@ -62,12 +62,12 @@ export type PayrollLoan = {
   /*! CNPJ of the corresponding banking institution */
   cnpjCorrespondentBanking?: string
   /*! Client information */
-  client: PayrollLoanClientContractInformation
+  client: BenefitLoanClientContractInformation
   /*! PDF Contract in base 64 */
   pdfContract?: string
 }
 
-export type PayrollLoanClientContractInformation = {
+export type BenefitLoanClientContractInformation = {
   /*! Document ID of the client (e.g., CPF or CNPJ) */
   document: string
   /*! Name of the client */
