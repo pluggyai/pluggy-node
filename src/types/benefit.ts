@@ -1,6 +1,10 @@
 import { CurrencyCode } from './common'
 
 export type Benefit = {
+  /*! Primary identifier of the entity */
+  id: string
+  /*! Related item id */
+  itemId: string
   /*! Number of the benefit */
   number: number
   /*! Benefit type */
