@@ -3,6 +3,7 @@
 
 export * from './account'
 export * from './auth'
+export * from './benefit'
 export * from './category'
 export * from './common'
 export * from './connector'
