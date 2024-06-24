@@ -16,6 +16,8 @@
     "example:connecttoken": "ts-node src/connectToken.ts",
     "example:payments": "ts-node src/payments.ts",
     "example:opportunities": "ts-node src/opportunities.ts",
+    "example:loans": "ts-node src/loans.ts",
+    "example:benefits": "ts-node src/benefits.ts",
     "example:acquirers": "ts-node src/acquirers.ts"
   },
   "dependencies": {

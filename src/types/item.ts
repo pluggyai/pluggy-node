@@ -73,6 +73,8 @@ export type ItemProductsStatusDetail = {
   loans: ItemProductState | null
   /** Collection details for 'OPPORTUNITIES' product, or null if it was not requested at all. */
   opportunities: ItemProductState | null
+  /** Collection details for 'BENEFIT' product, or null if it was not requested at all. */
+  benefits: ItemProductState | null
 }
 
 export type UserAction = {

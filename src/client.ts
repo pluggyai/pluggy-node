@@ -4,6 +4,7 @@ import { PluggyPaymentsClient } from './paymentsClient'
 import {
   Account,
   AccountType,
+  Benefit,
   Category,
   Connector,
   ConnectorFilters,
@@ -297,6 +298,27 @@ export class PluggyClient extends BaseApi {
    */
   async fetchLoan(id: string): Promise<Loan> {
     return this.createGetRequest(`loans/${id}`)
+  }
+
+  /**
+   * Fetch benefits from an Item
+   *
+   * @param {string} itemId
+   * @param {PageFilters} options - request search filters
+   * @returns {Promise<PageResponse<Benefit>>} - paged response of benefits
+   */
+  async fetchBenefits(itemId: string, options: PageFilters = {}): Promise<PageResponse<Benefit>> {
+    return this.createGetRequest('benefits', { ...options, itemId })
+  }
+
+  /**
+   * Fetch benefit by id
+   *
+   * @param {string} id - the benefit id
+   * @returns {Promise<Benefit>} - benefit object, if found
+   */
+  async fetchBenefit(id: string): Promise<Benefit> {
+    return this.createGetRequest(`benefits/${id}`)
   }
 
   /**
