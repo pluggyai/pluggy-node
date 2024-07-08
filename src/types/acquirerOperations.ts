@@ -10,7 +10,7 @@ export enum CreditCardBrand {
 }
 
 export const SALE_STATUSES = ['APPROVED', 'CANCELLED'] as const
-export type SaleStatus = (typeof SALE_STATUSES)[number]
+export type SaleStatus = typeof SALE_STATUSES[number]
 
 export const RECEIVABLE_SETTLEMENT_STATUSES = [
   'PAID',
@@ -19,7 +19,7 @@ export const RECEIVABLE_SETTLEMENT_STATUSES = [
   'EXPECTED',
   'OTHER',
 ] as const
-export type ReceivableSettlementStatus = (typeof RECEIVABLE_SETTLEMENT_STATUSES)[number]
+export type ReceivableSettlementStatus = typeof RECEIVABLE_SETTLEMENT_STATUSES[number]
 
 export const ANTICIPATION_STATUSES = [
   'SIMULATED',
@@ -28,13 +28,13 @@ export const ANTICIPATION_STATUSES = [
   'IN_ANALYSIS',
   'APPROVED',
 ] as const
-export type AnticipationStatus = (typeof ANTICIPATION_STATUSES)[number]
+export type AnticipationStatus = typeof ANTICIPATION_STATUSES[number]
 
 export const CARD_FUNDING_SOURCES = ['CREDIT', 'DEBIT'] as const
-export type CardFundingSource = (typeof CARD_FUNDING_SOURCES)[number]
+export type CardFundingSource = typeof CARD_FUNDING_SOURCES[number]
 
 export const SALE_PAYMENT_METHODS = ['CARD', 'PIX'] as const
-export type SalePaymentMethod = (typeof SALE_PAYMENT_METHODS)[number]
+export type SalePaymentMethod = typeof SALE_PAYMENT_METHODS[number]
 
 export type SaleInstallment = {
   number: number

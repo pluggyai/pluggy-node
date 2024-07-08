@@ -22,6 +22,7 @@ import {
   SmartAccountBalance,
   PaymentReceipt,
   CreatePaymentIntent,
+  SchedulePayment,
 } from './types'
 
 /**
@@ -282,5 +283,44 @@ export class PluggyPaymentsClient extends BaseApi {
    */
   async fetchPaymentRequestReceipt(requestId: string, receiptId: string): Promise<PaymentReceipt> {
     return this.createGetRequest(`payments/requests/${requestId}/receipts/${receiptId}`)
+  }
+
+  /**
+   * Fetch all scheduled payments from a payment request
+   * @param paymentRequest ID of the payment request
+   */
+  async fetchScheduledPayments(paymentRequest: string): Promise<PageResponse<SchedulePayment>> {
+    return this.createGetRequest(`payments/requests/${paymentRequest}/schedules`)
+  }
+
+  /**
+   * Fetch a single scheduled payment from a payment request
+   * @param paymentRequest ID of the payment request
+   * @param scheduleId ID of the scheduled payment
+   */
+  async fetchScheduledPayment(
+    paymentRequest: string,
+    scheduleId: string
+  ): Promise<SchedulePayment> {
+    return this.createGetRequest(`payments/requests/${paymentRequest}/schedules/${scheduleId}`)
+  }
+
+  /**
+   * Cancel a scheduled payment from a payment request
+   * @param paymentRequest ID of the payment request
+   * @param scheduleId ID of the scheduled payment
+   */
+  async cancelScheduledPayment(paymentRequest: string, scheduleId: string): Promise<void> {
+    await this.createPostRequest(
+      `payments/requests/${paymentRequest}/schedules/${scheduleId}/cancel`
+    )
+  }
+
+  /**
+   * Cancel the payment request authorization of a scheduled payment (cancel all pending payments)
+   * @param paymentRequest ID of the payment request
+   */
+  async cancelScheduledPayments(paymentRequest: string): Promise<void> {
+    await this.createPostRequest(`payments/requests/${paymentRequest}/schedules/cancel`)
   }
 }
