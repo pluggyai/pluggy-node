@@ -52,7 +52,7 @@ export class PluggyClient extends BaseApi {
    * @returns {PageResponse<Connector>} paged response of connectors
    */
   async fetchConnectors(options: ConnectorFilters = {}): Promise<PageResponse<Connector>> {
-    return this.createGetRequest('connectors', options)
+    return await this.createGetRequest('connectors', options)
   }
 
   /**
@@ -61,7 +61,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Connector} a connector object
    */
   async fetchConnector(id: number): Promise<Connector> {
-    return this.createGetRequest(`connectors/${id}`)
+    return await this.createGetRequest(`connectors/${id}`)
   }
 
   /**
@@ -70,7 +70,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Item} a item object
    */
   async fetchItem(id: string): Promise<Item> {
-    return this.createGetRequest(`items/${id}`)
+    return await this.createGetRequest(`items/${id}`)
   }
 
   /**
@@ -80,7 +80,7 @@ export class PluggyClient extends BaseApi {
    * @returns {ValidationResult} an object with the info of which parameters are wrong
    */
   async validateParameters(id: number, parameters: Parameters): Promise<ValidationResult> {
-    return this.createPostRequest(`connectors/${id}/validate`, null, parameters)
+    return await this.createPostRequest(`connectors/${id}/validate`, null, parameters)
   }
 
   /**
@@ -95,7 +95,7 @@ export class PluggyClient extends BaseApi {
     parameters: Record<string, string>,
     options?: CreateItemOptions
   ): Promise<Item> {
-    return this.createPostRequest(`items`, null, {
+    return await this.createPostRequest(`items`, null, {
       connectorId,
       parameters,
       ...(options || {}),
@@ -114,7 +114,7 @@ export class PluggyClient extends BaseApi {
     parameters?: Parameters,
     options?: CreateItemOptions
   ): Promise<Item> {
-    return this.createPatchRequest(`items/${id}`, null, {
+    return await this.createPatchRequest(`items/${id}`, null, {
       id,
       parameters,
       ...(options || {}),
@@ -128,7 +128,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Item} a item object
    */
   async updateItemMFA(id: string, parameters: Parameters = undefined): Promise<Item> {
-    return this.createPostRequest(`items/${id}/mfa`, null, parameters)
+    return await this.createPostRequest(`items/${id}/mfa`, null, parameters)
   }
 
   /**
@@ -144,7 +144,7 @@ export class PluggyClient extends BaseApi {
    * @returns {PageResponse<Account>} paged response of accounts
    */
   async fetchAccounts(itemId: string, type?: AccountType): Promise<PageResponse<Account>> {
-    return this.createGetRequest('accounts', { itemId, type })
+    return await this.createGetRequest('accounts', { itemId, type })
   }
 
   /**
@@ -152,7 +152,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Account} an account object
    */
   async fetchAccount(id: string): Promise<Account> {
-    return this.createGetRequest(`accounts/${id}`)
+    return await this.createGetRequest(`accounts/${id}`)
   }
 
   /**
@@ -165,7 +165,7 @@ export class PluggyClient extends BaseApi {
     accountId: string,
     options: TransactionFilters = {}
   ): Promise<PageResponse<Transaction>> {
-    return this.createGetRequest('transactions', { ...options, accountId })
+    return await this.createGetRequest('transactions', { ...options, accountId })
   }
 
   /**
@@ -207,7 +207,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Transaction} updated transaction object
    */
   async updateTransactionCategory(id: string, categoryId: string): Promise<Transaction> {
-    return this.createPatchRequest(`transactions/${id}`, null, {
+    return await this.createPatchRequest(`transactions/${id}`, null, {
       categoryId,
     })
   }
@@ -218,7 +218,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Transaction} an transaction object
    */
   async fetchTransaction(id: string): Promise<Transaction> {
-    return this.createGetRequest(`transactions/${id}`)
+    return await this.createGetRequest(`transactions/${id}`)
   }
 
   /**
@@ -232,7 +232,7 @@ export class PluggyClient extends BaseApi {
     type?: InvestmentType,
     options: InvestmentsFilters = {}
   ): Promise<PageResponse<Investment>> {
-    return this.createGetRequest('investments', {
+    return await this.createGetRequest('investments', {
       ...options,
       itemId,
       type,
@@ -245,7 +245,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Investment} an investment object
    */
   async fetchInvestment(id: string): Promise<Investment> {
-    return this.createGetRequest(`investments/${id}`)
+    return await this.createGetRequest(`investments/${id}`)
   }
 
   /**
@@ -259,7 +259,7 @@ export class PluggyClient extends BaseApi {
     investmentId: string,
     options: TransactionFilters = {}
   ): Promise<PageResponse<InvestmentTransaction>> {
-    return this.createGetRequest(`investments/${investmentId}/transactions`, {
+    return await this.createGetRequest(`investments/${investmentId}/transactions`, {
       ...options,
       investmentId,
     })
@@ -276,7 +276,7 @@ export class PluggyClient extends BaseApi {
     itemId: string,
     options: OpportunityFilters = {}
   ): Promise<PageResponse<Opportunity>> {
-    return this.createGetRequest('opportunities', { ...options, itemId })
+    return await this.createGetRequest('opportunities', { ...options, itemId })
   }
 
   /**
@@ -287,7 +287,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Promise<PageResponse<Loan>>} - paged response of loans
    */
   async fetchLoans(itemId: string, options: PageFilters = {}): Promise<PageResponse<Loan>> {
-    return this.createGetRequest('loans', { ...options, itemId })
+    return await this.createGetRequest('loans', { ...options, itemId })
   }
 
   /**
@@ -297,7 +297,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Promise<Loan>} - loan object, if found
    */
   async fetchLoan(id: string): Promise<Loan> {
-    return this.createGetRequest(`loans/${id}`)
+    return await this.createGetRequest(`loans/${id}`)
   }
 
   /**
@@ -308,7 +308,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Promise<PageResponse<Benefit>>} - paged response of benefits
    */
   async fetchBenefits(itemId: string, options: PageFilters = {}): Promise<PageResponse<Benefit>> {
-    return this.createGetRequest('benefits', { ...options, itemId })
+    return await this.createGetRequest('benefits', { ...options, itemId })
   }
 
   /**
@@ -318,7 +318,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Promise<Benefit>} - benefit object, if found
    */
   async fetchBenefit(id: string): Promise<Benefit> {
-    return this.createGetRequest(`benefits/${id}`)
+    return await this.createGetRequest(`benefits/${id}`)
   }
 
   /**
@@ -326,7 +326,7 @@ export class PluggyClient extends BaseApi {
    * @returns {IdentityResponse} an identity object
    */
   async fetchIdentity(id: string): Promise<IdentityResponse> {
-    return this.createGetRequest(`identity/${id}`)
+    return await this.createGetRequest(`identity/${id}`)
   }
 
   /**
@@ -334,7 +334,7 @@ export class PluggyClient extends BaseApi {
    * @returns {IdentityResponse} an identity object
    */
   async fetchIdentityByItemId(itemId: string): Promise<IdentityResponse> {
-    return this.createGetRequest(`identity?itemId=${itemId}`)
+    return await this.createGetRequest(`identity?itemId=${itemId}`)
   }
 
   /**
@@ -342,7 +342,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Categories[]} an paging response of categories
    */
   async fetchCategories(): Promise<PageResponse<Category>> {
-    return this.createGetRequest('categories')
+    return await this.createGetRequest('categories')
   }
 
   /**
@@ -350,7 +350,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Category} a category object
    */
   async fetchCategory(id: string): Promise<Category> {
-    return this.createGetRequest(`categories/${id}`)
+    return await this.createGetRequest(`categories/${id}`)
   }
 
   /**
@@ -358,7 +358,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Webhook} a webhook object
    */
   async fetchWebhook(id: string): Promise<Webhook> {
-    return this.createGetRequest(`webhooks/${id}`)
+    return await this.createGetRequest(`webhooks/${id}`)
   }
 
   /**
@@ -366,7 +366,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Webhook[]} a paging response of webhooks
    */
   async fetchWebhooks(): Promise<PageResponse<Webhook>> {
-    return this.createGetRequest('webhooks')
+    return await this.createGetRequest('webhooks')
   }
 
   /**
@@ -382,7 +382,7 @@ export class PluggyClient extends BaseApi {
     url: CreateWebhook['url'],
     headers?: CreateWebhook['headers']
   ): Promise<Webhook> {
-    return this.createPostRequest(`webhooks`, null, {
+    return await this.createPostRequest(`webhooks`, null, {
       event,
       url,
       headers,
@@ -396,14 +396,14 @@ export class PluggyClient extends BaseApi {
    * @returns {Webhook} The webhook updated
    */
   async updateWebhook(id: string, updatedWebhookParams: UpdateWebhook): Promise<Webhook> {
-    return this.createPatchRequest(`webhooks/${id}`, null, updatedWebhookParams)
+    return await this.createPatchRequest(`webhooks/${id}`, null, updatedWebhookParams)
   }
 
   /**
    * Deletes a Webhook
    */
   async deleteWebhook(id: string): Promise<void> {
-    return this.createDeleteRequest(`webhooks/${id}`)
+    return await this.createDeleteRequest(`webhooks/${id}`)
   }
 
   /**
@@ -412,7 +412,7 @@ export class PluggyClient extends BaseApi {
    * @returns {PageResponse<IncomeReport>} paged response of income reports
    */
   async fetchIncomeReports(itemId: string): Promise<PageResponse<IncomeReport>> {
-    return this.createGetRequest('income-reports', { itemId })
+    return await this.createGetRequest('income-reports', { itemId })
   }
 
   /**
@@ -423,6 +423,6 @@ export class PluggyClient extends BaseApi {
     itemId?: string,
     options?: ConnectTokenOptions
   ): Promise<{ accessToken: string }> {
-    return this.createPostRequest(`connect_token`, null, { itemId, options })
+    return await this.createPostRequest(`connect_token`, null, { itemId, options })
   }
 }
