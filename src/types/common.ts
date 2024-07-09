@@ -177,7 +177,7 @@ export const CURRENCY_CODES = [
   'YER',
   'ZAR',
   'ZMW',
-  'ZWL'
+  'ZWL',
 ] as const
 /**
  * @typedef CurrencyCode

@@ -22,6 +22,7 @@ import {
   SmartAccountBalance,
   PaymentReceipt,
   CreatePaymentIntent,
+  SchedulePayment,
 } from './types'
 
 /**
@@ -36,7 +37,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {PaymentRequest} PaymentRequest object
    */
   async createPaymentRequest(paymentRequest: CreatePaymentRequest): Promise<PaymentRequest> {
-    return this.createPostRequest(`payments/requests`, null, paymentRequest)
+    return await this.createPostRequest(`payments/requests`, null, paymentRequest)
   }
 
   /**
@@ -44,7 +45,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {PaymentRequest} PaymentRequest object
    */
   async fetchPaymentRequest(id: string): Promise<PaymentRequest> {
-    return this.createGetRequest(`payments/requests/${id}`)
+    return await this.createGetRequest(`payments/requests/${id}`)
   }
 
   /**
@@ -54,7 +55,7 @@ export class PluggyPaymentsClient extends BaseApi {
   async fetchPaymentRequests(
     options: PaymentRequestsFilters = {}
   ): Promise<PageResponse<PaymentRequest>> {
-    return this.createGetRequest('payments/requests', { ...options })
+    return await this.createGetRequest('payments/requests', { ...options })
   }
 
   /**
@@ -69,7 +70,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {PaymentIntent} PaymentIntent object
    */
   async createPaymentIntent(params: CreatePaymentIntent): Promise<PaymentIntent> {
-    return this.createPostRequest(`payments/intents`, null, params)
+    return await this.createPostRequest(`payments/intents`, null, params)
   }
 
   /**
@@ -77,7 +78,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {PaymentIntent} PaymentIntent object
    */
   async fetchPaymentIntent(id: string): Promise<PaymentIntent> {
-    return this.createGetRequest(`payments/intents/${id}`)
+    return await this.createGetRequest(`payments/intents/${id}`)
   }
 
   /**
@@ -87,7 +88,7 @@ export class PluggyPaymentsClient extends BaseApi {
   async fetchPaymentIntents(
     options: PaymentIntentsFilters = {}
   ): Promise<PageResponse<PaymentIntent>> {
-    return this.createGetRequest('payments/intents', { ...options })
+    return await this.createGetRequest('payments/intents', { ...options })
   }
 
   /**
@@ -95,7 +96,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {PaymentCustomer} PaymentCustomer object
    */
   async createPaymentCustomer(payload: CreatePaymentCustomer): Promise<PaymentCustomer> {
-    return this.createPostRequest(`payments/customers`, null, payload)
+    return await this.createPostRequest(`payments/customers`, null, payload)
   }
 
   /**
@@ -103,7 +104,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {PaymentCustomer} PaymentCustomer object
    */
   async fetchPaymentCustomer(id: string): Promise<PaymentCustomer> {
-    return this.createGetRequest(`payments/customers/${id}`)
+    return await this.createGetRequest(`payments/customers/${id}`)
   }
 
   /**
@@ -113,7 +114,7 @@ export class PluggyPaymentsClient extends BaseApi {
   async fetchPaymentCustomers(
     options: PaymentCustomersFilters = {}
   ): Promise<PageResponse<PaymentCustomer>> {
-    return this.createGetRequest('payments/customers', { ...options })
+    return await this.createGetRequest('payments/customers', { ...options })
   }
 
   /**
@@ -127,7 +128,7 @@ export class PluggyPaymentsClient extends BaseApi {
     id: string,
     payload: Partial<CreatePaymentCustomer>
   ): Promise<PaymentCustomer> {
-    return this.createPatchRequest(`payments/customers/${id}`, null, payload)
+    return await this.createPatchRequest(`payments/customers/${id}`, null, payload)
   }
 
   /**
@@ -135,7 +136,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {PaymentRecipient} PaymentRecipient object
    */
   async createPaymentRecipient(payload: CreatePaymentRecipient): Promise<PaymentRecipient> {
-    return this.createPostRequest(`payments/recipients`, null, payload)
+    return await this.createPostRequest(`payments/recipients`, null, payload)
   }
 
   /**
@@ -143,7 +144,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {PaymentRecipient} PaymentRecipient object
    */
   async fetchPaymentRecipient(id: string): Promise<PaymentRecipient> {
-    return this.createGetRequest(`payments/recipients/${id}`)
+    return await this.createGetRequest(`payments/recipients/${id}`)
   }
 
   /**
@@ -153,7 +154,7 @@ export class PluggyPaymentsClient extends BaseApi {
   async fetchPaymentRecipients(
     options: PaymentRecipientsFilters = {}
   ): Promise<PageResponse<PaymentRecipient>> {
-    return this.createGetRequest('payments/recipients', { ...options })
+    return await this.createGetRequest('payments/recipients', { ...options })
   }
 
   /**
@@ -173,7 +174,7 @@ export class PluggyPaymentsClient extends BaseApi {
     id: string,
     payload: UpdatePaymentRecipient
   ): Promise<PaymentRecipient> {
-    return this.createPatchRequest(`payments/recipients/${id}`, null, payload)
+    return await this.createPatchRequest(`payments/recipients/${id}`, null, payload)
   }
 
   /**
@@ -181,7 +182,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {PaymentInstitution} PaymentInstitution object
    */
   async fetchPaymentInstitution(id: string): Promise<PaymentInstitution> {
-    return this.createGetRequest(`payments/recipients/institutions/${id}`)
+    return await this.createGetRequest(`payments/recipients/institutions/${id}`)
   }
 
   /**
@@ -191,7 +192,7 @@ export class PluggyPaymentsClient extends BaseApi {
   async fetchPaymentInstitutions(
     options: PaymentInstitutionsFilters
   ): Promise<PageResponse<PaymentInstitution>> {
-    return this.createGetRequest('payments/recipients/institutions', { ...options })
+    return await this.createGetRequest('payments/recipients/institutions', { ...options })
   }
 
   /**
@@ -199,7 +200,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {BulkPayment} BulkPayment object
    */
   async createBulkPayment(payload: CreateBulkPaymentFields): Promise<BulkPayment> {
-    return this.createPostRequest(`payments/bulk`, null, payload)
+    return await this.createPostRequest(`payments/bulk`, null, payload)
   }
 
   /**
@@ -207,7 +208,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {BulkPayment} BulkPayment object
    */
   async fetchBulkPayment(id: string): Promise<BulkPayment> {
-    return this.createGetRequest(`payments/bulk/${id}`)
+    return await this.createGetRequest(`payments/bulk/${id}`)
   }
 
   /**
@@ -217,7 +218,7 @@ export class PluggyPaymentsClient extends BaseApi {
   async fetchBulkPayments(
     options: PaymentCustomersFilters = {}
   ): Promise<PageResponse<BulkPayment>> {
-    return this.createGetRequest('payments/bulk', options)
+    return await this.createGetRequest('payments/bulk', options)
   }
 
   /** Deletes the bulk payment */
@@ -230,7 +231,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {SmartAccount} SmartAccount object
    */
   async createSmartAccount(payload: CreateSmartAccount): Promise<SmartAccount> {
-    return this.createPostRequest(`payments/smart-accounts`, null, payload)
+    return await this.createPostRequest(`payments/smart-accounts`, null, payload)
   }
 
   /**
@@ -238,7 +239,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {SmartAccount} SmartAccount object
    */
   async fetchSmartAccount(id: string): Promise<SmartAccount> {
-    return this.createGetRequest(`payments/smart-accounts/${id}`)
+    return await this.createGetRequest(`payments/smart-accounts/${id}`)
   }
 
   /**
@@ -246,7 +247,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {SmartAccountBalance} SmartAccountBalance object
    */
   async fetchSmartAccountBalance(id: string): Promise<SmartAccountBalance> {
-    return this.createGetRequest(`payments/smart-accounts/${id}/balance`)
+    return await this.createGetRequest(`payments/smart-accounts/${id}/balance`)
   }
 
   /**
@@ -256,7 +257,7 @@ export class PluggyPaymentsClient extends BaseApi {
   async fetchSmartAccounts(
     options: PaymentCustomersFilters = {}
   ): Promise<PageResponse<SmartAccount>> {
-    return this.createGetRequest('payments/smart-accounts', options)
+    return await this.createGetRequest('payments/smart-accounts', options)
   }
 
   /**
@@ -272,7 +273,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @param id ID of the payment request
    */
   async fetchPaymentRequestReceipts(id: string): Promise<PageResponse<PaymentReceipt>> {
-    return this.createGetRequest(`payments/requests/${id}/receipts`)
+    return await this.createGetRequest(`payments/requests/${id}/receipts`)
   }
 
   /**
@@ -281,6 +282,47 @@ export class PluggyPaymentsClient extends BaseApi {
    * @param receiptId ID of the payment request receipt
    */
   async fetchPaymentRequestReceipt(requestId: string, receiptId: string): Promise<PaymentReceipt> {
-    return this.createGetRequest(`payments/requests/${requestId}/receipts/${receiptId}`)
+    return await this.createGetRequest(`payments/requests/${requestId}/receipts/${receiptId}`)
+  }
+
+  /**
+   * Fetch all scheduled payments from a payment request
+   * @param paymentRequest ID of the payment request
+   */
+  async fetchScheduledPayments(paymentRequest: string): Promise<PageResponse<SchedulePayment>> {
+    return await this.createGetRequest(`payments/requests/${paymentRequest}/schedules`)
+  }
+
+  /**
+   * Fetch a single scheduled payment from a payment request
+   * @param paymentRequest ID of the payment request
+   * @param scheduleId ID of the scheduled payment
+   */
+  async fetchScheduledPayment(
+    paymentRequest: string,
+    scheduleId: string
+  ): Promise<SchedulePayment> {
+    return await this.createGetRequest(
+      `payments/requests/${paymentRequest}/schedules/${scheduleId}`
+    )
+  }
+
+  /**
+   * Cancel a scheduled payment from a payment request
+   * @param paymentRequest ID of the payment request
+   * @param scheduleId ID of the scheduled payment
+   */
+  async cancelScheduledPayment(paymentRequest: string, scheduleId: string): Promise<void> {
+    await this.createPostRequest(
+      `payments/requests/${paymentRequest}/schedules/${scheduleId}/cancel`
+    )
+  }
+
+  /**
+   * Cancel the payment request authorization of a scheduled payment (cancel all pending payments)
+   * @param paymentRequest ID of the payment request
+   */
+  async cancelScheduledPayments(paymentRequest: string): Promise<void> {
+    await this.createPostRequest(`payments/requests/${paymentRequest}/schedules/cancel`)
   }
 }

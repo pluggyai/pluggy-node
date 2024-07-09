@@ -1,7 +1,5 @@
 import { BaseApi } from './baseApi'
-import {
-  PageResponse,
-} from './types'
+import { PageResponse } from './types'
 import { AcquirerAnticipation, AcquirerReceivable, AcquirerSale } from './types/acquirerOperations'
 /**
  * Creates a new client instance for interacting with Pluggy API for the Acquirer API
@@ -10,7 +8,6 @@ import { AcquirerAnticipation, AcquirerReceivable, AcquirerSale } from './types/
  * @returns {PluggyAcquirerClient} a client for making requests
  */
 export class PluggyAcquirerClient extends BaseApi {
-  
   /**
    * Fetch acquirer sale operations
    * @returns {PageResponse<AcquirerSale>} a paging response of AcquirerSale
@@ -19,13 +16,13 @@ export class PluggyAcquirerClient extends BaseApi {
     return this.createGetRequest('acquirer-sales', { itemId })
   }
 
-    /**
+  /**
    * Fetch acquirer sale receivables
    * @returns {PageResponse<AcquirerReceivable>} a paging response of AcquirerReceivable
    */
-    async fetchReceivables(itemId: string): Promise<PageResponse<AcquirerReceivable>> {
-      return this.createGetRequest('acquirer-receivables', { itemId })
-    }
+  async fetchReceivables(itemId: string): Promise<PageResponse<AcquirerReceivable>> {
+    return this.createGetRequest('acquirer-receivables', { itemId })
+  }
 
   /**
    * Fetch acquirer sale anticipations

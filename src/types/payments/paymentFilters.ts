@@ -1,4 +1,4 @@
-import { PageFilters, DateFilters } from "../common"
+import { PageFilters, DateFilters } from '../common'
 
 export type PaymentRequestsFilters = PageFilters & DateFilters
 

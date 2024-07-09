@@ -1,5 +1,16 @@
-import { PaymentCustomer } from './paymentCustomer'
+import type { PaymentCustomer } from './paymentCustomer'
 import { PaymentRecipient } from './paymentRecipient'
+
+export declare const DAYS_OF_WEEK: readonly [
+  'MONDAY',
+  'TUESDAY',
+  'WEDNESDAY',
+  'THURSDAY',
+  'FRIDAY',
+  'SATURDAY',
+  'SUNDAY'
+]
+export type DaysOfWeek = typeof DAYS_OF_WEEK[number]
 
 export const PAYMENT_REQUEST_STATUS = [
   'CREATED',
@@ -29,6 +40,45 @@ export type CreatePaymentRequest = {
   description?: string
   recipientId?: string
   customerId?: string
+  schedule?: PaymentRequestSchedule
+}
+
+export type PaymentRequestSchedule =
+  | SingleSchedule
+  | DailySchedule
+  | WeeklySchedule
+  | MonthlySchedule
+  | CustomSchedule
+
+export type SingleSchedule = {
+  type: 'SINGLE'
+  date: string
+}
+
+export type DailySchedule = {
+  type: 'DAILY'
+  startDate: string
+  occurrences: number
+}
+
+export type WeeklySchedule = {
+  type: 'WEEKLY'
+  startDate: string
+  occurrences: number
+  dayOfWeek: DaysOfWeek
+}
+
+export type MonthlySchedule = {
+  type: 'MONTHLY'
+  startDate: string
+  occurrences: number
+  dayOfMonth: number
+}
+
+export type CustomSchedule = {
+  type: 'CUSTOM'
+  dates: string[]
+  additionalInformation?: string
 }
 
 export type PaymentRequest = {
@@ -52,7 +102,11 @@ export type PaymentRequest = {
   customer: PaymentCustomer | null
   /**! fees that will be charged to the customer (related to bulk) */
   fees: number | null
+  /**! schedule of the payment */
+  schedule: PaymentRequestSchedule | null
+  /**! createdAt date */
   createdAt: Date
+  /**! updatedAt date */
   updatedAt: Date
 }
 
