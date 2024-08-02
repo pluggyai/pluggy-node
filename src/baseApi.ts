@@ -58,7 +58,7 @@ export class BaseApi {
         retry: {
           limit: 3,
           methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-          statusCodes: [408, 429, 500, 502, 503, 504],
+          statusCodes: [429],
           calculateDelay: ({ retryAfter }): number => {
             return retryAfter ?? _60_SECONDS
           },
