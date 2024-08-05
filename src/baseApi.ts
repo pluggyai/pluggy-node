@@ -1,4 +1,4 @@
-import got, { HTTPError, Method } from 'got'
+import got, { Got, HTTPError, Method } from 'got'
 import * as jwt from 'jsonwebtoken'
 import { deserializeJSONWithDates } from './transforms'
 
@@ -7,6 +7,8 @@ const {
   dependencies: { got: gotVersion },
   // eslint-disable-next-line @typescript-eslint/no-var-requires
 } = require('../package.json')
+
+const _60_SECONDS = 60 * 1000
 
 type QueryParameters = { [key: string]: number | number[] | string | string[] | boolean }
 
@@ -24,6 +26,7 @@ export class BaseApi {
   protected clientSecret: string
   protected baseUrl?: string
   protected defaultHeaders: Record<string, string>
+  protected serviceInstance: Got
 
   constructor(params: ClientParams) {
     const { clientId, clientSecret } = params
@@ -46,19 +49,41 @@ export class BaseApi {
     }
   }
 
+  private getServiceInstance(): Got {
+    if (!this.serviceInstance) {
+      this.serviceInstance = got.extend({
+        headers: this.defaultHeaders,
+        responseType: 'json',
+        parseJson: deserializeJSONWithDates,
+        retry: {
+          limit: 3,
+          methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+          statusCodes: [429],
+          calculateDelay: ({ retryAfter }): number => {
+            return retryAfter ?? _60_SECONDS
+          },
+        },
+      })
+    }
+    return this.serviceInstance
+  }
+
   protected async getApiKey(): Promise<string> {
     if (this.apiKey && !this.isJwtExpired(this.apiKey)) {
       return this.apiKey
     }
 
-    const response = await got.post<{ apiKey: string }>(`${this.baseUrl}/auth`, {
-      json: {
-        clientId: this.clientId,
-        clientSecret: this.clientSecret,
-        nonExpiring: false,
-      },
-      responseType: 'json',
-    })
+    const response = await this.getServiceInstance().post<{ apiKey: string }>(
+      `${this.baseUrl}/auth`,
+      {
+        json: {
+          clientId: this.clientId,
+          clientSecret: this.clientSecret,
+          nonExpiring: false,
+        },
+        responseType: 'json',
+      }
+    )
 
     this.apiKey = response.body.apiKey
     return this.apiKey
@@ -69,7 +94,7 @@ export class BaseApi {
     const url = `${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`
 
     try {
-      const { statusCode, body } = await got<T>(url, {
+      const { statusCode, body } = await this.getServiceInstance()<T>(url, {
         headers: {
           ...this.defaultHeaders,
           'X-API-KEY': apiKey,
@@ -140,15 +165,13 @@ export class BaseApi {
     }
 
     try {
-      const { statusCode, body: responseBody } = await got<T>(url, {
+      const { statusCode, body: responseBody } = await this.getServiceInstance()<T>(url, {
         method,
         headers: {
           ...this.defaultHeaders,
           'X-API-KEY': apiKey,
         },
         json: body,
-        responseType: 'json',
-        parseJson: deserializeJSONWithDates,
       })
 
       if (statusCode !== 200) {
