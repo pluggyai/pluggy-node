@@ -29,13 +29,20 @@ export type PaymentRecipient = {
   updatedAt: Date
 }
 
-export type CreatePaymentRecipient = {
-  name: string
-  taxNumber: string
-  paymentInstitutionId: string
-  isDefault?: boolean
-  account: PaymentRecipientAccount
-}
+export type CreatePaymentRecipient =
+  | {
+      name: string
+      taxNumber: string
+      paymentInstitutionId: string
+      isDefault?: boolean
+      account: PaymentRecipientAccount
+    }
+  | {
+      pixKey: string
+    }
+  | {
+      smartAccountId: string
+    }
 
 export type UpdatePaymentRecipient = {
   name: string
