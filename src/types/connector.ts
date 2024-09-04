@@ -148,6 +148,10 @@ export type Connector = {
   isSandbox: boolean
   /** Indicates that the connector supports Payment Initiation */
   supportsPaymentInitiation: boolean
+  /** Indicates that the connector supports Scheduled Payments */
+  supportsScheduledPayments: boolean
+  /** Indicates that the connector supports Smart Transfers */
+  supportsSmartTransfers: boolean
   /** Url where user can reset their account password */
   resetPasswordUrl?: string
   /** list of products supported by the institution */
