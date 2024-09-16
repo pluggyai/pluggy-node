@@ -29,6 +29,7 @@ import {
   PageFilters,
   InvestmentsFilters,
 } from './types'
+import { CreditCardBills } from './types/creditCardBills'
 import { ValidationResult } from './types/validation'
 
 /**
@@ -335,6 +336,26 @@ export class PluggyClient extends BaseApi {
    */
   async fetchIdentityByItemId(itemId: string): Promise<IdentityResponse> {
     return await this.createGetRequest(`identity?itemId=${itemId}`)
+  }
+
+  /**
+   * Fetch credit card bills from an accountId
+   * @returns {PageResponse<CreditCardBills>} an credit card bills object
+   */
+  async fetchCreditCardBills(
+    accountId: string,
+    options: PageFilters = {}
+  ): Promise<PageResponse<CreditCardBills>> {
+    return await this.createGetRequest('bills', { ...options, accountId })
+  }
+
+  /**
+   * Fetch a single credit card bill by its id
+   * @param {string} id - the credit card bill id
+   * @returns {Promise<CreditCardBills>} - credit card bill object, if found
+   */
+  async fetchCreditCardBill(id: string): Promise<CreditCardBills> {
+    return await this.createGetRequest(`bills/${id}`)
   }
 
   /**
