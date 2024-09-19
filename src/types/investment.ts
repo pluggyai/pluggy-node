@@ -197,7 +197,7 @@ export type Investment = {
   /** CNPJ of the issuer behind the investment. */
   issuerCNPJ: string | null
   /** Unique FI provider identifier that attach's the owner to an investment and its available as a reference. */
-  number: string
+  number: string | null
   /** 12-character ISIN, a globally unique identifier */
   isin: string | null
   /** Item identifier asscoiated with the investment */
