@@ -267,6 +267,37 @@ export class PluggyClient extends BaseApi {
   }
 
   /**
+   * Fetch all investment transactions from an investment
+   * @param investmentId The investment id
+   * @returns {InvestmentTransaction[]} an array of investment transactions
+   */
+  async fetchAllInvestmentTransactions(investmentId: string): Promise<InvestmentTransaction[]> {
+    const MAX_PAGE_SIZE = 500
+    const {
+      totalPages,
+      results: firstPageResults,
+    } = await this.fetchInvestmentTransactions(investmentId, { pageSize: MAX_PAGE_SIZE })
+    if (totalPages === 1) {
+      return firstPageResults
+    }
+
+    const transactions: InvestmentTransaction[] = [...firstPageResults]
+
+    let page = 1
+
+    while (page < totalPages) {
+      page++
+      const paginatedTransactions = await this.fetchInvestmentTransactions(investmentId, {
+        page,
+        pageSize: MAX_PAGE_SIZE,
+      })
+      transactions.push(...paginatedTransactions.results)
+    }
+
+    return transactions
+  }
+
+  /**
    * Fetch opportunities from an Item
    *
    * @param itemId the Item id
