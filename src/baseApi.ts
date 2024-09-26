@@ -8,7 +8,7 @@ const {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
 } = require('../package.json')
 
-const _60_SECONDS = 60 * 1000
+const _30_SECONDS = 30 * 1000
 
 type QueryParameters = { [key: string]: number | number[] | string | string[] | boolean }
 
@@ -55,13 +55,11 @@ export class BaseApi {
         headers: this.defaultHeaders,
         responseType: 'json',
         parseJson: deserializeJSONWithDates,
+        timeout: _30_SECONDS,
         retry: {
-          limit: 3,
+          limit: 2,
           methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
           statusCodes: [429],
-          calculateDelay: ({ retryAfter }): number => {
-            return retryAfter ?? _60_SECONDS
-          },
         },
       })
     }
