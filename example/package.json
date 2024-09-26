@@ -18,7 +18,8 @@
     "example:opportunities": "ts-node src/opportunities.ts",
     "example:loans": "ts-node src/loans.ts",
     "example:benefits": "ts-node src/benefits.ts",
-    "example:acquirers": "ts-node src/acquirers.ts"
+    "example:acquirers": "ts-node src/acquirers.ts",
+    "example:payment-recipient": "ts-node src/payment-recipient.ts"
   },
   "dependencies": {
     "dotenv": "^16.0.3",
