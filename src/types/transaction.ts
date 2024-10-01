@@ -119,4 +119,6 @@ export type Transaction = {
   creditCardMetadata: CreditCardMetadata | null
   /** Additional data related to the merchant associated to the transaction */
   merchant?: TransactionMerchantData
+  /** Category ID of the transaction */
+  categoryId: string | null
 }
