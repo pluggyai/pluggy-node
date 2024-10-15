@@ -1,6 +1,7 @@
 import { TriggeredBy } from './execution'
 
 export const WEBHOOK_EVENTS = [
+  'all',
   'item/created',
   'item/updated',
   'item/error',
@@ -9,7 +10,15 @@ export const WEBHOOK_EVENTS = [
   'item/login_succeeded',
   'connector/status_updated',
   'transactions/deleted',
-  'all',
+  'connector/status_updated',
+  'payment_intent/created',
+  'payment_intent/completed',
+  'payment_intent/waiting_payer_authorization',
+  'payment_intent/error',
+  'scheduled_payment/created',
+  'scheduled_payment/completed',
+  'scheduled_payment/error',
+  'scheduled_payment/canceled',
 ] as const
 /**
  * @typedef WebhookEvent
@@ -103,5 +112,14 @@ export type WebhookEventPayload = {
       event: 'payment_intent/created' | 'payment_intent/completed' | 'payment_intent/error'
       paymentIntentId: string
       paymentRequestId: string
+    }
+  | {
+      event:
+        | 'scheduled_payment/created'
+        | 'scheduled_payment/completed'
+        | 'scheduled_payment/error'
+        | 'scheduled_payment/canceled'
+      paymentRequestId: string
+      scheduledPaymentId: string
     }
 )
