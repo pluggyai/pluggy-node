@@ -41,6 +41,8 @@ export type CreatePaymentRequest = {
   recipientId?: string
   customerId?: string
   schedule?: PaymentRequestSchedule
+  smartAccountId?: string
+  clientPaymentId?: string
 }
 
 export type PaymentRequestSchedule =
@@ -108,6 +110,8 @@ export type PaymentRequest = {
   createdAt: Date
   /**! updatedAt date */
   updatedAt: Date
+  /**! Identification from client that can be used to track payment */
+  clientPaymentId: string | null
 }
 
 export type CallbackUrls = {
