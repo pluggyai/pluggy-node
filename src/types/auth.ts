@@ -4,7 +4,7 @@ export type ConnectTokenOptions = {
   /** A unique identifier of the user, usually used the UserId of your app */
   clientUserId?: string
   /** Url where the user will be redirected to after the oauth flow */
-  oauthRedirectUrl?: string
+  oauthRedirectUri?: string
   /** Avoid duplicate items per user */
   avoidDuplicates?: boolean
 }
