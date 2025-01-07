@@ -136,4 +136,6 @@ export type CreateItemOptions = {
    * If not specified, all products available to your subscription level will be collected.
    */
   products?: ProductType[]
+  /** Avoid duplicate items per user */
+  avoidDuplicates?: boolean
 }
