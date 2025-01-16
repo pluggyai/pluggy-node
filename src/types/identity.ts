@@ -27,6 +27,14 @@ export type IdentityResponse = {
   relations: IdentityRelation[] | null
   /** The investor's personality and motivation for investing  */
   investorProfile: 'Conservative' | 'Moderate' | 'Aggressive' | null
+  /** Name of the establishment */
+  establishmentName: string | null
+  /** Code of the establishment */
+  establishmentCode: string | null
+  /** List of financial relationships */
+  financialRelationships: FinancialRelationships | null
+  /** List of qualifications */
+  qualifications: Qualifications | null
   /** Date of the first time that the Identity was recovered */
   createdAt: Date
   /** Last update of the Identity data (if the data never changes, updatedAt will be the same as createdAt) */
@@ -57,4 +65,77 @@ export type Address = {
   state: string | null
   country: string | null
   type: 'Personal' | 'Work' | null
+}
+
+export type FinancialRelationships = {
+  /** Start date of the relationship */
+  startDate: Date
+  /** List of products and services type */
+  productsServicesType: string[]
+  /** List of procurators */
+  procurators: Procurator[]
+  /** List of accounts */
+  accounts?: FinancialRelationshipAccount[]
+}
+
+export type FinancialRelationshipAccount = {
+  /** Code of the bank */
+  compeCode: string
+  /** Code of the branch */
+  branchCode: string
+  /** Number of the account */
+  number: string
+  /** Check digit of the account */
+  checkDigit: string
+  /** Type of the account */
+  type: 'CONTA_DEPOSITO_A_VISTA' | 'CONTA_POUPANCA' | 'CONTA_PAGAMENTO_PRE_PAGA'
+  /** Subtype of the account */
+  subtype: 'INDIVIDUAL' | 'CONJUNTA_SIMPLES' | 'CONJUNTA_SOLIDARIA'
+}
+
+export type Procurator = {
+  /** Type of representative */
+  type: 'REPRESENTANTE_LEGAL' | 'PROCURADOR'
+  /** CPF number of the procurator */
+  cpfNumber: string
+  /** Civil name of the procurator */
+  civilName: string
+  /** Social name of the procurator (if any) */
+  socialName?: string
+}
+
+export type Qualifications = {
+  /** CNPJ of the company */
+  companyCnpj: string
+  /** Code of the occupation */
+  occupationCode?: 'RECEITA_FEDERAL' | 'CBO' | 'OUTRO'
+  /** Informed income */
+  informedIncome?: InformedIncome
+  /** Informed patrimony */
+  informedPatrimony?: InformedPatrimony
+}
+
+export type InformedIncome = {
+  /** Frequency of the income (e.g., daily) */
+  frequency:
+    | 'DIARIA'
+    | 'SEMANAL'
+    | 'QUINZENAL'
+    | 'MENSAL'
+    | 'BIMESTRAL'
+    | 'TRIMESTRAL'
+    | 'SEMESTRAL'
+    | 'ANUAL'
+    | 'OUTROS'
+  /** Income amount */
+  amount: number
+  /** Date the income was informed */
+  date: Date
+}
+
+export type InformedPatrimony = {
+  /** Patrimony amount */
+  amount: number
+  /** Year of the patrimony */
+  year: number
 }
