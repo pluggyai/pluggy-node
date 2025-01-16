@@ -34,6 +34,21 @@ export type TransactionPaymentParticipant = {
   routingNumber?: string
 }
 
+export type TransactionBoletoMetadataResponse = {
+  /** Digitable line of the boleto */
+  digitableLine: string | null
+  /** Barcode of the boleto */
+  barcode: string | null
+  /** Base amount of the boleto */
+  baseAmount: number | null
+  /** Penalty amount of the boleto */
+  penaltyAmount: number | null
+  /** Interest amount of the boleto */
+  interestAmount: number | null
+  /** Discount amount of the boleto */
+  discountAmount: number | null
+}
+
 export type TransactionPaymentData = {
   /** The identity of the sender of the transfer */
   payer?: TransactionPaymentParticipant
@@ -51,6 +66,8 @@ export type TransactionPaymentData = {
   referenceNumber?: string
   /** The payer description / motive of the transfer */
   reason?: string
+  /** Additional data related to boleto transaction */
+  boletoMetadata: TransactionBoletoMetadataResponse | null
 }
 
 export type TransactionMerchantData = {
@@ -121,4 +138,6 @@ export type Transaction = {
   merchant?: TransactionMerchantData
   /** Category ID of the transaction */
   categoryId: string | null
+  /** Operation type of the transaction */
+  operationType: string | null
 }

@@ -50,6 +50,10 @@ export type BankData = {
   closingBalance: number | null
   /** Automatically invested balance */
   automaticallyInvestedBalance: number | null
+  /** Overdraft used limit */
+  overdraftUsedLimit: number | null
+  /** Unarranged overdraft amount */
+  unarrangedOverdraftAmount: number | null
 }
 
 export type CreditData = {
@@ -69,4 +73,10 @@ export type CreditData = {
   minimumPayment: number | null
   /** Maximum credit card limit. */
   creditLimit: number | null
+  /** If the credit card limit is flexible. */
+  isLimitFlexible: boolean | null
+  /** Credit card status. */
+  status: 'ACTIVE' | 'BLOCKED' | 'CANCELLED' | null
+  /** Credit card holder type. */
+  holderType: 'MAIN' | 'ADDITIONAL' | null
 }
