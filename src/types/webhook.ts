@@ -9,6 +9,7 @@ export const WEBHOOK_EVENTS = [
   'item/waiting_user_input',
   'item/login_succeeded',
   'connector/status_updated',
+  'transactions/updated',
   'transactions/deleted',
   'connector/status_updated',
   'payment_intent/created',
@@ -98,7 +99,7 @@ export type WebhookEventPayload = {
     }
   | {
       /** Type of event subscribed */
-      event: 'transactions/deleted'
+      event: 'transactions/deleted' | 'transactions/updated'
       /** Primary identifier of the item related to the event */
       itemId: string
       /** Primary identifier of the client related to the event */
