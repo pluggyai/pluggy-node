@@ -145,7 +145,12 @@ export class PluggyClient extends BaseApi {
    * @returns {PageResponse<Account>} paged response of accounts
    */
   async fetchAccounts(itemId: string, type?: AccountType): Promise<PageResponse<Account>> {
-    return await this.createGetRequest('accounts', { itemId, type })
+    const options: Parameters = { itemId }
+    if (type) {
+      options.type = type
+    }
+
+    return await this.createGetRequest('accounts', options)
   }
 
   /**
