@@ -140,4 +140,6 @@ export type Transaction = {
   categoryId: string | null
   /** Operation type of the transaction */
   operationType: string | null
+  /** Provider ID of the transaction. Only returned for Open Finance connectors */
+  providerId: string | null
 }
