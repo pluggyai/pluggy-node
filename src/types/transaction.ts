@@ -101,6 +101,8 @@ export type TransactionFilters = PageFilters & {
   to?: string
   /** Filter greater than date. Format can be ISO Date, or 'YYYY-MM-dd' string. */
   from?: string
+  /** Filter transactions created after date. Format is ISO Date. */
+  createdAtFrom?: string
 }
 
 export type Transaction = {
@@ -142,4 +144,8 @@ export type Transaction = {
   operationType: string | null
   /** Provider ID of the transaction. Only returned for Open Finance connectors */
   providerId: string | null
+  /** Date when the transaction was created in Pluggy */
+  createdAt: Date
+  /** Date when the transaction was last updated in Pluggy */
+  updatedAt: Date
 }
