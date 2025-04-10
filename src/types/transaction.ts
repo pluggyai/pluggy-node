@@ -103,6 +103,8 @@ export type TransactionFilters = PageFilters & {
   from?: string
   /** Filter transactions created after date. Format is ISO Date. */
   createdAtFrom?: string
+  /** Filter transactions with the specifics ids. */
+  ids?: string[]
 }
 
 export type Transaction = {
