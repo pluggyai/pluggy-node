@@ -3,7 +3,6 @@ import { IdentityResponse } from './identity'
 import { Investment, InvestmentTransaction } from './investment'
 import { Item, ItemProductsStatusDetail, ItemProductState, UserAction } from './item'
 import { Transaction } from './transaction'
-import { Opportunity } from './opportunity'
 import { ConnectorCredential } from './connector'
 
 export type DeserializedAccount = Omit<Account, 'creditData'> & {
@@ -80,6 +79,3 @@ export type DeserializedTransaction = Omit<Transaction, 'date'> & {
   date: string
 }
 
-export type DeserializedOpportunity = Omit<Opportunity, 'date'> & {
-  date: string
-}

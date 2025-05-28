@@ -23,12 +23,8 @@ export const PRODUCT_TYPES = [
   'INVESTMENTS_TRANSACTIONS',
   'IDENTITY',
   'BROKERAGE_NOTE',
-  'OPPORTUNITIES',
-  'PORTFOLIO',
-  'INCOME_REPORTS',
   'MOVE_SECURITY',
   'LOANS',
-  'BENEFITS',
 ] as const
 
 export type ProductType = typeof PRODUCT_TYPES[number]
