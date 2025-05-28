@@ -11,14 +11,10 @@
     "example:mfa": "ts-node src/mfa.ts",
     "example:webhooks": "ts-node src/webhooks.ts",
     "example:investments": "ts-node src/investments.ts",
-    "examle:incomereports": "ts-node src/incomeReports.ts",
     "example:creditcards": "ts-node src/creditCards.ts",
     "example:connecttoken": "ts-node src/connectToken.ts",
     "example:payments": "ts-node src/payments.ts",
-    "example:opportunities": "ts-node src/opportunities.ts",
     "example:loans": "ts-node src/loans.ts",
-    "example:benefits": "ts-node src/benefits.ts",
-    "example:acquirers": "ts-node src/acquirers.ts",
     "example:payment-recipient": "ts-node src/payment-recipient.ts"
   },
   "dependencies": {

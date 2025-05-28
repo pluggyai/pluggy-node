@@ -65,16 +65,8 @@ export type ItemProductsStatusDetail = {
   identity: ItemProductState | null
   /** Collection details for 'PAYMENT_DATA' product, or null if it was not requested at all. */
   paymentData: ItemProductState | null
-  /** Collection details for 'INCOME_REPORT' product, or null if it was not requested at all. */
-  incomeReports: ItemProductState | null
-  /** Collection details for 'PORTFOLIO' product, or null if it was not requested at all. */
-  portfolio: ItemProductState | null
   /** Collection details for 'LOAN' product, or null if it was not requested at all. */
   loans: ItemProductState | null
-  /** Collection details for 'OPPORTUNITIES' product, or null if it was not requested at all. */
-  opportunities: ItemProductState | null
-  /** Collection details for 'BENEFIT' product, or null if it was not requested at all. */
-  benefits: ItemProductState | null
 }
 
 export type UserAction = {

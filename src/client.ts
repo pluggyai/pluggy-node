@@ -1,10 +1,8 @@
-import { PluggyAcquirerClient } from './acquirerClient'
 import { BaseApi, ClientParams } from './baseApi'
 import { PluggyPaymentsClient } from './paymentsClient'
 import {
   Account,
   AccountType,
-  Benefit,
   Category,
   Connector,
   ConnectorFilters,
@@ -16,15 +14,12 @@ import {
   InvestmentTransaction,
   InvestmentType,
   Item,
-  Opportunity,
-  OpportunityFilters,
   PageResponse,
   Parameters,
   Transaction,
   TransactionFilters,
   UpdateWebhook,
   Webhook,
-  IncomeReport,
   Loan,
   PageFilters,
   InvestmentsFilters,
@@ -40,12 +35,10 @@ import { ValidationResult } from './types/validation'
  */
 export class PluggyClient extends BaseApi {
   public payments: PluggyPaymentsClient
-  public acquirer: PluggyAcquirerClient
 
   constructor(params: ClientParams) {
     super(params)
     this.payments = new PluggyPaymentsClient(params)
-    this.acquirer = new PluggyAcquirerClient(params)
   }
 
   /**
@@ -298,20 +291,6 @@ export class PluggyClient extends BaseApi {
   }
 
   /**
-   * Fetch opportunities from an Item
-   *
-   * @param itemId the Item id
-   * @param options - request search filters
-   * @returns {PageResponse<Opportunity>} paged response of opportunities
-   */
-  async fetchOpportunities(
-    itemId: string,
-    options: OpportunityFilters = {}
-  ): Promise<PageResponse<Opportunity>> {
-    return await this.createGetRequest('opportunities', { ...options, itemId })
-  }
-
-  /**
    * Fetch loans from an Item
    *
    * @param {string} itemId
@@ -330,27 +309,6 @@ export class PluggyClient extends BaseApi {
    */
   async fetchLoan(id: string): Promise<Loan> {
     return await this.createGetRequest(`loans/${id}`)
-  }
-
-  /**
-   * Fetch benefits from an Item
-   *
-   * @param {string} itemId
-   * @param {PageFilters} options - request search filters
-   * @returns {Promise<PageResponse<Benefit>>} - paged response of benefits
-   */
-  async fetchBenefits(itemId: string, options: PageFilters = {}): Promise<PageResponse<Benefit>> {
-    return await this.createGetRequest('benefits', { ...options, itemId })
-  }
-
-  /**
-   * Fetch benefit by id
-   *
-   * @param {string} id - the benefit id
-   * @returns {Promise<Benefit>} - benefit object, if found
-   */
-  async fetchBenefit(id: string): Promise<Benefit> {
-    return await this.createGetRequest(`benefits/${id}`)
   }
 
   /**
@@ -456,15 +414,6 @@ export class PluggyClient extends BaseApi {
    */
   async deleteWebhook(id: string): Promise<void> {
     return await this.createDeleteRequest(`webhooks/${id}`)
-  }
-
-  /**
-   * Fetch all income reports for the last years that the Financial Institution provides
-   * @param {string} itemId - The Item ID to fetch income reports for
-   * @returns {PageResponse<IncomeReport>} paged response of income reports
-   */
-  async fetchIncomeReports(itemId: string): Promise<PageResponse<IncomeReport>> {
-    return await this.createGetRequest('income-reports', { itemId })
   }
 
   /**
