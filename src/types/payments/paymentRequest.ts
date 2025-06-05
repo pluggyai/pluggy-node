@@ -83,6 +83,25 @@ export type CustomSchedule = {
   additionalInformation?: string
 }
 
+export const AUTOMATIC_PIX_INTERVALS = ["WEEKLY", "MONTHLY", "QUARTERLY", "SEMESTER", "YEARLY"] as const;
+export type AutomaticPixInterval = typeof AUTOMATIC_PIX_INTERVALS[number];
+
+export type AutomaticPixFirstPayment = {
+  date?: string;
+  amount: number;
+  description?: string;
+};
+
+export type PaymentRequestAutomaticPix = {
+  interval: AutomaticPixInterval;
+  startDate: string;
+  minimumVariableAmount?: number;
+  maximumVariableAmount?: number;
+  expiresAt?: string;
+  isRetryAccepted?: boolean;
+  firstPayment?: AutomaticPixFirstPayment;
+}
+
 export type PaymentRequest = {
   /**! primary identifier */
   id: string
@@ -106,6 +125,8 @@ export type PaymentRequest = {
   fees: number | null
   /**! schedule of the payment */
   schedule: PaymentRequestSchedule | null
+  /**! automaticPix of the payment */
+  automaticPix: PaymentRequestAutomaticPix | null
   /**! createdAt date */
   createdAt: Date
   /**! updatedAt date */
