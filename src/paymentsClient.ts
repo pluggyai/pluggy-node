@@ -20,9 +20,10 @@ import {
   CreateSmartAccount,
   SmartAccount,
   SmartAccountBalance,
-  PaymentReceipt,
   CreatePaymentIntent,
   SchedulePayment,
+  PaymentRequestAutomaticPix,
+  CreatePaymentRequestAutomaticPix,
 } from './types'
 
 /**
@@ -261,28 +262,18 @@ export class PluggyPaymentsClient extends BaseApi {
   }
 
   /**
-   * Creates a payment request receipt
-   * @param id ID of the payment request
+   * Creates a payment request automatic pix
+   * @param pixAutomaticPayload CreatePaymentRequestAutomaticPix
+   * @returns {PaymentRequestAutomaticPix} PaymentRequestAutomaticPix object
    */
-  async createPaymentRequestReceipt(id: string): Promise<PaymentReceipt> {
-    return await this.createPostRequest(`payments/requests/${id}/receipt`)
-  }
-
-  /**
-   * Fetch all payment request receipts
-   * @param id ID of the payment request
-   */
-  async fetchPaymentRequestReceipts(id: string): Promise<PageResponse<PaymentReceipt>> {
-    return await this.createGetRequest(`payments/requests/${id}/receipts`)
-  }
-
-  /**
-   * Fetch a single payment request receipt
-   * @param requestId ID of the payment request
-   * @param receiptId ID of the payment request receipt
-   */
-  async fetchPaymentRequestReceipt(requestId: string, receiptId: string): Promise<PaymentReceipt> {
-    return await this.createGetRequest(`payments/requests/${requestId}/receipts/${receiptId}`)
+  async createPaymentRequestPixAutomatico(
+    pixAutomaticPayload: CreatePaymentRequestAutomaticPix
+  ): Promise<PaymentRequestAutomaticPix> {
+    return await this.createPostRequest(
+      `payments/requests/automatic-pix`,
+      null,
+      pixAutomaticPayload
+    )
   }
 
   /**
