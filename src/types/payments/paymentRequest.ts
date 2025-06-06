@@ -22,6 +22,7 @@ export const PAYMENT_REQUEST_STATUS = [
   'REFUND_IN_PROGRESS',
   'REFUNDED',
   'REFUND_ERROR',
+  'AUTHORIZED',
 ] as const
 /**
  * @typedef PaymentRequestStatus
