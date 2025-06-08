@@ -22,6 +22,7 @@ export const PAYMENT_REQUEST_STATUS = [
   'REFUND_IN_PROGRESS',
   'REFUNDED',
   'REFUND_ERROR',
+  'EXPIRED',
   'AUTHORIZED',
 ] as const
 /**
@@ -96,7 +97,7 @@ export type AutomaticPixFirstPayment = {
   description?: string;
 };  
 
-export type PaymentRequestAutomaticPix = {
+export type PaymentRequestAutomaticPixDetails = {
   /**! interval of the authorization */
   interval: AutomaticPixInterval;
   /**! start date of the authorization */
@@ -139,7 +140,7 @@ export type PaymentRequest = {
   /**! schedule of the payment */
   schedule: PaymentRequestSchedule | null
   /**! automaticPix of the payment */
-  automaticPix: PaymentRequestAutomaticPix | null
+  automaticPix: PaymentRequestAutomaticPixDetails | null
   /**! createdAt date */
   createdAt: Date
   /**! updatedAt date */
