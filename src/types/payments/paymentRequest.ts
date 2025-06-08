@@ -149,11 +149,11 @@ export type PaymentRequest = {
   clientPaymentId: string | null
 }
 
-export type PaymentRequesAutomaticPix = Omit<PaymentRequest, 'amount'>
+export type PaymentRequestAutomaticPix = Omit<PaymentRequest, 'amount'>
 
 export type CallbackUrls = {
   success?: string
   error?: string
 }
 
-export type CreatePaymentRequestAutomaticPix = Pick<CreatePaymentRequest, 'description' | 'recipientId' | 'customerId' | 'callbackUrls' | 'clientPaymentId'> & PaymentRequestAutomaticPix
+export type CreatePaymentRequestAutomaticPix = Pick<CreatePaymentRequest, 'description' | 'recipientId' | 'customerId' | 'callbackUrls' | 'clientPaymentId'> & PaymentRequestAutomaticPixDetails
