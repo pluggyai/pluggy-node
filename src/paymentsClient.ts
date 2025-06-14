@@ -24,6 +24,11 @@ import {
   SchedulePayment,
   PaymentRequestAutomaticPix,
   CreatePaymentRequestAutomaticPix,
+  AutomaticPixPayment,
+  ScheduleAutomaticPixPaymentRequest,
+  RetryAutomaticPixPaymentRequest,
+  AutomaticPixPaymentListResponse,
+  PaymentPixAutomaticFilters,
 } from './types'
 
 /**
@@ -315,5 +320,94 @@ export class PluggyPaymentsClient extends BaseApi {
    */
   async cancelScheduledPayments(paymentRequest: string): Promise<void> {
     await this.createPostRequest(`payments/requests/${paymentRequest}/schedules/cancel`)
+  }
+
+  /**
+   * Schedule a new payment for an existing Pix Automático authorization
+   * @param authorizationId ID of the Pix Automático authorization
+   * @param payload ScheduleAutomaticPixPaymentRequest
+   * @returns {AutomaticPixPayment} AutomaticPixPayment object
+   */
+  async scheduleAutomaticPixPayment(
+    authorizationId: string,
+    payload: ScheduleAutomaticPixPaymentRequest
+  ): Promise<AutomaticPixPayment> {
+    return await this.createPostRequest(
+      `payments/requests/${authorizationId}/automatic-pix/schedule`,
+      null,
+      payload
+    )
+  }
+
+  /**
+   * Retry a failed scheduled Pix Automático payment
+   * @param paymentRequestId ID of the payment request
+   * @param automaticPixPaymentId ID of the Pix Automático authorization
+   * @param payload RetryAutomaticPixPaymentRequest
+   * @returns {AutomaticPixPayment} AutomaticPixPayment object
+   */
+  async retryAutomaticPixPayment(
+    paymentRequestId: string,
+    automaticPixPaymentId: string,
+    payload: RetryAutomaticPixPaymentRequest
+  ): Promise<AutomaticPixPayment> {
+    return await this.createPostRequest(
+      `payments/requests/${paymentRequestId}/automatic-pix/schedules/${automaticPixPaymentId}/retry`,
+      null,
+      payload
+    )
+  }
+
+  /**
+   * List scheduled Pix Automático payments for an authorization
+   * @param automaticPixPaymentId ID of the Pix Automático authorization
+   * @param options PaymentPixAutomaticFilters
+   * @returns {AutomaticPixPaymentListResponse} List of scheduled payments
+   */
+  async fetchAutomaticPixPayments(
+    automaticPixPaymentId: string,
+    options: PaymentPixAutomaticFilters
+  ): Promise<AutomaticPixPaymentListResponse> {
+    return await this.createGetRequest(
+      `payments/requests/${automaticPixPaymentId}/automatic-pix/schedules`,
+      options
+    )
+  }
+
+  /**
+   * Fetch a single scheduled Pix Automático payment
+   * @param paymentRequestId ID of the payment request
+   * @param automaticPixPaymentId ID of the Pix Automático authorization
+   * @returns {AutomaticPixPayment} AutomaticPixPayment object
+   */
+  async fetchAutomaticPixPayment(
+    paymentRequestId: string,
+    automaticPixPaymentId: string
+  ): Promise<AutomaticPixPayment> {
+    return await this.createGetRequest(
+      `payments/requests/${paymentRequestId}/automatic-pix/schedules/${automaticPixPaymentId}`
+    )
+  }
+
+  /**
+   * Cancel a scheduled Pix Automático payment
+   * @param paymentRequestId ID of the payment request
+   * @param automaticPixPaymentId ID of the Pix Automático authorization
+   */
+  async cancelAutomaticPixPayment(
+    paymentRequestId: string,
+    automaticPixPaymentId: string
+  ): Promise<void> {
+    await this.createPostRequest(
+      `payments/requests/${paymentRequestId}/automatic-pix/schedules/${automaticPixPaymentId}/cancel`
+    )
+  }
+
+  /**
+   * Cancel all scheduled Pix Automático payments for a payment request authorization
+   * @param paymentRequestId ID of the payment request
+   */
+  async cancelAutomaticPixAuthorization(paymentRequestId: string): Promise<void> {
+    await this.createPostRequest(`payments/requests/${paymentRequestId}/automatic-pix/cancel`)
   }
 }
