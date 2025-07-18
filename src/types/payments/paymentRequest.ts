@@ -45,6 +45,7 @@ export type CreatePaymentRequest = {
   schedule?: PaymentRequestSchedule
   smartAccountId?: string
   clientPaymentId?: string
+  isSandbox: boolean
 }
 
 export type PaymentRequestSchedule =
@@ -147,6 +148,8 @@ export type PaymentRequest = {
   updatedAt: Date
   /**! Identification from client that can be used to track payment */
   clientPaymentId: string | null
+  /**! Indicates if the paymentRequest is sandbox */
+  isSandbox: boolean
 }
 
 export type PaymentRequestAutomaticPix = Omit<PaymentRequest, 'amount'>
@@ -156,4 +159,4 @@ export type CallbackUrls = {
   error?: string
 }
 
-export type CreatePaymentRequestAutomaticPix = Pick<CreatePaymentRequest, 'description' | 'recipientId' | 'customerId' | 'callbackUrls' | 'clientPaymentId'> & PaymentRequestAutomaticPixDetails
+export type CreatePaymentRequestAutomaticPix = Pick<CreatePaymentRequest, 'description' | 'recipientId' | 'customerId' | 'callbackUrls' | 'clientPaymentId'> & PaymentRequestAutomaticPixDetails & { isSandbox: boolean }
