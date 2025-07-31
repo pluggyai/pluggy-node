@@ -24,6 +24,7 @@ export const PAYMENT_REQUEST_STATUS = [
   'REFUND_ERROR',
   'EXPIRED',
   'AUTHORIZED',
+  'CANCELED',
 ] as const
 /**
  * @typedef PaymentRequestStatus
@@ -33,6 +34,8 @@ export const PAYMENT_REQUEST_STATUS = [
  * WAITING_PAYER_AUTHORIZATION - User needs to authorize the payment in the payment institution
  * COMPLETED - Payment request was completed
  * ERROR - Payment request has an error
+ * AUTHORIZED - Payment request authorized and active (for automatic PIX)
+ * CANCELED - Payment request canceled or authorization revoked
  */
 export type PaymentRequestStatus = typeof PAYMENT_REQUEST_STATUS[number]
 
