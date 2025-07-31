@@ -30,7 +30,7 @@ export const WEBHOOK_EVENTS = [
   'automatic_pix_payment/completed',
   'automatic_pix_payment/error',
   'automatic_pix_payment/canceled',
-  'payment_request/update',
+  'payment_request/updated',
 ] as const
 /**
  * @typedef WebhookEvent
@@ -146,7 +146,7 @@ export type WebhookEventPayload = {
       scheduledPaymentId: string
     }
     | {
-      event: 'payment_request/update'
+      event: 'payment_request/updated'
       paymentRequestId: string
       data: {
         status: 'AUTHORIZED' | 'CANCELED' | 'COMPLETED' | 'ERROR'
