@@ -150,7 +150,6 @@ export type WebhookEventPayload = {
       paymentRequestId: string
       data: {
         status: 'AUTHORIZED' | 'CANCELED' | 'COMPLETED' | 'ERROR'
-        previousStatus?: string
       }
     }
   )
