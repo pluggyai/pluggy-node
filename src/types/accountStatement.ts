@@ -1,4 +1,4 @@
-export type CreditCardBillFinanceChargeResponseItem = {
+export type AccountStatement = {
   /*! Primary identifier of the entity */
   id: string
   /*! Month and year of the account statement */
