@@ -23,6 +23,7 @@ import {
   Loan,
   PageFilters,
   InvestmentsFilters,
+  AccountStatement,
 } from './types'
 import { CreditCardBills } from './types/creditCardBills'
 import { ValidationResult } from './types/validation'
@@ -193,6 +194,17 @@ export class PluggyClient extends BaseApi {
 
     return transactions
   }
+
+  /**
+   * Fetch account statements from an account
+   * @param accountId The account id
+   * @returns {PageResponse<AccountStatement[]>} object which contains the Account statements list and related paging data
+   */
+    async fetchAccountStatements(
+      accountId: string
+    ): Promise<PageResponse<AccountStatement>> {
+      return await this.createGetRequest(`accounts/${accountId}/statements`)
+    }
 
   /**
    * Post transaction user category for transactin

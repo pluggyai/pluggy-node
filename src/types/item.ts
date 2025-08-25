@@ -67,6 +67,8 @@ export type ItemProductsStatusDetail = {
   paymentData: ItemProductState | null
   /** Collection details for 'LOAN' product, or null if it was not requested at all. */
   loans: ItemProductState | null
+  /** Collection details for 'ACCOUNT_STATEMENTS' product, or null if it was not requested at all. */
+  accountStatements: ItemProductState | null
 }
 
 export type UserAction = {
