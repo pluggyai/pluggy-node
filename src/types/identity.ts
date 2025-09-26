@@ -65,6 +65,7 @@ export type Address = {
   state: string | null
   country: string | null
   type: 'Personal' | 'Work' | null
+  additionalInfo: string | null
 }
 
 export type FinancialRelationships = {
