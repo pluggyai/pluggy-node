@@ -132,4 +132,6 @@ export type CreateItemOptions = {
   products?: ProductType[]
   /** Avoid duplicate items per user */
   avoidDuplicates?: boolean
+  /** Redirect URI required for the Oauth flow */
+  oauthRedirectUri?: string
 }
