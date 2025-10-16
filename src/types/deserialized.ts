@@ -31,11 +31,12 @@ export type DeserializedInvestmentTransaction = Omit<
 
 export type DeserializedInvestment = Omit<
   Investment,
-  'date' | 'dueDate' | 'issueDate' | 'transactions'
+  'date' | 'dueDate' | 'issueDate' | 'purchaseDate' | 'transactions'
 > & {
   date?: string
   dueDate?: string
   issueDate?: string
+  purchaseDate?: string
   transactions: DeserializedInvestmentTransaction[]
 }
 

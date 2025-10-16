@@ -236,6 +236,8 @@ export type Investment = {
   issuer: string | null
   /** Date when the investment was issued. (Normally FIXED_INCOME investments are issued by an entity) */
   issueDate: Date | null
+  /** Date when the investment was purchased. */
+  purchaseDate: Date | null
   /** Fixed rate for the investment. (Normally only available in FIXED_INCOME types) */
   rate: number | null
   /** Fixed rate type for the investment, ie. CDI. (Normally only available in FIXED_INCOME types) */
