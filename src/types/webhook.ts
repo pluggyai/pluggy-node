@@ -74,20 +74,21 @@ export type WebhookEventPayload = {
   /** Primary identifier of the event that was notified */
   eventId: string
 } & (
-    | {
+  | {
       /** Type of event subscribed */
       event:
-      | 'item/created'
-      | 'item/updated'
-      | 'item/waiting_user_input'
-      | 'item/login_succeeded'
-      | 'item/deleted'
+        | 'item/created'
+        | 'item/updated'
+        | 'item/waiting_user_input'
+        | 'item/waiting_user_action'
+        | 'item/login_succeeded'
+        | 'item/deleted'
       /** Primary identifier of the item related to the event */
       itemId: string
       /** Who trigger the event */
       triggeredBy?: TriggeredBy | null
     }
-    | {
+  | {
       /** Type of event subscribed */
       event: 'item/error'
       /** Primary identifier of the item related to the event */
@@ -100,7 +101,7 @@ export type WebhookEventPayload = {
       /** Who trigger the event */
       triggeredBy?: TriggeredBy | null
     }
-    | {
+  | {
       /** Type of event subscribed */
       event: 'connector/status_updated'
       /** Object with extra information of the connector updated */
@@ -108,7 +109,7 @@ export type WebhookEventPayload = {
         status: string
       }
     }
-    | {
+  | {
       /** Type of event subscribed */
       event: 'transactions/deleted' | 'transactions/updated'
       /** Primary identifier of the item related to the event */
@@ -120,7 +121,7 @@ export type WebhookEventPayload = {
       /** Primary identifier of the transactions related to the event */
       transactionIds: string[]
     }
-    | {
+  | {
       event: 'transactions/created'
       /** Primary identifier of the item related to the event */
       itemId: string
@@ -131,25 +132,25 @@ export type WebhookEventPayload = {
       /** Link to get the created transactions of the sync */
       createdTransactionsLink: string
     }
-    | {
+  | {
       event: 'payment_intent/created' | 'payment_intent/completed' | 'payment_intent/error'
       paymentIntentId: string
       paymentRequestId: string
     }
-    | {
+  | {
       event:
-      | 'scheduled_payment/created'
-      | 'scheduled_payment/completed'
-      | 'scheduled_payment/error'
-      | 'scheduled_payment/canceled'
+        | 'scheduled_payment/created'
+        | 'scheduled_payment/completed'
+        | 'scheduled_payment/error'
+        | 'scheduled_payment/canceled'
       paymentRequestId: string
       scheduledPaymentId: string
     }
-    | {
+  | {
       event: 'payment_request/updated'
       paymentRequestId: string
       data: {
         status: 'AUTHORIZED' | 'CANCELED' | 'COMPLETED' | 'ERROR'
       }
     }
-  )
+)
