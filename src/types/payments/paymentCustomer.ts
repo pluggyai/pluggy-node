@@ -1,3 +1,5 @@
+import { Connector } from "../connector"
+
 export const PAYMENT_CUSTOMER_TYPE = ['INDIVIDUAL', 'BUSINESS'] as const
 
 /**
@@ -13,6 +15,7 @@ export type PaymentCustomer = {
   cpf: string
   cnpj: string
   type: PaymentCustomerType
+  connector: Connector | null
   createdAt: Date
   updatedAt: Date
 }
