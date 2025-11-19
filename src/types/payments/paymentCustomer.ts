@@ -1,4 +1,4 @@
-import { Connector } from "../connector"
+import { Connector } from '../connector'
 
 export const PAYMENT_CUSTOMER_TYPE = ['INDIVIDUAL', 'BUSINESS'] as const
 

@@ -79,4 +79,3 @@ export type DeserializedItem = Omit<
 export type DeserializedTransaction = Omit<Transaction, 'date'> & {
   date: string
 }
-

@@ -200,11 +200,9 @@ export class PluggyClient extends BaseApi {
    * @param accountId The account id
    * @returns {PageResponse<AccountStatement[]>} object which contains the Account statements list and related paging data
    */
-    async fetchAccountStatements(
-      accountId: string
-    ): Promise<PageResponse<AccountStatement>> {
-      return await this.createGetRequest(`accounts/${accountId}/statements`)
-    }
+  async fetchAccountStatements(accountId: string): Promise<PageResponse<AccountStatement>> {
+    return await this.createGetRequest(`accounts/${accountId}/statements`)
+  }
 
   /**
    * Post transaction user category for transactin
