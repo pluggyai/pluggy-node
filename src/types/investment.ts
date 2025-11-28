@@ -45,6 +45,10 @@ export const MUTUAL_FUND_INVESTMENT_SUBTYPES = [
   'FIP_FUND',
   /*! Fundos de Cambio/Cambial */
   'EXCHANGE_FUND',
+  /*! Fundos de Infraestrutura */
+  'FI_INFRA',
+  /*! Fundos de Agronegócio */
+  'FI_AGRO',
 ] as const
 export type MutualFundInvestmentSubtype = typeof MUTUAL_FUND_INVESTMENT_SUBTYPES[number]
 
