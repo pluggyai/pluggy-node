@@ -1,4 +1,4 @@
-import type { PaymentCustomer } from './paymentCustomer'
+import { PaymentCustomer } from './paymentCustomer'
 import { PaymentRecipient } from './paymentRecipient'
 
 export declare const DAYS_OF_WEEK: readonly [
@@ -89,35 +89,41 @@ export type CustomSchedule = {
   additionalInformation?: string
 }
 
-export const AUTOMATIC_PIX_INTERVALS = ["WEEKLY", "MONTHLY", "QUARTERLY", "SEMESTER", "YEARLY"] as const;
-export type AutomaticPixInterval = typeof AUTOMATIC_PIX_INTERVALS[number];
+export const AUTOMATIC_PIX_INTERVALS = [
+  'WEEKLY',
+  'MONTHLY',
+  'QUARTERLY',
+  'SEMESTER',
+  'YEARLY',
+] as const
+export type AutomaticPixInterval = typeof AUTOMATIC_PIX_INTERVALS[number]
 
 export type AutomaticPixFirstPayment = {
   /**! date of the first payment, default to instant */
-  date?: string;
+  date?: string
   /**! amount of the first payment */
-  amount: number;
+  amount: number
   /**! description of the first payment */
-  description?: string;
-};  
+  description?: string
+}
 
 export type PaymentRequestAutomaticPixDetails = {
   /**! interval of the authorization */
-  interval: AutomaticPixInterval;
+  interval: AutomaticPixInterval
   /**! start date of the authorization */
-  startDate: string;
+  startDate: string
   /**! fixed amount of the payment, if provided can't be used with minimumVariableAmount or maximumVariableAmount */
-  fixedAmount?: number;
+  fixedAmount?: number
   /**! minimum variable amount of the payment, if provided can't be used with fixedAmount */
-  minimumVariableAmount?: number;
+  minimumVariableAmount?: number
   /**! maximum variable amount of the payment, if provided can't be used with fixedAmount */
-  maximumVariableAmount?: number;
+  maximumVariableAmount?: number
   /**! expiration date of the authorization */
-  expiresAt?: string;
+  expiresAt?: string
   /**! if the payments done for this authorization can be retried */
-  isRetryAccepted?: boolean;
+  isRetryAccepted?: boolean
   /**! if provided, will execute a first payment */
-  firstPayment?: AutomaticPixFirstPayment;
+  firstPayment?: AutomaticPixFirstPayment
 }
 
 export type PaymentRequest = {
@@ -162,4 +168,8 @@ export type CallbackUrls = {
   error?: string
 }
 
-export type CreatePaymentRequestAutomaticPix = Pick<CreatePaymentRequest, 'description' | 'recipientId' | 'customerId' | 'callbackUrls' | 'clientPaymentId'> & PaymentRequestAutomaticPixDetails & { isSandbox: boolean }
+export type CreatePaymentRequestAutomaticPix = Pick<
+  CreatePaymentRequest,
+  'description' | 'recipientId' | 'customerId' | 'callbackUrls' | 'clientPaymentId'
+> &
+  PaymentRequestAutomaticPixDetails & { isSandbox: boolean }

@@ -9,3 +9,5 @@ export type PaymentRecipientsFilters = PageFilters
 export type PaymentCustomersFilters = PageFilters
 
 export type PaymentInstitutionsFilters = PageFilters & { name?: string }
+
+export type SmartTransferPreauthorizationsFilters = PageFilters

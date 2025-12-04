@@ -29,6 +29,11 @@ import {
   RetryAutomaticPixPaymentRequest,
   AutomaticPixPaymentListResponse,
   PaymentPixAutomaticFilters,
+  SmartTransferPreauthorization,
+  CreateSmartTransferPreauthorization,
+  SmartTransferPayment,
+  CreateSmartTransferPayment,
+  SmartTransferPreauthorizationsFilters,
 } from './types'
 
 /**
@@ -409,5 +414,56 @@ export class PluggyPaymentsClient extends BaseApi {
    */
   async cancelAutomaticPixAuthorization(paymentRequestId: string): Promise<void> {
     await this.createPostRequest(`payments/requests/${paymentRequestId}/automatic-pix/cancel`)
+  }
+
+  /**
+   * Fetch all smart transfer preauthorizations
+   * @param options SmartTransferPreauthorizationsFilters with page and pageSize
+   * @returns {PageResponse<SmartTransferPreauthorization>} paged response of smart transfer preauthorizations
+   */
+  async fetchSmartTransferPreauthorizations(
+    options: SmartTransferPreauthorizationsFilters = {}
+  ): Promise<PageResponse<SmartTransferPreauthorization>> {
+    return await this.createGetRequest('smart-transfers/preauthorizations', { ...options })
+  }
+
+  /**
+   * Creates a smart transfer preauthorization
+   * @param payload CreateSmartTransferPreauthorization
+   * @returns {SmartTransferPreauthorization} SmartTransferPreauthorization object
+   */
+  async createSmartTransferPreauthorization(
+    payload: CreateSmartTransferPreauthorization
+  ): Promise<SmartTransferPreauthorization> {
+    return await this.createPostRequest('smart-transfers/preauthorizations', null, payload)
+  }
+
+  /**
+   * Fetch a single smart transfer preauthorization
+   * @param id ID of the smart transfer preauthorization
+   * @returns {SmartTransferPreauthorization} SmartTransferPreauthorization object
+   */
+  async fetchSmartTransferPreauthorization(id: string): Promise<SmartTransferPreauthorization> {
+    return await this.createGetRequest(`smart-transfers/preauthorizations/${id}`)
+  }
+
+  /**
+   * Creates a smart transfer payment
+   * @param payload CreateSmartTransferPayment
+   * @returns {SmartTransferPayment} SmartTransferPayment object
+   */
+  async createSmartTransferPayment(
+    payload: CreateSmartTransferPayment
+  ): Promise<SmartTransferPayment> {
+    return await this.createPostRequest('smart-transfers/payments', null, payload)
+  }
+
+  /**
+   * Fetch a single smart transfer payment
+   * @param id ID of the smart transfer payment
+   * @returns {SmartTransferPayment} SmartTransferPayment object
+   */
+  async fetchSmartTransferPayment(id: string): Promise<SmartTransferPayment> {
+    return await this.createGetRequest(`smart-transfers/payments/${id}`)
   }
 }
