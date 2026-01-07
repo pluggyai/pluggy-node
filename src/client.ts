@@ -166,11 +166,16 @@ export class PluggyClient extends BaseApi {
   /**
    * Fetch all transactions from an account
    * @param accountId The account id
+   * @param {TransactionFilters} options Optional transaction filters
    * @returns {Transaction[]} an array of transactions
    */
-  async fetchAllTransactions(accountId: string): Promise<Transaction[]> {
+  async fetchAllTransactions(
+    accountId: string,
+    options: TransactionFilters = {}
+  ): Promise<Transaction[]> {
     const MAX_PAGE_SIZE = 500
     const { totalPages, results: firstPageResults } = await this.fetchTransactions(accountId, {
+      ...options,
       pageSize: MAX_PAGE_SIZE,
     })
     if (totalPages === 1) {
@@ -186,6 +191,7 @@ export class PluggyClient extends BaseApi {
     while (page < totalPages) {
       page++
       const paginatedTransactions = await this.fetchTransactions(accountId, {
+        ...options,
         page,
         pageSize: MAX_PAGE_SIZE,
       })
