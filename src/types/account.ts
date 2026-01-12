@@ -41,6 +41,8 @@ export type Account = {
   bankData: BankData | null
   /** Account related credit data, when account is CREDIT type */
   creditData: CreditData | null
+  /** Total number of transactions in the account */
+  totalTransactions: number | null
 }
 
 export type BankData = {
