@@ -169,6 +169,7 @@ export class PluggyClient extends BaseApi {
    * @param {TransactionFilters} options Optional transaction filters
    * @returns {Transaction[]} an array of transactions
    */
+  
   async fetchAllTransactions(
     accountId: string,
     options: TransactionFilters = {}
