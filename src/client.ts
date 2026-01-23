@@ -7,6 +7,8 @@ import {
   Connector,
   ConnectorFilters,
   ConnectTokenOptions,
+  Consent,
+  ConsentFilters,
   CreateItemOptions,
   CreateWebhook,
   IdentityResponse,
@@ -326,6 +328,27 @@ export class PluggyClient extends BaseApi {
    */
   async fetchLoan(id: string): Promise<Loan> {
     return await this.createGetRequest(`loans/${id}`)
+  }
+
+  /**
+   * Fetch consents from an Item
+   *
+   * @param {string} itemId - the item id
+   * @param {ConsentFilters} options - request search filters
+   * @returns {Promise<PageResponse<Consent>>} - paged response of consents
+   */
+  async fetchConsents(itemId: string, options: ConsentFilters = {}): Promise<PageResponse<Consent>> {
+    return await this.createGetRequest('consents', { ...options, itemId })
+  }
+
+  /**
+   * Fetch consent by id
+   *
+   * @param {string} id - the consent id
+   * @returns {Promise<Consent>} - consent object, if found
+   */
+  async fetchConsent(id: string): Promise<Consent> {
+    return await this.createGetRequest(`consents/${id}`)
   }
 
   /**

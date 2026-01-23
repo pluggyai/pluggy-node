@@ -30,8 +30,10 @@ export type TransactionPaymentParticipant = {
   accountNumber?: string
   /** Number of the agency / branch */
   branchNumber?: string
-  /** Number of the bank */
+  /** Number of the bank (COMPE code) */
   routingNumber?: string
+  /** Number of the bank (ISPB code) */
+  routingNumberISPB?: string
 }
 
 export type TransactionBoletoMetadataResponse = {
@@ -94,6 +96,10 @@ export type CreditCardMetadata = {
   payeeMCC?: number
   /** The original date of the purchase */
   purchaseDate?: Date
+  /** The credit card bill ID associated with this transaction */
+  billId?: string
+  /** The masked card number */
+  cardNumber?: string
 }
 
 export type TransactionFilters = PageFilters & {

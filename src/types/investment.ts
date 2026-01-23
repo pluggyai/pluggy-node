@@ -184,6 +184,8 @@ export type InvestmentTransaction = {
   expenses: Expenses | null
   /** Type of movement */
   movementType: MovementType
+  /** Agreed rate for fixed income investments */
+  agreedRate: number | null
 }
 
 /** institution holding the investment */
