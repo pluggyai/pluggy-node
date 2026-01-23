@@ -8,7 +8,8 @@
   ],
   "license": "MIT",
   "scripts": {
-    "test": "jest",
+    "test": "jest --testPathIgnorePatterns=tests/integration.test.ts",
+    "test:integration": "jest --testPathPattern=integration --runInBand",
     "build": "tsc",
     "prepare": "npm run build",
     "prettier-fix": "prettier --write \"src/**/*.ts\"",
