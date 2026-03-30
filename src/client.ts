@@ -16,9 +16,11 @@ import {
   InvestmentTransaction,
   InvestmentType,
   Item,
+  CursorPageResponse,
   PageResponse,
   Parameters,
   Transaction,
+  TransactionCursorFilters,
   TransactionFilters,
   UpdateWebhook,
   Webhook,
@@ -199,6 +201,47 @@ export class PluggyClient extends BaseApi {
         pageSize: MAX_PAGE_SIZE,
       })
       transactions.push(...paginatedTransactions.results)
+    }
+
+    return transactions
+  }
+
+  /**
+   * Fetch transactions from an account using cursor-based pagination (v2)
+   * @param accountId The account id
+   * @param {TransactionCursorFilters} options Optional filters (dateFrom, createdAtFrom, after cursor)
+   * @returns {CursorPageResponse<Transaction>} object with results and next cursor link
+   */
+  async fetchTransactionsV2(
+    accountId: string,
+    options: TransactionCursorFilters = {}
+  ): Promise<CursorPageResponse<Transaction>> {
+    return await this.createGetRequest('v2/transactions', { ...options, accountId })
+  }
+
+  /**
+   * Fetch all transactions from an account using cursor-based pagination (v2)
+   * @param accountId The account id
+   * @param {TransactionCursorFilters} options Optional filters (dateFrom, createdAtFrom)
+   * @returns {Transaction[]} an array of all transactions
+   */
+  async fetchAllTransactionsV2(
+    accountId: string,
+    options: Omit<TransactionCursorFilters, 'after'> = {}
+  ): Promise<Transaction[]> {
+    const firstPage = await this.fetchTransactionsV2(accountId, options)
+    const transactions: Transaction[] = [...firstPage.results]
+
+    let next = firstPage.next
+
+    while (next !== null) {
+      const afterParam = new URL(next).searchParams.get('after')
+      if (!afterParam) {
+        break
+      }
+      const page = await this.fetchTransactionsV2(accountId, { ...options, after: afterParam })
+      transactions.push(...page.results)
+      next = page.next
     }
 
     return transactions
