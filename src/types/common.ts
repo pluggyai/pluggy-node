@@ -200,6 +200,12 @@ export type PageResponse<T> = {
   totalPages: number
 }
 
+export type CursorPageResponse<T> = {
+  results: T[]
+  /** Cursor link to the next page, or null if there are no more results */
+  next: string | null
+}
+
 export type PageFilters = {
   /** Page to retrieve, this calculates the offset */
   page?: number
