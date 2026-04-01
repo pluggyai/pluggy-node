@@ -168,51 +168,12 @@ export class PluggyClient extends BaseApi {
   }
 
   /**
-   * Fetch all transactions from an account
-   * @param accountId The account id
-   * @param {TransactionFilters} options Optional transaction filters
-   * @returns {Transaction[]} an array of transactions
-   */
-  
-  async fetchAllTransactions(
-    accountId: string,
-    options: TransactionFilters = {}
-  ): Promise<Transaction[]> {
-    const MAX_PAGE_SIZE = 500
-    const { totalPages, results: firstPageResults } = await this.fetchTransactions(accountId, {
-      ...options,
-      pageSize: MAX_PAGE_SIZE,
-    })
-    if (totalPages === 1) {
-      // just one page return transactions
-      return firstPageResults
-    }
-
-    const transactions: Transaction[] = [...firstPageResults]
-
-    // first page already fetched
-    let page = 1
-
-    while (page < totalPages) {
-      page++
-      const paginatedTransactions = await this.fetchTransactions(accountId, {
-        ...options,
-        page,
-        pageSize: MAX_PAGE_SIZE,
-      })
-      transactions.push(...paginatedTransactions.results)
-    }
-
-    return transactions
-  }
-
-  /**
-   * Fetch transactions from an account using cursor-based pagination (v2)
+   * Fetch transactions from an account using cursor-based pagination
    * @param accountId The account id
    * @param {TransactionCursorFilters} options Optional filters (dateFrom, createdAtFrom, after cursor)
    * @returns {CursorPageResponse<Transaction>} object with results and next cursor link
    */
-  async fetchTransactionsV2(
+  async fetchTransactionsCursor(
     accountId: string,
     options: TransactionCursorFilters = {}
   ): Promise<CursorPageResponse<Transaction>> {
@@ -220,16 +181,16 @@ export class PluggyClient extends BaseApi {
   }
 
   /**
-   * Fetch all transactions from an account using cursor-based pagination (v2)
+   * Fetch all transactions from an account using cursor-based pagination
    * @param accountId The account id
    * @param {TransactionCursorFilters} options Optional filters (dateFrom, createdAtFrom)
    * @returns {Transaction[]} an array of all transactions
    */
-  async fetchAllTransactionsV2(
+  async fetchAllTransactions(
     accountId: string,
     options: Omit<TransactionCursorFilters, 'after'> = {}
   ): Promise<Transaction[]> {
-    const firstPage = await this.fetchTransactionsV2(accountId, options)
+    const firstPage = await this.fetchTransactionsCursor(accountId, options)
     const transactions: Transaction[] = [...firstPage.results]
 
     let next = firstPage.next
@@ -239,7 +200,7 @@ export class PluggyClient extends BaseApi {
       if (!afterParam) {
         break
       }
-      const page = await this.fetchTransactionsV2(accountId, { ...options, after: afterParam })
+      const page = await this.fetchTransactionsCursor(accountId, { ...options, after: afterParam })
       transactions.push(...page.results)
       next = page.next
     }
