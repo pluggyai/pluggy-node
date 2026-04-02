@@ -156,6 +156,52 @@ describeIf('Integration Tests', () => {
         expect(fetchedTx.id).toBe(tx.id)
       }
     })
+
+    it('fetchTransactionsCursor returns cursor-paged transactions', async () => {
+      expect(item).not.toBeNull()
+
+      const accounts = await client.fetchAccounts(item!.id)
+      expect(accounts.results.length).toBeGreaterThan(0)
+
+      const account = accounts.results[0]
+      const oneYearAgo = new Date()
+      oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1)
+
+      const page = await client.fetchTransactionsCursor(account.id, {
+        dateFrom: oneYearAgo.toISOString().split('T')[0],
+      })
+
+      expect(page).toBeDefined()
+      expect(Array.isArray(page.results)).toBe(true)
+      expect('next' in page).toBe(true)
+      console.log(
+        `fetchTransactionsCursor: ${page.results.length} results, next=${page.next ?? 'null'}`
+      )
+    })
+
+    it('fetchAllTransactions returns all transactions via cursor pagination', async () => {
+      expect(item).not.toBeNull()
+
+      const accounts = await client.fetchAccounts(item!.id)
+      expect(accounts.results.length).toBeGreaterThan(0)
+
+      const account = accounts.results[0]
+      const oneYearAgo = new Date()
+      oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1)
+
+      const allTransactions = await client.fetchAllTransactions(account.id, {
+        dateFrom: oneYearAgo.toISOString().split('T')[0],
+      })
+
+      expect(Array.isArray(allTransactions)).toBe(true)
+      console.log(`fetchAllTransactions (cursor): ${allTransactions.length} total transactions`)
+
+      if (allTransactions.length > 0) {
+        const ids = allTransactions.map(t => t.id)
+        const uniqueIds = new Set(ids)
+        expect(uniqueIds.size).toBe(ids.length) // no duplicates
+      }
+    })
   })
 
   describe('Investments', () => {

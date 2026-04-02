@@ -7,4 +7,6 @@ export type ConnectTokenOptions = {
   oauthRedirectUri?: string
   /** Avoid duplicate items per user */
   avoidDuplicates?: boolean
+  /** If true, connectors are sorted alphabetically (A-Z) within each tab. Default: false (analytics-based order) */
+  connectorSortAlphabetically?: boolean
 }
