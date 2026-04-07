@@ -168,8 +168,21 @@ export type CallbackUrls = {
   error?: string
 }
 
+export type AutomaticPixSchedulerConfiguration = {
+  /**! whether the scheduler should automatically trigger payments for this authorization */
+  enabled: boolean
+  /**! description used by the scheduler when creating payments */
+  description?: string
+  /**! fixed amount used by the scheduler when the payment has a variable amount */
+  valueForVariableAmount?: number
+}
+
 export type CreatePaymentRequestAutomaticPix = Pick<
   CreatePaymentRequest,
   'description' | 'recipientId' | 'customerId' | 'callbackUrls' | 'clientPaymentId'
 > &
-  PaymentRequestAutomaticPixDetails & { isSandbox: boolean }
+  PaymentRequestAutomaticPixDetails & {
+    isSandbox: boolean
+    /**! configuration for the automatic scheduler that triggers recurring payments */
+    schedulerConfiguration?: AutomaticPixSchedulerConfiguration
+  }
