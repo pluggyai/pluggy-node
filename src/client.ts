@@ -196,7 +196,7 @@ export class PluggyClient extends BaseApi {
     let next = firstPage.next
 
     while (next !== null) {
-      const afterParam = new URL(next).searchParams.get('after')
+      const afterParam = new URL(next, this.baseUrl).searchParams.get('after')
       if (!afterParam) {
         break
       }
