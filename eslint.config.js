@@ -14,6 +14,7 @@
 const js = require('@eslint/js')
 const tseslint = require('typescript-eslint')
 const globals = require('globals')
+const n = require('eslint-plugin-n')
 
 module.exports = tseslint.config(
   // Replaces the old .eslintignore
@@ -37,6 +38,23 @@ module.exports = tseslint.config(
     languageOptions: {
       globals: { ...globals.node },
       sourceType: 'commonjs',
+    },
+  },
+  // Node-API guardrail: reads `engines.node` from package.json and
+  // flags any built-in / global usage that is not available in that
+  // version range (e.g. `fs.cp` would error because it requires
+  // Node 16.7+ while engines.node is '>=12.0.0'). Scoped to src/
+  // only — runtime code is the only place that ships to consumers;
+  // tests and config can freely use modern Node APIs.
+  {
+    files: ['src/**/*.ts'],
+    plugins: { n },
+    rules: {
+      'n/no-unsupported-features/node-builtins': 'error',
+      'n/no-unsupported-features/es-builtins': 'error',
+      // es-syntax is already covered by `target: "ES2019"` in
+      // tsconfig.build.json (anything newer gets transpiled), so we
+      // don't duplicate it here.
     },
   },
   // Scope the typescript-eslint recommended preset (and the rule
