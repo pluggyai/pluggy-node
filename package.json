@@ -27,7 +27,7 @@
     "lint": "pnpm run prettier-fix && eslint .",
     "lint:fix": "pnpm run lint -- --fix",
     "lint:lockfile": "pnpm install --frozen-lockfile",
-    "audit:supply-chain": "pnpm audit --prod --audit-level=high && pnpm audit signatures",
+    "audit:supply-chain": "pnpm audit && pnpm audit signatures",
     "semantic-release": "semantic-release"
   },
   "repository": "https://github.com/pluggyai/pluggy-node",

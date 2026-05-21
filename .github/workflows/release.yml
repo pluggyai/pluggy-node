@@ -25,8 +25,8 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Supply-chain audit (runtime deps + signatures)
-        run: pnpm audit --prod --audit-level=high && pnpm audit signatures
+      - name: Supply-chain audit (strict — any vulnerability fails the release)
+        run: pnpm audit && pnpm audit signatures
       - name: Build library
         run: pnpm run build
       - name: Run Tests
