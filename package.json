@@ -21,7 +21,7 @@
   "scripts": {
     "test": "jest --testPathIgnorePatterns=tests/integration.test.ts",
     "test:integration": "jest --testPathPattern=integration --runInBand",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
     "prepare": "pnpm run build",
     "prettier-fix": "prettier --write \"src/**/*.ts\"",
     "lint": "pnpm run prettier-fix && eslint . --ext .ts",
@@ -49,19 +49,19 @@
     "@semantic-release/github": "12.0.6",
     "@semantic-release/npm": "13.1.5",
     "@semantic-release/release-notes-generator": "14.1.0",
-    "@types/jest": "29.5.12",
+    "@types/jest": "30.0.0",
     "@types/jsonwebtoken": "8.5.4",
-    "@types/node": "16.18.78",
+    "@types/node": "22.19.17",
     "@typescript-eslint/eslint-plugin": "2.16.0",
     "@typescript-eslint/parser": "2.16.0",
     "dotenv": "16.4.5",
     "eslint": "10.0.3",
-    "jest": "29.7.0",
+    "jest": "30.3.0",
     "nock": "13.5.4",
     "prettier": "1.19.1",
     "semantic-release": "25.0.3",
-    "ts-jest": "29.2.4",
-    "typescript": "4.6.2"
+    "ts-jest": "29.4.9",
+    "typescript": "6.0.3"
   },
   "release": {
     "branches": [

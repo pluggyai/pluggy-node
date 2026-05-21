@@ -1,4 +1,4 @@
-import * as nock from 'nock'
+import nock from 'nock'
 import { setupAuth } from './utils'
 import { PluggyClient } from '../src/client'
 
