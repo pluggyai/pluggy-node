@@ -20,19 +20,19 @@ minimumReleaseAge: 20160
 # version is genuinely mature, so keep the v11 default of `true`.
 minimumReleaseAgeIgnoreMissingTime: true
 
-# Whitelist for the 14-day wait. `@pluggyai/*` ships from our own
-# release pipeline, so the window adds friction without adding
-# safety — third-party packages still go through the full wait.
-#
-# Ad-hoc third-party entries are only for documented CVE bypasses
-# (a fix released in the last 14 days that you can't wait for).
-# Each ad-hoc entry MUST include an inline comment of the form:
+# Whitelist for the 14-day wait. Only ad-hoc third-party entries
+# for documented CVE bypasses (a fix released in the last 14 days
+# that you can't wait for). Each ad-hoc entry MUST include an inline
+# comment of the form:
 #   # Remove after YYYY-MM-DD — <CVE / fix reference>
 # where the date is when the 14-day window closes on the fixed
 # version (release date + 14 days). Without that date, temporary
 # excludes silently become permanent.
+#
+# (The Pluggy SDK does not depend on any `@pluggyai/*` packages —
+# the standard `@pluggyai/*` wildcard from the skill template is
+# omitted here; re-add it the first time we pull one in.)
 minimumReleaseAgeExclude:
-  - '@pluggyai/*'
   - 'brace-expansion'  # Remove after 2026-05-22 — GHSA-jxxr-4gwj-5jf2 patched in 5.0.6 (released 2026-05-08)
 
 # With exact pins in `package.json` (enforced by `savePrefix: ""`
