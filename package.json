@@ -7,14 +7,27 @@
     "dist"
   ],
   "license": "MIT",
+  "packageManager": "pnpm@11.1.3",
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=24.0.0",
+      "onFail": "error"
+    }
+  },
   "scripts": {
     "test": "jest --testPathIgnorePatterns=tests/integration.test.ts",
     "test:integration": "jest --testPathPattern=integration --runInBand",
     "build": "tsc",
-    "prepare": "npm run build",
+    "prepare": "pnpm run build",
     "prettier-fix": "prettier --write \"src/**/*.ts\"",
-    "lint": "npm run prettier-fix && eslint . --ext .ts",
-    "lint:fix": "npm run lint -- --fix",
+    "lint": "pnpm run prettier-fix && eslint . --ext .ts",
+    "lint:fix": "pnpm run lint -- --fix",
+    "lint:lockfile": "pnpm install --frozen-lockfile",
+    "audit:supply-chain": "pnpm audit --prod --audit-level=high && pnpm audit signatures",
     "semantic-release": "semantic-release"
   },
   "repository": "https://github.com/pluggyai/pluggy-node",
@@ -28,7 +41,7 @@
   ],
   "dependencies": {
     "got": "11.8.6",
-    "jsonwebtoken": "9.0.2"
+    "jsonwebtoken": "9.0.3"
   },
   "devDependencies": {
     "@semantic-release/commit-analyzer": "9.0.2",

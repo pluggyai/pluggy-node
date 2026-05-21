@@ -153,19 +153,26 @@ async deleteModel(id: string): Promise<void> {
 
 ## Build and Test
 
+This repo uses **pnpm 11** (managed via corepack — the `packageManager` field in `package.json` pins the version). Development requires **Node 24+** (declared in `devEngines`); the published package itself supports **Node 12+** for consumers (`engines.node`).
+
 ```bash
-# Install dependencies
-npm ci
+# Install dependencies (corepack activates the pinned pnpm version)
+pnpm install --frozen-lockfile
 
 # Build
-npm run build
+pnpm run build
 
 # Test
-npm test
+pnpm test
 
-# Lint
-npm run lint
+# Lint (currently fails on master — eslint 10 dropped .eslintrc.js, needs flat-config migration)
+pnpm run lint
+
+# Run the same supply-chain audit CI runs (prod-deps high + signatures)
+pnpm run audit:supply-chain
 ```
+
+Supply-chain hardening lives in `pnpm-workspace.yaml`: `minimumReleaseAge: 14d`, `trustPolicy: no-downgrade`, `blockExoticSubdeps`, `engineStrict`, exact pinning via `savePrefix: ""`. The full reasoning is documented inline in that file.
 
 ## Current SDK Status (Last Updated: 2026-01-23)
 

@@ -4,6 +4,11 @@ dist
 # Dependencies
 node_modules
 
+# Block npm/yarn lockfiles — this repo is pnpm-only.
+# pnpm-lock.yaml is the canonical lockfile.
+package-lock.json
+yarn.lock
+
 .vscode
 
 .env.local
