@@ -203,6 +203,11 @@ export class BaseApi {
 
   protected isJwtExpired(token: string): boolean {
     const decoded = jwt.decode(token, { complete: true })
-    return decoded.payload.exp <= Math.floor(Date.now() / 1000)
+    // Pluggy auth tokens always carry a JSON payload with `exp`. The
+    // `string | JwtPayload` union surfaced by @types/jsonwebtoken@9 is
+    // not reachable for tokens minted by the Pluggy API, so narrow it
+    // explicitly to keep the previous (pre-v9-types) behaviour.
+    const payload = decoded.payload as jwt.JwtPayload
+    return payload.exp <= Math.floor(Date.now() / 1000)
   }
 }
