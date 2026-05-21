@@ -80,7 +80,6 @@ trustPolicyIgnoreAfter: 129600
 # future default change.
 blockExoticSubdeps: true
 
-
 # Version pinning
 # ---------------
 
@@ -90,7 +89,6 @@ blockExoticSubdeps: true
 # across environments and every upgrade lands as an explicit, easy-
 # to-review PR diff.
 savePrefix: ""
-
 
 # Per-package decisions
 # ---------------------
@@ -105,7 +103,12 @@ savePrefix: ""
 # install scripts on every machine, including CI. `false` is not
 # redundant: without an entry pnpm rewrites placeholders into this
 # file on every install. Populated during the first `pnpm install`.
-allowBuilds: {}
+allowBuilds:
+  # Native Rust resolver pulled in by jest@30 (via jest-resolve). Platform
+  # binaries ship via optionalDependencies (pnpm installs the matching one
+  # automatically), so the postinstall script is not required for the
+  # package to work at runtime. Leaving it off keeps install hermetic.
+  unrs-resolver: false
 
 # Force a specific version on transitive dependencies, regardless
 # of what the parent's `package.json` range allows. Use sparingly —

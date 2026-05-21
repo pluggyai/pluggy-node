@@ -24,7 +24,7 @@
     "build": "tsc -p tsconfig.build.json",
     "prepare": "pnpm run build",
     "prettier-fix": "prettier --write \"src/**/*.ts\"",
-    "lint": "pnpm run prettier-fix && eslint . --ext .ts",
+    "lint": "pnpm run prettier-fix && eslint .",
     "lint:fix": "pnpm run lint -- --fix",
     "lint:lockfile": "pnpm install --frozen-lockfile",
     "audit:supply-chain": "pnpm audit --prod --audit-level=high && pnpm audit signatures",
@@ -44,6 +44,7 @@
     "jsonwebtoken": "9.0.3"
   },
   "devDependencies": {
+    "@eslint/js": "10.0.1",
     "@semantic-release/commit-analyzer": "13.0.1",
     "@semantic-release/git": "10.0.1",
     "@semantic-release/github": "12.0.6",
@@ -52,16 +53,18 @@
     "@types/jest": "30.0.0",
     "@types/jsonwebtoken": "8.5.4",
     "@types/node": "22.19.17",
-    "@typescript-eslint/eslint-plugin": "2.16.0",
-    "@typescript-eslint/parser": "2.16.0",
+    "@typescript-eslint/eslint-plugin": "8.59.2",
+    "@typescript-eslint/parser": "8.59.2",
     "dotenv": "16.4.5",
-    "eslint": "10.0.3",
+    "eslint": "10.3.0",
+    "globals": "17.6.0",
     "jest": "30.3.0",
     "nock": "13.5.4",
     "prettier": "1.19.1",
     "semantic-release": "25.0.3",
     "ts-jest": "29.4.9",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.59.2"
   },
   "release": {
     "branches": [
