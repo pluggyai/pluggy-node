@@ -28,7 +28,7 @@ jobs:
       - name: Supply-chain audit (strict — any vulnerability fails the release)
         run: pnpm audit && pnpm audit signatures
       - name: Build library
-        run: pnpm run build
+        run: pnpm build
       - name: Run Tests
         run: pnpm test
       - name: Run Integration Tests
@@ -36,7 +36,7 @@ jobs:
           PLUGGY_CLIENT_ID: ${{ secrets.PLUGGY_CLIENT_ID }}
           PLUGGY_CLIENT_SECRET: ${{ secrets.PLUGGY_CLIENT_SECRET }}
           PLUGGY_API_URL: https://api.pluggy.ai
-        run: pnpm run test:integration
+        run: pnpm test:integration
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

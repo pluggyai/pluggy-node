@@ -35,11 +35,11 @@ jobs:
         run: pnpm audit && pnpm audit signatures
 
       - name: Build
-        run: pnpm run build
+        run: pnpm build
 
       - name: Run Integration Tests
         env:
           PLUGGY_CLIENT_ID: ${{ secrets.PLUGGY_CLIENT_ID }}
           PLUGGY_CLIENT_SECRET: ${{ secrets.PLUGGY_CLIENT_SECRET }}
           PLUGGY_API_URL: https://api.pluggy.ai
-        run: pnpm run test:integration
+        run: pnpm test:integration

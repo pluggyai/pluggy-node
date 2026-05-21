@@ -22,10 +22,10 @@
     "test": "jest --testPathIgnorePatterns=tests/integration.test.ts",
     "test:integration": "jest --testPathPattern=integration --runInBand",
     "build": "tsc -p tsconfig.build.json",
-    "prepare": "pnpm run build",
+    "prepare": "pnpm build",
     "prettier-fix": "prettier --write \"src/**/*.ts\"",
-    "lint": "pnpm run prettier-fix && eslint .",
-    "lint:fix": "pnpm run lint -- --fix",
+    "lint": "pnpm prettier-fix && eslint .",
+    "lint:fix": "pnpm lint -- --fix",
     "lint:lockfile": "pnpm install --frozen-lockfile",
     "audit:supply-chain": "pnpm audit && pnpm audit signatures",
     "semantic-release": "semantic-release"

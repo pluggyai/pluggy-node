@@ -160,27 +160,27 @@ This repo uses **pnpm 11** (managed via corepack — the `packageManager` field 
 pnpm install --frozen-lockfile
 
 # Build
-pnpm run build
+pnpm build
 
 # Test
 pnpm test
 
 # Lint. ⚠️ This script first runs `prettier --write src/**/*.ts`. Since
 # prettier is pinned to 1.19.1 (last 1.x, kept on purpose to avoid mass
-# reformatting), running `pnpm run lint` WILL rewrite files. To lint
+# reformatting), running `pnpm lint` WILL rewrite files. To lint
 # without touching formatting, use `pnpm exec eslint .` instead.
-pnpm run lint
+pnpm lint
 
 # Run the same strict supply-chain audit CI runs (any vuln, any
 # severity fails — prod + dev — plus signature verification).
-pnpm run audit:supply-chain
+pnpm audit:supply-chain
 ```
 
 ### TypeScript & Build setup
 
 Two tsconfigs by design:
 - `tsconfig.json` — used by the IDE and ts-jest. Includes `src/` AND `tests/`, `noEmit: true`, `types: ["jest", "node"]`. Keeps editor errors silent on test files.
-- `tsconfig.build.json` — used only by `pnpm run build`. Emits only `src/` to `dist/` with declarations. The `build` script wires this in.
+- `tsconfig.build.json` — used only by `pnpm build`. Emits only `src/` to `dist/` with declarations. The `build` script wires this in.
 
 Other intentional settings worth knowing about:
 - `strict: false` — TypeScript 6 flipped the `strict` default to `true`; we keep it `false` to preserve the legacy laxness on null / undefined / unintialised class members. Enabling strict surfaces real but unrelated work and belongs in a dedicated PR.
