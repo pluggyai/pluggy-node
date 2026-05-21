@@ -117,4 +117,24 @@ allowBuilds:
 # changelog before adding one, and prefer upgrading the parent dep
 # first (it usually picks up a fixed transitive without an
 # override).
-overrides: {}
+overrides:
+  # Patches for transitives reaching us through the @semantic-release
+  # plugin tree. @semantic-release/git@10.0.1 has been unmaintained
+  # since 2021 so the parent will not pull these in on its own.
+  # All four are patch-level bumps within the same major (drop-in
+  # API-compatible).
+  #
+  # lodash GHSA-r5fr-rjxr-66jc (Code Injection via _.template,
+  # HIGH) — patched in 4.17.21+ (project ships 4.18.x today).
+  # lodash GHSA-f23m-r3pf-42rh (Prototype Pollution via _.unset /
+  # _.omit, MODERATE) — patched in 4.17.24+ (project ships 4.18.x).
+  lodash: '>=4.18.0'
+  # Same advisories also affect lodash-es; npm registry has 4.17.22+
+  # patches and a 4.18.x stream.
+  lodash-es: '>=4.18.0'
+  # braces GHSA-grv7-fg5c-xmjg (ReDoS via crafted braces input, HIGH)
+  # — patched in 3.0.3.
+  braces: '>=3.0.3'
+  # micromatch GHSA-952p-6rrq-rcjv (ReDoS, MODERATE) — patched in
+  # 4.0.8.
+  micromatch: '>=4.0.8'
