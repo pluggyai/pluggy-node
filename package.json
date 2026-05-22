@@ -20,7 +20,7 @@
   },
   "scripts": {
     "test": "jest --testPathIgnorePatterns=tests/integration.test.ts",
-    "test:integration": "jest --testPathPattern=integration --runInBand",
+    "test:integration": "jest --testPathPatterns=integration --runInBand",
     "build": "tsc -p tsconfig.build.json",
     "prepare": "pnpm build",
     "prettier-fix": "prettier --write \"src/**/*.ts\"",
