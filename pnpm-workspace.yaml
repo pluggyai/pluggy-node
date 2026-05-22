@@ -1,0 +1,159 @@
+# Supply-chain hardening
+# ----------------------
+
+# Reject any package version published less than 14 days ago when
+# resolving. Existing locked versions install regardless (the filter
+# only kicks in on `pnpm install` / `pnpm update` when the lockfile
+# changes). Most supply-chain attacks are detected within hours or
+# days; the 14-day window absorbs that while keeping upgrades moving
+# at a reasonable pace. For a critical CVE that demands a sub-14d
+# upgrade, add a temporary `minimumReleaseAgeExclude` entry with a
+# CVE link and remove it once the window closes.
+# 14 days = 60 * 24 * 14 minutes
+minimumReleaseAge: 20160
+
+# When the registry metadata is missing the `time` field for a
+# version, fall back to allowing it. Some packument endpoints
+# (notably @typescript-eslint/*) omit `time` on the slim listing
+# pnpm fetches, even though the detailed endpoint has it. Setting
+# this to `false` would error on those packages even when the
+# version is genuinely mature, so keep the v11 default of `true`.
+minimumReleaseAgeIgnoreMissingTime: true
+
+# Whitelist for the 14-day wait. Only ad-hoc third-party entries
+# for documented CVE bypasses (a fix released in the last 14 days
+# that you can't wait for). Each ad-hoc entry MUST include an inline
+# comment of the form:
+#   # Remove after YYYY-MM-DD — <CVE / fix reference>
+# where the date is when the 14-day window closes on the fixed
+# version (release date + 14 days). Without that date, temporary
+# excludes silently become permanent.
+#
+# (The Pluggy SDK does not depend on any `@pluggyai/*` packages —
+# the standard `@pluggyai/*` wildcard from the skill template is
+# omitted here; re-add it the first time we pull one in.)
+minimumReleaseAgeExclude:
+  - 'brace-expansion'  # Remove after 2026-05-22 — GHSA-jxxr-4gwj-5jf2 patched in 5.0.6 (released 2026-05-08)
+
+# With exact pins in `package.json` (enforced by `savePrefix: ""`
+# below) there is only one version that satisfies each dep, so this
+# is effectively a no-op today. Pinned explicitly to survive any
+# future default change and to keep behaviour stable if a dep is
+# ever loosened back to a range.
+resolutionMode: highest
+
+# Refuse to install if Node / pnpm don't satisfy the `engines` field
+# in `package.json`. Combined with `packageManager` + `corepack`,
+# this keeps the team converged on a single pnpm version.
+#
+# Note: this only applies to local development of pluggy-sdk. It
+# does NOT affect consumers installing pluggy-sdk as a dependency
+# — pnpm-workspace.yaml is not published to npm.
+engineStrict: true
+
+# Fail the install if a package version's trust level (signature,
+# provenance) drops compared to earlier versions of the same package.
+# Protects against a compromised maintainer pushing an unsigned
+# malicious update.
+trustPolicy: no-downgrade
+
+# Auto-skip the trust check for packages older than this. Supply-
+# chain compromises via maintainer takeover are typically detected
+# within hours or days; if a release has survived 90 days in the
+# wild without an advisory, missing provenance is almost always a
+# publishing-process change (e.g. maintainer stopped using GitHub
+# Actions for releases), not a takeover.
+#
+# Combined with `minimumReleaseAge: 20160` (14 days), the trust
+# window looks like:
+#   - 0-14 days  → blocked entirely by minimumReleaseAge
+#   - 14-90 days → trustPolicy: no-downgrade enforced
+#   - 90+ days   → trustPolicy bypassed (legacy / proven)
+#
+# 90 days = 60 * 24 * 90 minutes
+trustPolicyIgnoreAfter: 129600
+
+# Block transitive dependencies from being resolved from exotic
+# sources (git URLs, direct tarballs, etc.). Direct deps in
+# `package.json` can still use them when needed, but a malicious
+# transitive cannot smuggle code via a raw git URL. Default is
+# `true` in pnpm 11; pinned explicitly so behaviour survives any
+# future default change.
+blockExoticSubdeps: true
+
+# Version pinning
+# ---------------
+
+# When running `pnpm add <pkg>`, save the exact resolved version
+# (e.g. "1.2.3") instead of a range ("^1.2.3"). All dependencies
+# in `package.json` must stay pinned so installs are deterministic
+# across environments and every upgrade lands as an explicit, easy-
+# to-review PR diff.
+savePrefix: ""
+
+# Per-package decisions
+# ---------------------
+
+# pnpm 11 blocks postinstall / install / preinstall scripts by
+# default but requires an explicit decision per package — installs
+# fail with `ERR_PNPM_IGNORED_BUILDS` until every package that ships
+# scripts is listed here as `true` (run the script) or `false`
+# (skip it). Default new entries to `false` and only flip to `true`
+# after a conscious review that the runtime or build actually needs
+# the script — flipping to `true` means pnpm will run that package's
+# install scripts on every machine, including CI. `false` is not
+# redundant: without an entry pnpm rewrites placeholders into this
+# file on every install. Populated during the first `pnpm install`.
+allowBuilds:
+  # Native Rust resolver pulled in by jest@30 (via jest-resolve). Platform
+  # binaries ship via optionalDependencies (pnpm installs the matching one
+  # automatically), so the postinstall script is not required for the
+  # package to work at runtime. Leaving it off keeps install hermetic.
+  unrs-resolver: false
+
+# Force a specific version on transitive dependencies, regardless
+# of what the parent's `package.json` range allows. Use sparingly —
+# an override can break the parent if it relied on an older API of
+# the transitive. Always check both the package's and the parent's
+# changelog before adding one, and prefer upgrading the parent dep
+# first (it usually picks up a fixed transitive without an
+# override).
+overrides:
+  # All overrides use exact versions (matches the savePrefix: ""
+  # policy applied to package.json deps): reproducible installs and
+  # explicit upgrade diffs. A range like `>=1.1.13` is unsafe in pnpm
+  # overrides because pnpm picks the *latest* matching version — for
+  # `brace-expansion >=1.1.13` that ends up resolving to the 5.x
+  # stream and violating semver against parents that declared `^1.x`.
+  #
+  # Patches for transitives reaching us through the @semantic-release
+  # plugin tree. @semantic-release/git@10.0.1 has been unmaintained
+  # since 2021 so the parent will not pull these in on its own. All
+  # four are patch-level within the same major (drop-in API-compat).
+  #
+  # lodash GHSA-r5fr-rjxr-66jc (Code Injection via _.template, HIGH)
+  # and GHSA-f23m-r3pf-42rh (Prototype Pollution, MODERATE).
+  lodash: '4.18.1'
+  lodash-es: '4.18.1'
+  # braces GHSA-grv7-fg5c-xmjg (ReDoS, HIGH).
+  braces: '3.0.3'
+  # micromatch GHSA-952p-6rrq-rcjv (ReDoS, MODERATE).
+  micromatch: '4.0.8'
+  # Patches for transitives reaching us through the jest tree.
+  #
+  # @babel/helpers GHSA-968p-4wvh-cqc8 (inefficient RegExp, MODERATE).
+  '@babel/helpers': '7.29.2'
+  # js-yaml GHSA-mh29-5h37-fv8m (DoS via deeply-nested input,
+  # MODERATE). The advisory lists v3.14.2 as the patched v3 release;
+  # the only consumer in our tree (@istanbuljs/load-nyc-config) also
+  # accepts v4, so we converge on the v4 line.
+  js-yaml: '4.1.1'
+  # brace-expansion has three separate advisories — one per major
+  # in active use. Version-scoped overrides keep each parent within
+  # its expected semver range so 1.x consumers stay on 1.x, etc:
+  #   GHSA-v6h2-p8h4-qcjw (LOW)      → patched in 1.1.12
+  #   GHSA-f886-m6hf-6m8v (MODERATE) → patched in 1.1.13 / 2.0.3
+  #   GHSA-jxxr-4gwj-5jf2 (MODERATE) → patched in 5.0.6
+  'brace-expansion@1': '1.1.14'
+  'brace-expansion@2': '2.0.3'
+  'brace-expansion@5': '5.0.6'

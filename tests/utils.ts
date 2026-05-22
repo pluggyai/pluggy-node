@@ -1,4 +1,4 @@
-import * as nock from 'nock'
+import nock from 'nock'
 
 // A non-expiring JWT (exp: 9999999999 = year 2286) — used to allow the SDK
 // to reuse the cached apiKey across multiple requests in the same test.

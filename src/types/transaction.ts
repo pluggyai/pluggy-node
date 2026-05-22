@@ -116,10 +116,14 @@ export type TransactionFilters = PageFilters & {
 export type TransactionCursorFilters = {
   /** Filter transactions with date >= this value. Format is ISO Date or 'YYYY-MM-dd'. Mutually exclusive with createdAtFrom. */
   dateFrom?: string
+  /** Filter transactions with date <= this value. Format is ISO Date or 'YYYY-MM-dd'. */
+  dateTo?: string
   /** Filter transactions created after this timestamp. Format is ISO Date. Mutually exclusive with dateFrom. */
   createdAtFrom?: string
   /** Base64-encoded cursor from the previous page's `next` field */
   after?: string
+  /** Filter transactions with the specified ids. Max 500 ids per request. Serialized as a comma-separated list. */
+  ids?: string[]
 }
 
 export type Transaction = {

@@ -11,6 +11,10 @@ Official Node.js/TypeScript SDK for the Pluggy API.
 npm install pluggy-sdk
 ```
 
+### Requirements
+
+- **Node.js**: `>=12.0.0`
+
 ## Quickstart
 
 ```ts

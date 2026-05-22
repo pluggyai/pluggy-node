@@ -69,7 +69,7 @@ Current SDK methods in `client.ts` (PluggyClient):
 | Item MFA | `updateItemMFA()` | POST /items/{id}/mfa |
 | Accounts | `fetchAccounts()`, `fetchAccount()` | /accounts |
 | Account Statements | `fetchAccountStatements()` | GET /accounts/{id}/statements |
-| Transactions | `fetchTransactions()`, `fetchTransaction()`, `fetchAllTransactions()` | /transactions |
+| Transactions | `fetchTransactionsCursor()` (single page) + `fetchAllTransactions()` (full sweep) for the v2 cursor endpoint; `fetchTransactions()` page-based is `@deprecated`; `fetchTransaction()` by id | GET /v2/transactions, GET /transactions/{id} |
 | Transaction Update | `updateTransactionCategory()` | PATCH /transactions/{id} |
 | Investments | `fetchInvestments()`, `fetchInvestment()` | /investments |
 | Investment Transactions | `fetchInvestmentTransactions()`, `fetchAllInvestmentTransactions()` | GET /investments/{id}/transactions |
@@ -153,25 +153,64 @@ async deleteModel(id: string): Promise<void> {
 
 ## Build and Test
 
+This repo uses **pnpm 11** (managed via corepack — the `packageManager` field in `package.json` pins the version). Development requires **Node 24+** (declared in `devEngines`); the published package itself supports **Node 12+** for consumers (`engines.node`).
+
 ```bash
-# Install dependencies
-npm ci
+# Install dependencies (corepack activates the pinned pnpm version)
+pnpm install --frozen-lockfile
 
 # Build
-npm run build
+pnpm build
 
 # Test
-npm test
+pnpm test
 
-# Lint
-npm run lint
+# Lint. ⚠️ This script first runs `prettier --write src/**/*.ts`. Since
+# prettier is pinned to 1.19.1 (last 1.x, kept on purpose to avoid mass
+# reformatting), running `pnpm lint` WILL rewrite files. To lint
+# without touching formatting, use `pnpm exec eslint .` instead.
+pnpm lint
+
+# Run the same strict supply-chain audit CI runs (any vuln, any
+# severity fails — prod + dev — plus signature verification).
+pnpm audit:supply-chain
 ```
 
-## Current SDK Status (Last Updated: 2026-01-23)
+### TypeScript & Build setup
+
+Two tsconfigs by design:
+- `tsconfig.json` — used by the IDE and ts-jest. Includes `src/` AND `tests/`, `noEmit: true`, `types: ["jest", "node"]`. Keeps editor errors silent on test files.
+- `tsconfig.build.json` — used only by `pnpm build`. Emits only `src/` to `dist/` with declarations. The `build` script wires this in.
+
+Other intentional settings worth knowing about:
+- `strict: false` — TypeScript 6 flipped the `strict` default to `true`; we keep it `false` to preserve the legacy laxness on null / undefined / unintialised class members. Enabling strict surfaces real but unrelated work and belongs in a dedicated PR.
+- `target: "ES2019"`, `lib: ["ES2019"]`, `module: "node16"` — follows the Microsoft-recommended config for Node 12 consumers (output stays CommonJS because the package has no `"type": "module"`).
+
+### Supply-chain hardening
+
+`pnpm-workspace.yaml` enforces:
+- `minimumReleaseAge: 14d` — versions younger than 14 days are blocked at resolve time (CVE bypasses go through `minimumReleaseAgeExclude` with a documented removal date).
+- `trustPolicy: no-downgrade`, `blockExoticSubdeps`, `engineStrict`.
+- `savePrefix: ""` — `pnpm add` saves exact versions.
+- `allowBuilds: { unrs-resolver: false }` — postinstall scripts are blocked by default; each one needs an explicit decision.
+- `overrides: { ... }` — exact-version patches for transitive vulnerabilities (lodash, braces, micromatch, @babel/helpers, js-yaml, brace-expansion). **Review these whenever you bump a parent dep**: once the parent picks up the fix natively, the override should come back out.
+
+Full inline reasoning lives in `pnpm-workspace.yaml`.
+
+### Node version surface
+
+- `engines.node: ">=12.0.0"` — the floor we promise to consumers (real minimum that the runtime deps require; `jsonwebtoken` is the strictest).
+- `devEngines.runtime.version: ">=24.10.0"` — required to develop the SDK (pnpm 11 + semantic-release v25 both require it).
+- `@types/node: 16.18.126` — the closest match to `engines.node` that compiles cleanly with TS 6 (the 12.x types do not).
+- `eslint-plugin-n` reads `engines.node` and statically rejects any Node API call not available in the supported range (e.g. `fs.promises.cp` would fail). Scoped to `src/**/*.ts` only.
+
+## Current SDK Status (Last Updated: 2026-05-21)
 
 ### SDK Coverage
 The Node SDK has comprehensive coverage including:
 - All core aggregation endpoints
+- Cursor-based transactions (`GET /v2/transactions` via `fetchTransactionsCursor` / `fetchAllTransactions`); the page-based `fetchTransactions` is `@deprecated`
+- Identity PF/PJ fields (new in Pluggy API 0.24)
 - Full payment initiation support
 - Automatic PIX payments
 - Smart accounts and transfers

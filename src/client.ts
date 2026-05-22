@@ -155,7 +155,16 @@ export class PluggyClient extends BaseApi {
   }
 
   /**
-   * Fetch transactions from an account
+   * Fetch transactions from an account using page-based pagination.
+   *
+   * @deprecated Use {@link fetchTransactionsCursor} (single page) or
+   * {@link fetchAllTransactions} (full sweep) instead. Both rely on the
+   * `GET /v2/transactions` endpoint with cursor-based pagination, which
+   * is more stable for long lists and supports the full filter set
+   * (`dateTo`, `ids`, etc.). This page-based method is kept for
+   * backward compatibility and will be removed in a future major
+   * release.
+   *
    * @param accountId The account id
    * @param {TransactionFilters} options Transaction options to filter
    * @returns {PageResponse<Transaction[]>} object which contains the transactions list and related paging data

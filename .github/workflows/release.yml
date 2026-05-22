@@ -9,28 +9,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           fetch-depth: 0
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6.4.0
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: '24'
+      - name: Enable corepack
+        run: corepack enable
+      - name: Setup pnpm cache
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '24'
+          cache: 'pnpm'
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
+      - name: Supply-chain audit (strict — any vulnerability fails the release)
+        run: pnpm audit && pnpm audit signatures
       - name: Build library
-        run: npm run build
+        run: pnpm build
       - name: Run Tests
-        run: npm test
+        run: pnpm test
       - name: Run Integration Tests
         env:
           PLUGGY_CLIENT_ID: ${{ secrets.PLUGGY_CLIENT_ID }}
           PLUGGY_CLIENT_SECRET: ${{ secrets.PLUGGY_CLIENT_SECRET }}
           PLUGGY_API_URL: https://api.pluggy.ai
-        run: npm run test:integration
+        run: pnpm test:integration
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
+        run: pnpm exec semantic-release
