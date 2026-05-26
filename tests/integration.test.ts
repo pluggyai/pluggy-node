@@ -128,35 +128,6 @@ describeIf('Integration Tests', () => {
   })
 
   describe('Transactions', () => {
-    it('fetchTransactions returns transactions', async () => {
-      expect(item).not.toBeNull()
-
-      const accounts = await client.fetchAccounts(item!.id)
-      expect(accounts.results.length).toBeGreaterThan(0)
-
-      const account = accounts.results[0]
-      const oneYearAgo = new Date()
-      oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1)
-
-      const transactions = await client.fetchTransactions(account.id, {
-        from: oneYearAgo.toISOString().split('T')[0],
-        to: new Date().toISOString().split('T')[0],
-      })
-
-      expect(transactions).toBeDefined()
-      console.log(`Found ${transactions.total} transactions for account ${account.id}`)
-
-      if (transactions.results.length > 0) {
-        const tx = transactions.results[0]
-        console.log(`Transaction: ${tx.id}, Date: ${tx.date}, Amount: ${tx.amount}`)
-
-        // Verify we can fetch individual transaction
-        const fetchedTx = await client.fetchTransaction(tx.id)
-        expect(fetchedTx).toBeDefined()
-        expect(fetchedTx.id).toBe(tx.id)
-      }
-    })
-
     it('fetchTransactionsCursor returns cursor-paged transactions', async () => {
       expect(item).not.toBeNull()
 
@@ -177,6 +148,13 @@ describeIf('Integration Tests', () => {
       console.log(
         `fetchTransactionsCursor: ${page.results.length} results, next=${page.next ?? 'null'}`
       )
+
+      if (page.results.length > 0) {
+        const tx = page.results[0]
+        const fetchedTx = await client.fetchTransaction(tx.id)
+        expect(fetchedTx).toBeDefined()
+        expect(fetchedTx.id).toBe(tx.id)
+      }
     })
 
     it('fetchAllTransactions returns all transactions via cursor pagination', async () => {
