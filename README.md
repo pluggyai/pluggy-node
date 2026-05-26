@@ -86,23 +86,40 @@ await client.updateItemMFA(item.id, {
 
 ### Accounts and transactions (with pagination)
 
-Most list endpoints support filters/pagination via an `options` object.
+Transactions use **cursor-based pagination** against `GET /v2/transactions`. The SDK exposes two helpers:
+
+- `fetchTransactionsCursor(accountId, options)` — fetch a single page and the cursor to the next one.
+- `fetchAllTransactions(accountId, options)` — iterate through every page and return the full list.
 
 ```ts
 const accounts = await client.fetchAccounts(item.id)
+const account = accounts.results[0]
 
-const firstPage = await client.fetchTransactions({
-  itemId: item.id,
-  page: 1,
-  pageSize: 20,
+// Single page (returns { results, next })
+const page = await client.fetchTransactionsCursor(account.id, {
+  dateFrom: '2024-01-01',
 })
 
-// If you need to iterate across all pages:
-const all = await client.fetchAllTransactions({
-  itemId: item.id,
-  pageSize: 500,
+// Manual pagination: follow the cursor until `next` is null
+let cursor = page.next
+while (cursor) {
+  const url = new URL(cursor)
+  const after = url.searchParams.get('after')!
+  const next = await client.fetchTransactionsCursor(account.id, {
+    dateFrom: '2024-01-01',
+    after,
+  })
+  // ...do something with next.results
+  cursor = next.next
+}
+
+// Or fetch all transactions in one call
+const all = await client.fetchAllTransactions(account.id, {
+  dateFrom: '2024-01-01',
 })
 ```
+
+> **Deprecation note:** the legacy page-based `fetchTransactions(accountId, options)` method (`GET /transactions`) is `@deprecated` and will be removed in a future major release. Migrate to `fetchTransactionsCursor` / `fetchAllTransactions` — the cursor endpoint is more stable for long lists and supports the full filter set (`dateTo`, `ids`, etc.).
 
 ### Webhooks
 

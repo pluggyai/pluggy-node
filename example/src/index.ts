@@ -63,8 +63,8 @@ void (async function(): Promise<void> {
     console.log(
       `Account # ${account.id} has a balance of ${account.balance}, its number is ${account.number}`
     )
-    const transactions = await client.fetchTransactions(account.id)
-    transactions.results.forEach(tx => {
+    const transactions = await client.fetchAllTransactions(account.id)
+    transactions.forEach(tx => {
       console.log(
         `Transaction # ${tx.id} made at ${moment(tx.date).format('DD/MM/YYYY')}, description: ${
           tx.description
@@ -77,7 +77,7 @@ void (async function(): Promise<void> {
   if (accounts.results.length !== 0) {
     console.log(`Upadating transactions category to a random one`)
     const { id } = accounts.results[0]
-    const { results: transactions } = await client.fetchTransactions(id)
+    const transactions = await client.fetchAllTransactions(id)
 
     if (transactions.length !== 0) {
       // Select random transaction
