@@ -4,7 +4,21 @@
     "dist"
   ],
   "license": "MIT",
+  "packageManager": "pnpm@11.1.3",
+  "engines": {
+    "node": ">=24.0.0",
+    "pnpm": ">=11.0.0"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=24.0.0",
+      "onFail": "error"
+    }
+  },
   "scripts": {
+    "preinstall": "pnpm audit && pnpm audit signatures",
+    "lint:lockfile": "pnpm install --frozen-lockfile",
     "build": "tsc",
     "start": "ts-node src/index.ts",
     "example:auth": "ts-node src/auth.ts",
@@ -19,13 +33,13 @@
     "example:payment-recipient": "ts-node src/payment-recipient.ts"
   },
   "dependencies": {
-    "dotenv": "^16.0.3",
-    "moment": "^2.29.4",
-    "pluggy-sdk": "../"
+    "dotenv": "17.4.2",
+    "moment": "2.30.1",
+    "pluggy-sdk": "link:.."
   },
   "devDependencies": {
-    "@types/node": "^18.15.11",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.0.3"
+    "@types/node": "24.12.4",
+    "ts-node": "10.9.2",
+    "typescript": "5.9.3"
   }
 }

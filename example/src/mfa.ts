@@ -1,12 +1,11 @@
 import dotenv from 'dotenv'
 import { PluggyClient } from 'pluggy-sdk'
 import {
-  PLUGGY_BANK_CONNECTOR,
   PLUGGY_BANK_CREDENTIALS,
   PLUGGY_BANK_MFA_2STEP_CONNECTOR,
   sleep,
 } from './utils'
-import { Item, ItemStatus } from '../../src'
+import { Item } from '../../src'
 
 const DEFAULT_MFA_VALUE = '123456'
 
