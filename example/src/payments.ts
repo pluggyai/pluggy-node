@@ -15,6 +15,7 @@ void (async function(): Promise<void> {
   const paymentRequest = await client.payments.createPaymentRequest({
     amount: 100,
     description: 'Test payment',
+    isSandbox: true,
   })
 
   console.log('Payment request created, open this url: ', paymentRequest.paymentUrl)

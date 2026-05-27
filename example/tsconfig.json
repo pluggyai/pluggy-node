@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es2015",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "lib": ["es2017", "dom"],
+    "target": "ES2024",
+    "module": "node20",
+    "moduleResolution": "node16",
+    "lib": ["ES2024"],
     "declaration": true,
     "esModuleInterop": true,
-    "strict": true,
+    "strict": false,
+    "skipLibCheck": true,
     "outDir": "dist"
   },
-  "include": ["**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

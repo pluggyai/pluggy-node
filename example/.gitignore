@@ -1,3 +1,7 @@
 .env
 dist
 node_modules
+
+# Block npm/yarn lockfiles — this subdirectory is pnpm-only
+package-lock.json
+yarn.lock
