@@ -50,10 +50,53 @@ export type BankData = {
   closingBalance: number | null
   /** Automatically invested balance */
   automaticallyInvestedBalance: number | null
+  /** Overdraft contracted limit */
+  overdraftContractedLimit: number | null
   /** Overdraft used limit */
   overdraftUsedLimit: number | null
   /** Unarranged overdraft amount */
   unarrangedOverdraftAmount: number | null
+  /** Whether the account has any active reserved balances ("saldo reservado"),
+   * such as goal-based savings ("caixinhas") or judicial holds */
+  hasReservedBalance: boolean | null
+  /** Funds reserved/earmarked on the account. Only present when hasReservedBalance
+   * is true and the institution exposes the data */
+  reservedBalances: ReservedBalance[] | null
+}
+
+export type ReservedBalance = {
+  /** User-given name for the reservation (for example, 'Caixinha Para Férias') */
+  name: string | null
+  /** Unique identifier of the reservation */
+  identification: string
+  /** Available amount(s) in the reservation, one entry per remuneration band */
+  amounts: ReservedBalanceAmount[]
+}
+
+export type ReservedBalanceAmount = {
+  /** Reserved amount */
+  amount: number
+  /** Amount currency code (for example, BRL) */
+  currencyCode: CurrencyCode
+  /** Remuneration applied to the reserved amount */
+  remuneration: ReservedBalanceRemuneration | null
+}
+
+export type ReservedBalanceRemuneration = {
+  /** Pre-fixed remuneration rate, as a fraction (for example, 0.3 = 30%) */
+  preFixedRate: number | null
+  /** Post-fixed indexer percentage, as a fraction (for example, 1.1 = 110% of the indexer) */
+  postFixedIndexerPercentage: number | null
+  /** Rate type */
+  rateType: 'LINEAR' | 'EXPONENCIAL' | null
+  /** Indexer used as remuneration reference (for example, CDI, IPCA, SELIC) */
+  indexer: string | null
+  /** Calculation basis */
+  calculation: 'DIAS_UTEIS' | 'DIAS_CORRIDOS' | null
+  /** Rate periodicity */
+  ratePeriodicity: 'MENSAL' | 'ANUAL' | 'DIARIO' | 'SEMESTRAL' | null
+  /** Additional indexer info, required when indexer is OUTROS */
+  indexerAdditionalInfo: string | null
 }
 
 export type CreditData = {
