@@ -204,7 +204,7 @@ Full inline reasoning lives in `pnpm-workspace.yaml`.
 - `@types/node: 16.18.126` — the closest match to `engines.node` that compiles cleanly with TS 6 (the 12.x types do not).
 - `eslint-plugin-n` reads `engines.node` and statically rejects any Node API call not available in the supported range (e.g. `fs.promises.cp` would fail). Scoped to `src/**/*.ts` only.
 
-## Current SDK Status (Last Updated: 2026-05-21)
+## Current SDK Status (Last Updated: 2026-06-08)
 
 ### SDK Coverage
 The Node SDK has comprehensive coverage including:
@@ -217,5 +217,13 @@ The Node SDK has comprehensive coverage including:
 - Bulk payments
 - Scheduled payments
 
+### Last API Sync (2026-06-08)
+Type-only gap fixes from comparing `src/types/` against the OpenAPI spec (`oas3.json`). No new endpoints — all paths already covered. Added fields:
+- **Connector**: `supportsAutomaticPix`, `supportsBoletoManagement`, `updatedAt?`
+- **Item**: `consentExpiresAt`
+- **Loan**: `kind` (new `LoanKind` enum: `LOAN` | `FINANCING` | `INVOICE_FINANCING` | `UNARRANGED_ACCOUNT_OVERDRAFT`)
+- **CreditCardBills**: `payments` (new `CreditCardBillPayment` type + `valueType`/`paymentMode` enums)
+- Re-exported `creditCardBills` types from `src/types/index.ts` (were public via `fetchCreditCardBill()` return type but not importable)
+
 ### Not Implemented (Intentional)
-- Boleto Management: Beta feature, not added to SDK
+- Boleto Management: Beta feature, not added to SDK (the `Connector.supportsBoletoManagement` flag is exposed as read-only metadata, but no boleto endpoints/types are implemented)

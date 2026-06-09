@@ -149,12 +149,18 @@ export type Connector = {
   supportsScheduledPayments: boolean
   /** Indicates that the connector supports Smart Transfers */
   supportsSmartTransfers: boolean
+  /** Indicates that the connector supports Automatic Pix */
+  supportsAutomaticPix: boolean
+  /** Indicates that the connector supports Boleto Management */
+  supportsBoletoManagement: boolean
   /** Url where user can reset their account password */
   resetPasswordUrl?: string
   /** list of products supported by the institution */
   products: ProductType[]
   /** Connector creation date */
   createdAt: Date
+  /** Date of last modification of the connector */
+  updatedAt?: Date
 }
 
 export type ConnectorFilters = {

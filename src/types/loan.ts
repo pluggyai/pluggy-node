@@ -1,5 +1,14 @@
 import { CurrencyCode } from './common'
 
+export const LOAN_KINDS = [
+  'LOAN',
+  'FINANCING',
+  'INVOICE_FINANCING',
+  'UNARRANGED_ACCOUNT_OVERDRAFT',
+] as const
+
+export type LoanKind = typeof LOAN_KINDS[number]
+
 const LOAN_INSTALLMENT_PERIODICITIES = [
   'WITHOUT_REGULAR_PERIODICITY',
   'WEEKLY',
@@ -212,6 +221,8 @@ export type Loan = {
   productName: string
   /*! Loan type (https://openbanking-brasil.github.io/openapi/swagger-apis/loans/?urls.primaryName=2.0.1#model-EnumContractProductSubTypeLoans) */
   type: string | null
+  /*! Credit-operation family this contract belongs to */
+  kind: LoanKind
   /*! Date when the loan data was collected */
   date: Date | null
   /*! Date when the loan was contracted */
