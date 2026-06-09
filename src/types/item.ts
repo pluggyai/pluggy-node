@@ -113,6 +113,8 @@ export type Item = {
   consecutiveFailedLoginAttempts: number
   /** The date when the next Pluggy's auto-sync update will be attempted (if item is updatable). */
   nextAutoSyncAt: Date | null
+  /** Consent expiration date (Open Finance connections). */
+  consentExpiresAt: Date | null
 }
 
 /**
