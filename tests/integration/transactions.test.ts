@@ -85,7 +85,9 @@ describeIntegration('Transactions (integration, cursor-based)', () => {
 
     const tx = page.results[0]
     const categories = await client.fetchCategories()
-    const newCategory = categories.results.find(c => c.id !== tx.category)
+    // Pick any category different from the transaction's current one.
+    // Compare against `tx.categoryId` (the id) — `tx.category` is the name.
+    const newCategory = categories.results.find(c => c.id !== tx.categoryId)
     if (!newCategory) return
 
     const updated = await client.updateTransactionCategory(tx.id, newCategory.id)

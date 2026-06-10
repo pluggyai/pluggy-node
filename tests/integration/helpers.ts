@@ -1,13 +1,11 @@
 /**
- * Shared helpers for integration tests.
- *
- * Patterned after plaid-node's test/clientHelper.ts: a client factory, a
- * fixture builder that creates a sandbox item and waits for it to sync,
- * a defensive cleanup helper, and a small retry utility for endpoints
- * that are eventually consistent in sandbox.
+ * Shared helpers for integration tests: a client factory, a fixture builder
+ * that creates a sandbox item and waits for it to sync, a defensive cleanup
+ * helper, and a small retry utility for endpoints that are eventually
+ * consistent in sandbox.
  */
 import { PluggyClient } from '../../src/client'
-import { Item } from '../../src/types'
+import { Item, ItemStatus } from '../../src/types'
 
 /** Pluggy Bank — the sandbox connector. */
 export const SANDBOX_CONNECTOR_ID = 0
@@ -47,6 +45,15 @@ export function createClient(): PluggyClient {
 }
 
 /**
+ * Statuses that mean a sync is still in progress. Anything else is terminal
+ * (UPDATED on success; LOGIN_ERROR / OUTDATED / WAITING_USER_* otherwise),
+ * so the poll loop stops and we assert the outcome. Polling only while the
+ * item is genuinely still working avoids spinning until the timeout when an
+ * item lands in a terminal error/waiting state.
+ */
+const PENDING_STATUSES: ItemStatus[] = ['UPDATING', 'MERGING']
+
+/**
  * Create a sandbox item and poll until it reaches a terminal status.
  * Throws on timeout or on any non-UPDATED terminal state.
  */
@@ -54,7 +61,7 @@ export async function createSandboxItem(client: PluggyClient): Promise<Item> {
   let item = await client.createItem(SANDBOX_CONNECTOR_ID, SANDBOX_CREDENTIALS)
   const deadline = Date.now() + ITEM_SYNC_TIMEOUT_MS
 
-  while (item.status !== 'UPDATED' && item.status !== 'LOGIN_ERROR') {
+  while (PENDING_STATUSES.includes(item.status)) {
     if (Date.now() > deadline) {
       // Best-effort cleanup before bubbling the error.
       await deleteItemSafely(client, item.id)

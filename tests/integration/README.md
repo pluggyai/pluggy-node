@@ -1,6 +1,6 @@
 # Integration tests
 
-These specs run the SDK against the real Pluggy API (sandbox connector) to catch drift between the SDK and the live service. Patterned after [`plaid/plaid-node`'s test suite](https://github.com/plaid/plaid-node/tree/master/test) — one spec per resource, each owning its own fixture lifecycle.
+These specs run the SDK against the real Pluggy API (sandbox connector) to catch drift between the SDK and the live service. One spec per resource, each owning its own fixture lifecycle.
 
 ## Running locally
 
@@ -44,7 +44,7 @@ Without credentials each spec auto-skips via `describe.skip`, so the suite is sa
 
 Each spec that needs server state calls `createSandboxItem(client)` in `beforeAll` — this creates a sandbox item, polls until status is `UPDATED`, and returns it. The matching `afterAll` calls `deleteItemSafely` so cleanup never masks the real failure (and orphans are surfaced to stderr).
 
-Plaid's suite does not clean up — it relies on the sandbox being cheap. Pluggy items are heavier, so cleanup is mandatory.
+Cleanup is mandatory: Pluggy items are heavy enough that leaked fixtures pile up against the test tenant's quota, so every spec that creates one deletes it defensively.
 
 ## Resource tagging
 
