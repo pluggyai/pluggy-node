@@ -9,6 +9,12 @@ export const API_URL = process.env.PLUGGY_API_URL!
  * from `beforeEach` after `nock.cleanAll()`.
  */
 export function createPaymentsClient(): PluggyPaymentsClient {
+  // Block any unmocked real network call from the payments unit suite — a
+  // wrong path would otherwise hit the wire instead of failing the test.
+  // Scoped here (not in the shared setup) on purpose: the real-API
+  // integration suite never imports this module, and each npm test script
+  // runs in its own process, so live connections there stay enabled.
+  nock.disableNetConnect()
   setupAuth()
   return new PluggyPaymentsClient({ clientId: '123', clientSecret: '456' })
 }
