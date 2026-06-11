@@ -163,6 +163,8 @@ export type Transaction = {
   categoryId: string | null
   /** Operation type of the transaction */
   operationType: string | null
+  /** Complementary, free-form information about the operation type, as provided by the institution. Only returned for Open Finance connectors */
+  operationTypeAdditionalInfo: string | null
   /** Provider ID of the transaction. Only returned for Open Finance connectors */
   providerId: string | null
   /** Date when the transaction was created in Pluggy */
