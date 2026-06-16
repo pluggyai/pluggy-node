@@ -85,6 +85,34 @@ export type TransactionMerchantData = {
   category?: string
 }
 
+export const CREDIT_CARD_ACCOUNT_FEE_TYPES = [
+  'ANNUAL_FEE',
+  'ATM_WITHDRAWAL_DOMESTIC',
+  'ATM_WITHDRAWAL_INTERNATIONAL',
+  'EMERGENCY_CREDIT_EVALUATION',
+  'CARD_REISSUE',
+  'BILL_PAYMENT_FEE',
+  'SMS',
+  'OTHER',
+] as const
+/**
+ * @typedef CreditCardAccountFeeType
+ * Type of fee charged on a credit card transaction.
+ */
+export type CreditCardAccountFeeType = typeof CREDIT_CARD_ACCOUNT_FEE_TYPES[number]
+
+export const CREDIT_CARD_ACCOUNT_OTHER_CREDIT_TYPES = [
+  'REVOLVING_CREDIT',
+  'BILL_INSTALLMENT',
+  'LOAN',
+  'OTHER',
+] as const
+/**
+ * @typedef CreditCardAccountOtherCreditType
+ * Other type of credit contracted on the card.
+ */
+export type CreditCardAccountOtherCreditType = typeof CREDIT_CARD_ACCOUNT_OTHER_CREDIT_TYPES[number]
+
 export type CreditCardMetadata = {
   /** The number of the installment */
   installmentNumber?: number
@@ -100,6 +128,14 @@ export type CreditCardMetadata = {
   billId?: string
   /** The masked card number */
   cardNumber?: string
+  /** Type of fee charged. Only returned for Open Finance connectors */
+  feeType?: CreditCardAccountFeeType
+  /** Additional information about the fee type. Required when feeType is 'OTHER'. Only returned for Open Finance connectors */
+  feeTypeAdditionalInfo?: string
+  /** Other type of credit contracted on the card. Only returned for Open Finance connectors */
+  otherCreditsType?: CreditCardAccountOtherCreditType
+  /** Additional information about the other credits type. Required when otherCreditsType is 'OTHER'. Only returned for Open Finance connectors */
+  otherCreditsAdditionalInfo?: string
 }
 
 export type TransactionFilters = PageFilters & {
