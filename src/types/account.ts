@@ -99,11 +99,60 @@ export type ReservedBalanceRemuneration = {
   indexerAdditionalInfo: string | null
 }
 
+export const CREDIT_CARD_LIMIT_LINE_NAMES = [
+  'CREDITO_A_VISTA',
+  'CREDITO_PARCELADO',
+  'SAQUE_CREDITO_BRASIL',
+  'SAQUE_CREDITO_EXTERIOR',
+  'EMPRESTIMO_CARTAO_CONSIGNADO',
+  'OUTROS',
+] as const
+/**
+ * @typedef CreditCardLimitLineName
+ * Name of the credit limit line.
+ */
+export type CreditCardLimitLineName = typeof CREDIT_CARD_LIMIT_LINE_NAMES[number]
+
+export type DisaggregatedCreditLimit = {
+  /** Limit type (LIMITE_CREDITO_TOTAL or LIMITE_CREDITO_MODALIDADE_OPERACAO). */
+  creditLineLimitType: string
+  /** Indicates if the limit is consolidated or individual. */
+  consolidationType: string
+  /** Identification number of the credit card. */
+  identificationNumber: string
+  /** Indicates if the limit is flexible. */
+  isLimitFlexible: boolean
+  /** Used amount of the reported limit. */
+  usedAmount: number
+  /** Currency of the reported used amount. */
+  usedAmountCurrencyCode: CurrencyCode
+  /** Name of the credit limit line. */
+  lineName?: CreditCardLimitLineName
+  /** Additional information about the line name. Required when lineName is 'OUTROS'. */
+  lineNameAdditionalInfo?: string
+  /** Total amount of the granted limit. */
+  limitAmount?: number
+  /** Currency of the reported limit amount. */
+  limitAmountCurrencyCode?: CurrencyCode
+  /** Reason why the reported total limit amount is equal to zero. */
+  limitAmountReason?: string
+  /** Total limit amount customized by the customer through the institution's electronic channels. */
+  customizedLimitAmount?: number
+  /** Currency of the reported customized limit amount. */
+  customizedLimitAmountCurrencyCode?: CurrencyCode
+  /** Available amount of the reported limit. */
+  availableAmount?: number
+  /** Currency of the reported available amount. */
+  availableAmountCurrencyCode?: CurrencyCode
+}
+
 export type CreditData = {
   /** Credit card end user's level */
   level: string | null
   /** Credit card brand, ie. Mastercard, Visa */
   brand: string | null
+  /** Free text to specify the brand category when brand is marked as 'OTHER'. */
+  brandAdditionalInfo?: string
   /** Current balance close date */
   balanceCloseDate: Date | null
   /** Current balance due date */
@@ -122,4 +171,6 @@ export type CreditData = {
   status: 'ACTIVE' | 'BLOCKED' | 'CANCELLED' | null
   /** Credit card holder type. */
   holderType: 'MAIN' | 'ADDITIONAL' | null
+  /** Detailed credit limit information, broken down by credit line. Only returned for Open Finance connectors */
+  disaggregatedCreditLimits?: DisaggregatedCreditLimit[]
 }
