@@ -32,8 +32,11 @@ minimumReleaseAgeIgnoreMissingTime: true
 # (The Pluggy SDK does not depend on any `@pluggyai/*` packages —
 # the standard `@pluggyai/*` wildcard from the skill template is
 # omitted here; re-add it the first time we pull one in.)
-minimumReleaseAgeExclude:
-  - 'brace-expansion'  # Remove after 2026-05-22 — GHSA-jxxr-4gwj-5jf2 patched in 5.0.6 (released 2026-05-08)
+#
+# Currently empty: the previous `brace-expansion` bypass (GHSA-jxxr-4gwj-5jf2,
+# patched in 5.0.6) was removed once its 14-day window closed on 2026-05-22.
+# 5.0.6 is now pinned via the override below and resolves on its own.
+minimumReleaseAgeExclude: []
 
 # With exact pins in `package.json` (enforced by `savePrefix: ""`
 # below) there is only one version that satisfies each dep, so this
@@ -141,13 +144,25 @@ overrides:
   micromatch: '4.0.8'
   # Patches for transitives reaching us through the jest tree.
   #
-  # @babel/helpers GHSA-968p-4wvh-cqc8 (inefficient RegExp, MODERATE).
-  '@babel/helpers': '7.29.2'
-  # js-yaml GHSA-mh29-5h37-fv8m (DoS via deeply-nested input,
-  # MODERATE). The advisory lists v3.14.2 as the patched v3 release;
-  # the only consumer in our tree (@istanbuljs/load-nyc-config) also
-  # accepts v4, so we converge on the v4 line.
-  js-yaml: '4.1.1'
+  # @babel/helpers GHSA-968p-4wvh-cqc8 (inefficient RegExp, MODERATE)
+  # no longer needs an override: @babel/core is now resolved to 7.29.7
+  # (the highest in-range version, refreshed from the jest tree rather
+  # than pinned), which pulls @babel/helpers ^7.29.7 natively — well
+  # past the 7.29.2 fix. Per the policy above, the override came back
+  # out once the parent picked up the fix on its own.
+  #
+  # js-yaml — two DoS advisories, both reaching us only through the
+  # jest tree (@istanbuljs/load-nyc-config, unmaintained and pinned to
+  # ^3.13.1) and the semantic-release tree (cosmiconfig@9, ^4.1.0).
+  # Neither parent will pull a fix on its own, so we pin via override
+  # and converge both trees on the v4 line (@istanbuljs/load-nyc-config
+  # accepts v4, cosmiconfig requires it):
+  #   GHSA-mh29-5h37-fv8m (DoS via deeply-nested input, MODERATE)
+  #     → patched in 3.14.2 (v3) / 4.x
+  #   GHSA-h67p-54hq-rp68 (quadratic-complexity DoS in merge-key
+  #     handling via repeated aliases, MODERATE) → patched in 4.2.0
+  #     (no v4.1.2 was published; 4.2.0 is the fixed release).
+  js-yaml: '4.2.0'
   # brace-expansion has three separate advisories — one per major
   # in active use. Version-scoped overrides keep each parent within
   # its expected semver range so 1.x consumers stay on 1.x, etc:
