@@ -136,6 +136,8 @@ export type CreditCardMetadata = {
   otherCreditsType?: CreditCardAccountOtherCreditType
   /** Additional information about the other credits type. Required when otherCreditsType is 'OTHER'. Only returned for Open Finance connectors */
   otherCreditsAdditionalInfo?: string
+  /** Forecasted bill period (formatted as YYYY-MM) in which this transaction is expected to be charged. Unlike billId, it is provided for pending and future transactions too. Only returned for Open Finance connectors */
+  billForecastDate?: string
 }
 
 export type TransactionFilters = PageFilters & {
