@@ -162,13 +162,34 @@ overrides:
   #   GHSA-h67p-54hq-rp68 (quadratic-complexity DoS in merge-key
   #     handling via repeated aliases, MODERATE) → patched in 4.2.0
   #     (no v4.1.2 was published; 4.2.0 is the fixed release).
-  js-yaml: '4.2.0'
+  #   GHSA-52cp-r559-cp3m (quadratic CPU via YAML merge-key chains,
+  #     HIGH) → patched in 4.3.0.
+  js-yaml: '4.3.0'
   # brace-expansion has three separate advisories — one per major
   # in active use. Version-scoped overrides keep each parent within
   # its expected semver range so 1.x consumers stay on 1.x, etc:
   #   GHSA-v6h2-p8h4-qcjw (LOW)      → patched in 1.1.12
   #   GHSA-f886-m6hf-6m8v (MODERATE) → patched in 1.1.13 / 2.0.3
   #   GHSA-jxxr-4gwj-5jf2 (MODERATE) → patched in 5.0.6
-  'brace-expansion@1': '1.1.14'
-  'brace-expansion@2': '2.0.3'
-  'brace-expansion@5': '5.0.6'
+  #   GHSA-3jxr-9vmj-r5cp (DoS via exponential-time expansion, HIGH)
+  #     → hits all three majors in their own ranges: patched in
+  #     1.1.16, 2.1.2 and 5.0.7 respectively.
+  'brace-expansion@1': '1.1.16'
+  'brace-expansion@2': '2.1.2'
+  'brace-expansion@5': '5.0.7'
+  # undici reaches us only through the release tooling — the
+  # @semantic-release/github client and @semantic-release/npm via
+  # @actions/core > @actions/http-client. Both majors are present in
+  # the tree and each has its own advisory set, so they are pinned
+  # separately to keep every parent inside its declared range:
+  #   GHSA-vxpw-j846-p89q (TLS certificate validation bypass, HIGH),
+  #   GHSA-p88m-4jfj-68fv (HTTP header injection, MODERATE),
+  #   GHSA-35p6-xmwp-9g52 (response queue poisoning, LOW) and
+  #   GHSA-g8m3-5g58-fq7m (Set-Cookie SameSite downgrade, LOW)
+  #     → all patched in 6.27.0.
+  #   GHSA-vmh5-mc38-953g (WebSocket client DoS, HIGH),
+  #   GHSA-hm92-r4w5-c3mj (WebSocket client DoS, HIGH) and
+  #   GHSA-pr7r-676h-xcf6 (cross-user information disclosure,
+  #     MODERATE) → all patched in 7.28.0.
+  'undici@6': '6.27.0'
+  'undici@7': '7.28.0'
