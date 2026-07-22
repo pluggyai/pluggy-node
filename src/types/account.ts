@@ -70,7 +70,7 @@ export type ReservedBalance = {
   /** Unique identifier of the reservation */
   identification: string
   /** Available amount(s) in the reservation, one entry per remuneration band */
-  amounts: ReservedBalanceAmount[]
+  availableAmounts: ReservedBalanceAmount[]
 }
 
 export type ReservedBalanceAmount = {
