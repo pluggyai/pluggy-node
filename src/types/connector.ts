@@ -95,6 +95,51 @@ export type ConnectorHealthDetails = {
   error?: string
 }
 
+export const CONNECTOR_INCIDENT_KINDS = ['INCIDENT', 'MAINTENANCE'] as const
+/** Whether this is an unplanned incident or a planned maintenance window. */
+export type ConnectorIncidentKind = (typeof CONNECTOR_INCIDENT_KINDS)[number]
+
+export const CONNECTOR_INCIDENT_SEVERITIES = [
+  'DEGRADED',
+  'PARTIAL_OUTAGE',
+  'MAJOR_OUTAGE',
+  'MAINTENANCE',
+] as const
+/** How badly the institution is affected. */
+export type ConnectorIncidentSeverity = (typeof CONNECTOR_INCIDENT_SEVERITIES)[number]
+
+export const CONNECTOR_INCIDENT_STATES = [
+  'INVESTIGATING',
+  'IDENTIFIED',
+  'MONITORING',
+  'SCHEDULED',
+] as const
+/** Where the incident is in its lifecycle. Resolved incidents are never listed. */
+export type ConnectorIncidentState = (typeof CONNECTOR_INCIDENT_STATES)[number]
+
+/**
+ * An incident affecting a connector right now, as published on
+ * https://status.pluggy.ai. Describes the institution, not your own
+ * connections — see ConnectorHealthDetails for those.
+ */
+export type ConnectorIncident = {
+  /** Identifier of the incident on the status page. */
+  id: string
+  /** Short, customer-facing summary. Safe to show to your own users. */
+  title: string
+  /** Longer explanation, when there is one. */
+  description: string | null
+  kind: ConnectorIncidentKind
+  severity: ConnectorIncidentSeverity
+  state: ConnectorIncidentState
+  /** When the incident began. */
+  startedAt: string
+  /** When the incident was last updated. */
+  updatedAt: string | null
+  /** Permalink to the full timeline and postmortem on the status page. */
+  url: string
+}
+
 export type Connector = {
   /** Primary identifier of the connector */
   id: number
@@ -133,6 +178,16 @@ export type Connector = {
      * Once the connector is fully productive, stage field will be set to 'null'.
      */
     stage: 'BETA' | null
+    /**
+     * Incidents currently affecting this connector, worst first. Absent when
+     * there are none, so its presence is the signal. Only incidents active at
+     * this moment are listed: a scheduled maintenance appears once its window
+     * opens, not when it is announced.
+     *
+     * Use it to warn a user before they pick a bank that is known to be
+     * failing, rather than after their connection fails.
+     */
+    incidents?: ConnectorIncident[]
     /**
      * Detailed information about how the connector is performing, and/or
      * more context about the current status of the connector.
