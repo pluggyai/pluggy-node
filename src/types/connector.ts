@@ -95,6 +95,51 @@ export type ConnectorHealthDetails = {
   error?: string
 }
 
+/**
+ * What is broken, as opposed to how badly (severity) or how far along Pluggy is
+ * (state). Use it to group the same problem across institutions, and to decide
+ * which incidents are worth showing your own users: a SCHEDULED_MAINTENANCE and
+ * a TRANSACTIONS_MISSING both read as "degraded" otherwise. OTHER means Pluggy
+ * has not classified it, not that nothing is wrong.
+ */
+export const CONNECTOR_INCIDENT_TYPES = [
+  /** Whether you can connect at all. */
+  'CONNECTOR_UNAVAILABLE',
+  'CONNECTOR_DEGRADED',
+  'INSTITUTION_OUTAGE',
+  'SCHEDULED_MAINTENANCE',
+  /** It answers, but the connection does not complete or does not refresh. */
+  'CONSENT_ERROR',
+  'CONNECTION_NOT_UPDATING',
+  'PARTIAL_SUCCESS',
+  /** It connects and syncs, but what comes back is wrong or incomplete. */
+  'ACCOUNTS_MISSING',
+  'BALANCE_INCORRECT',
+  'TRANSACTIONS_MISSING',
+  'TRANSACTIONS_INCORRECT',
+  'TRANSACTIONS_INSTALLMENTS_ISSUE',
+  'INVESTMENTS_MISSING',
+  'INVESTMENTS_INCORRECT',
+  'IDENTITY_MISSING',
+  'HISTORICAL_DATA_MISSING',
+  /** Pluggy's own platform, not the institution's. */
+  'WEBHOOK_DELAY',
+  'PAYMENT_FAILURE',
+  'OTHER',
+] as const
+export type ConnectorIncidentType = (typeof CONNECTOR_INCIDENT_TYPES)[number]
+
+/** Product line an incident affects. */
+export const CONNECTOR_INCIDENT_PRODUCTS = [
+  'dados',
+  'pis',
+  'pis-agendado',
+  'pixauto',
+  'smart',
+  'infra',
+] as const
+export type ConnectorIncidentProduct = (typeof CONNECTOR_INCIDENT_PRODUCTS)[number]
+
 export const CONNECTOR_INCIDENT_KINDS = ['INCIDENT', 'MAINTENANCE'] as const
 /** Whether this is an unplanned incident or a planned maintenance window. */
 export type ConnectorIncidentKind = (typeof CONNECTOR_INCIDENT_KINDS)[number]
@@ -129,6 +174,8 @@ export type ConnectorIncident = {
   title: string
   /** Longer explanation, when there is one. */
   description: string | null
+  type: ConnectorIncidentType
+  product: ConnectorIncidentProduct
   kind: ConnectorIncidentKind
   severity: ConnectorIncidentSeverity
   state: ConnectorIncidentState
