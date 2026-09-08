@@ -95,6 +95,98 @@ export type ConnectorHealthDetails = {
   error?: string
 }
 
+/**
+ * What is broken, as opposed to how badly (severity) or how far along Pluggy is
+ * (state). Use it to group the same problem across institutions, and to decide
+ * which incidents are worth showing your own users: a SCHEDULED_MAINTENANCE and
+ * a TRANSACTIONS_MISSING both read as "degraded" otherwise. OTHER means Pluggy
+ * has not classified it, not that nothing is wrong.
+ */
+export const CONNECTOR_INCIDENT_TYPES = [
+  /** Whether you can connect at all. */
+  'CONNECTOR_UNAVAILABLE',
+  'CONNECTOR_DEGRADED',
+  'INSTITUTION_OUTAGE',
+  'SCHEDULED_MAINTENANCE',
+  /** It answers, but the connection does not complete or does not refresh. */
+  'CONSENT_ERROR',
+  'CONNECTION_NOT_UPDATING',
+  'PARTIAL_SUCCESS',
+  /** It connects and syncs, but what comes back is wrong or incomplete. */
+  'ACCOUNTS_MISSING',
+  'BALANCE_INCORRECT',
+  'TRANSACTIONS_MISSING',
+  'TRANSACTIONS_INCORRECT',
+  'TRANSACTIONS_INSTALLMENTS_ISSUE',
+  'INVESTMENTS_MISSING',
+  'INVESTMENTS_INCORRECT',
+  'IDENTITY_MISSING',
+  'HISTORICAL_DATA_MISSING',
+  /** Pluggy's own platform, not the institution's. */
+  'WEBHOOK_DELAY',
+  'PAYMENT_FAILURE',
+  'OTHER',
+] as const
+export type ConnectorIncidentType = (typeof CONNECTOR_INCIDENT_TYPES)[number]
+
+/** Product line an incident affects. */
+export const CONNECTOR_INCIDENT_PRODUCTS = [
+  'dados',
+  'pis',
+  'pis-agendado',
+  'pixauto',
+  'smart',
+  'infra',
+] as const
+export type ConnectorIncidentProduct = (typeof CONNECTOR_INCIDENT_PRODUCTS)[number]
+
+export const CONNECTOR_INCIDENT_KINDS = ['INCIDENT', 'MAINTENANCE'] as const
+/** Whether this is an unplanned incident or a planned maintenance window. */
+export type ConnectorIncidentKind = (typeof CONNECTOR_INCIDENT_KINDS)[number]
+
+export const CONNECTOR_INCIDENT_SEVERITIES = [
+  'DEGRADED',
+  'PARTIAL_OUTAGE',
+  'MAJOR_OUTAGE',
+  'MAINTENANCE',
+] as const
+/** How badly the institution is affected. */
+export type ConnectorIncidentSeverity = (typeof CONNECTOR_INCIDENT_SEVERITIES)[number]
+
+export const CONNECTOR_INCIDENT_STATES = [
+  'INVESTIGATING',
+  'IDENTIFIED',
+  'MONITORING',
+  'SCHEDULED',
+] as const
+/** Where the incident is in its lifecycle. Resolved incidents are never listed. */
+export type ConnectorIncidentState = (typeof CONNECTOR_INCIDENT_STATES)[number]
+
+/**
+ * An incident affecting a connector right now, as published on
+ * https://status.pluggy.ai. Describes the institution, not your own
+ * connections — see ConnectorHealthDetails for those.
+ */
+export type ConnectorIncident = {
+  /** Identifier of the incident on the status page. */
+  id: string
+  /** Short, customer-facing summary. Safe to show to your own users. */
+  title: string
+  /** Longer explanation, when there is one. */
+  description: string | null
+  type: ConnectorIncidentType
+  product: ConnectorIncidentProduct
+  kind: ConnectorIncidentKind
+  severity: ConnectorIncidentSeverity
+  state: ConnectorIncidentState
+  /** When the incident began. */
+  startedAt: string
+  /** When the incident was last updated. */
+  updatedAt: string | null
+  /** Permalink to the full timeline and postmortem on the status page. */
+  url: string
+}
+
 export type Connector = {
   /** Primary identifier of the connector */
   id: number
@@ -133,6 +225,16 @@ export type Connector = {
      * Once the connector is fully productive, stage field will be set to 'null'.
      */
     stage: 'BETA' | null
+    /**
+     * Incidents currently affecting this connector, worst first. Absent when
+     * there are none, so its presence is the signal. Only incidents active at
+     * this moment are listed: a scheduled maintenance appears once its window
+     * opens, not when it is announced.
+     *
+     * Use it to warn a user before they pick a bank that is known to be
+     * failing, rather than after their connection fails.
+     */
+    incidents?: ConnectorIncident[]
     /**
      * Detailed information about how the connector is performing, and/or
      * more context about the current status of the connector.
