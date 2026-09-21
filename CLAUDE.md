@@ -176,6 +176,14 @@ pnpm lint
 pnpm audit:supply-chain
 ```
 
+### Test structure
+
+Three layers, by directory:
+
+- **Unit (default, offline)** — `tests/*.test.ts` (e.g. `transactions.test.ts`, `auth.test.ts`) and `tests/payments/*.test.ts`. Run by `pnpm test`, which ignores `tests/integration`. They mock HTTP with **nock** (`/auth` + the target endpoint) and assert the SDK builds the right request (method, path, query, body) and parses the response — no network, no credentials. The payments suite (`tests/payments/`) has one spec per public `PluggyPaymentsClient` method and calls `nock.disableNetConnect()` (scoped in `tests/payments/utils.ts`, **not** the shared `setupTests.ts`, so the integration suite keeps live connections) — a wrong path then fails hard instead of reaching the wire.
+- **Integration (real sandbox, opt-in)** — `tests/integration/*.test.ts`, run by `pnpm test:integration` (`--runInBand`). These hit the **real Pluggy API** against the sandbox connector (id `0`, `user-ok`/`password-ok`), create an item, poll until `UPDATED`, assert, then delete it defensively. Each spec owns its own item lifecycle (per-suite isolation), so wall time is ~30+ min. They **auto-skip** (`describe.skip`) when `PLUGGY_CLIENT_ID` / `PLUGGY_CLIENT_SECRET` are absent, so they're safe to run locally/in forks without creds. Credentials come from `.env.test` at the repo root (loaded by `tests/setupTests.ts`); CI runs them nightly + `workflow_dispatch`. See `tests/integration/README.md`.
+- **Shared** — `tests/utils.ts` (`setupAuth`, mock JWT) and `tests/setupTests.ts` (loads `.env.test`) back the unit suites; `tests/integration/helpers.ts` backs the integration suite.
+
 ### TypeScript & Build setup
 
 Two tsconfigs by design:
