@@ -34,4 +34,11 @@ describeIntegration('Items (integration)', () => {
     expect(fetched.createdAt).toBeInstanceOf(Date)
     expect(fetched.updatedAt).toBeInstanceOf(Date)
   })
+
+  it('fetchItemResources returns an empty page for a non Open Finance item', async () => {
+    const page = await client.fetchItemResources(item.id)
+
+    expect(page.results).toEqual([])
+    expect(page.total).toBe(0)
+  })
 })

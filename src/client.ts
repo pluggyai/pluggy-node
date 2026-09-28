@@ -16,6 +16,8 @@ import {
   InvestmentTransaction,
   InvestmentType,
   Item,
+  ItemResource,
+  ItemResourceFilters,
   CursorPageResponse,
   PageResponse,
   Parameters,
@@ -135,6 +137,22 @@ export class PluggyClient extends BaseApi {
    */
   async deleteItem(id: string): Promise<void> {
     await this.createDeleteRequest(`items/${id}`)
+  }
+
+  /**
+   * Fetch the resources the financial institution declared for an Item's Open Finance consent.
+   * Items on non Open Finance connectors return an empty page.
+   * An empty list means the institution declared nothing only when the Item's
+   * `resourcesCollectedAt` is set; when it is null, the list was never obtained.
+   * @param itemId The Item id
+   * @param {ItemResourceFilters} options - request search filters (page size defaults to 500)
+   * @returns {PageResponse<ItemResource>} paged response of item resources
+   */
+  async fetchItemResources(
+    itemId: string,
+    options: ItemResourceFilters = {}
+  ): Promise<PageResponse<ItemResource>> {
+    return await this.createGetRequest(`items/${itemId}/resources`, options)
   }
 
   /**
