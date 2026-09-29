@@ -67,6 +67,7 @@ Current SDK methods in `client.ts` (PluggyClient):
 | Connector Validation | `validateParameters()` | POST /connectors/{id}/validate |
 | Items | `createItem()`, `fetchItem()`, `updateItem()`, `deleteItem()` | /items |
 | Item MFA | `updateItemMFA()` | POST /items/{id}/mfa |
+| Item Resources | `fetchItemResources()` | GET /items/{id}/resources |
 | Accounts | `fetchAccounts()`, `fetchAccount()` | /accounts |
 | Account Statements | `fetchAccountStatements()` | GET /accounts/{id}/statements |
 | Transactions | `fetchTransactionsCursor()` (single page) + `fetchAllTransactions()` (full sweep) for the v2 cursor endpoint; `fetchTransactions()` page-based is `@deprecated`; `fetchTransaction()` by id | GET /v2/transactions, GET /transactions/{id} |
