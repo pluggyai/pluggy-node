@@ -122,11 +122,12 @@ export type Item = {
    */
   resourcesCollectedAt: Date | null
   /**
-   * True when the financial institution declares at least one of this Item's resources as
-   * 'PENDING_AUTHORISATION', meaning the user still has to approve it at their institution.
-   * Always false for non Open Finance connectors.
+   * Open Finance only. True when the financial institution declares at least one of this Item's
+   * resources as 'PENDING_AUTHORISATION', meaning the user still has to approve it at their
+   * institution; false when the resource list was read and none is. Null for non Open Finance
+   * connectors, and while the resource list has not been read yet (`resourcesCollectedAt` is null).
    */
-  hasResourcesPendingAuthorization: boolean
+  hasResourcesPendingAuthorization: boolean | null
 }
 
 /**

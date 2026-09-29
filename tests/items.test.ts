@@ -41,20 +41,20 @@ describe('fetchItem resource fields', () => {
     expect(mock.isDone()).toBeTruthy()
   })
 
-  it('keeps resourcesCollectedAt null when the resource list was never read', async () => {
+  it('keeps both resource fields null when the resource list was never read', async () => {
     const mock = nock(API_URL)
       .get(`/items/${ITEM_ID}`)
       .reply(200, {
         id: ITEM_ID,
         resourcesCollectedAt: null,
-        hasResourcesPendingAuthorization: false,
+        hasResourcesPendingAuthorization: null,
       })
 
     const client = new PluggyClient({ clientId: '123', clientSecret: '456' })
     const item = await client.fetchItem(ITEM_ID)
 
     expect(item.resourcesCollectedAt).toBeNull()
-    expect(item.hasResourcesPendingAuthorization).toBe(false)
+    expect(item.hasResourcesPendingAuthorization).toBeNull()
     expect(mock.isDone()).toBeTruthy()
   })
 })
