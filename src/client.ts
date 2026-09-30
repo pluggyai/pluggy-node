@@ -2,6 +2,7 @@ import { BaseApi, ClientParams } from './baseApi'
 import { PluggyPaymentsClient } from './paymentsClient'
 import {
   Account,
+  AccountBalance,
   AccountType,
   Category,
   Connector,
@@ -170,6 +171,16 @@ export class PluggyClient extends BaseApi {
    */
   async fetchAccount(id: string): Promise<Account> {
     return await this.createGetRequest(`accounts/${id}`)
+  }
+
+  /**
+   * Fetch the real-time balance of an account directly from the financial
+   * institution connector, without requiring a full item sync.
+   * @param id The Account ID
+   * @returns {AccountBalance} an account balance object
+   */
+  async fetchAccountBalance(id: string): Promise<AccountBalance> {
+    return await this.createGetRequest(`accounts/${id}/balance`)
   }
 
   /**
