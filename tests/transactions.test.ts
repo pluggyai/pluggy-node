@@ -279,3 +279,35 @@ describe('creditCardMetadata deserialization', () => {
     expect(second.billPostDate).toBeNull()
   })
 })
+
+describe('query string encoding', () => {
+  beforeEach(() => {
+    nock.cleanAll()
+    setupAuth()
+  })
+
+  it('URL-encodes a base64 cursor so "+", "/" and "=" reach the API intact', async () => {
+    const cursor = 'MjAyNi0xMC0wNFQxMjowMDowMC4wMDBafGE+Yi9j=='
+    const mock = nock(API_URL)
+      .get('/v2/transactions')
+      .query(actual => actual.after === cursor && actual.accountId === ACCOUNT_ID)
+      .reply(200, mockCursorPage(['tx-1'], null))
+
+    const client = new PluggyClient({ clientId: '123', clientSecret: '456' })
+    await client.fetchTransactionsCursor(ACCOUNT_ID, { after: cursor })
+
+    expect(mock.isDone()).toBeTruthy()
+  })
+
+  it('keeps list params comma-separated', async () => {
+    const mock = nock(API_URL)
+      .get('/v2/transactions')
+      .query(actual => actual.ids === 'a,b' && actual.accountId === ACCOUNT_ID)
+      .reply(200, mockCursorPage([], null))
+
+    const client = new PluggyClient({ clientId: '123', clientSecret: '456' })
+    await client.fetchTransactionsCursor(ACCOUNT_ID, { ids: ['a', 'b'] })
+
+    expect(mock.isDone()).toBeTruthy()
+  })
+})
