@@ -84,6 +84,29 @@ await client.updateItemMFA(item.id, {
 })
 ```
 
+#### Listing items (opt-in, paid plans only)
+
+> ⚠️ **Opt-in, paid plans only.** Listing items is disabled by default and is only available to paid-plan teams that have explicitly requested it from Pluggy support. Teams without it enabled get `403 LIST_ITEMS_FEATURE_NOT_ENABLED`. For most integrations, store each `itemId` when it is created (Pluggy Connect `onSuccess` or the `item/created` webhook) and use `fetchItem(id)` instead.
+
+`GET /v2/items` returns the team's items newest first, with cursor-based pagination. The only accepted filters are `clientUserId`, `connectorId` and `after`.
+
+- `fetchItemsCursor(options)` — fetch a single page (`{ results, next }`). `next` is a query string such as `?connectorId=201&after=<cursor>`, or `null` on the last page.
+- `fetchAllItems(options)` — follow the cursor through every page and return the full list.
+
+```ts
+// Single page
+const page = await client.fetchItemsCursor({ clientUserId: 'user-123' })
+
+// Next page: read `after` from the `next` query string
+if (page.next) {
+  const after = new URLSearchParams(page.next).get('after')!
+  const nextPage = await client.fetchItemsCursor({ clientUserId: 'user-123', after })
+}
+
+// Or every item at once
+const items = await client.fetchAllItems({ connectorId: 201 })
+```
+
 ### Accounts and transactions (with pagination)
 
 Transactions use **cursor-based pagination** against `GET /v2/transactions`. The SDK exposes two helpers:

@@ -66,6 +66,7 @@ Current SDK methods in `client.ts` (PluggyClient):
 | Connectors | `fetchConnectors()`, `fetchConnector()` | GET /connectors |
 | Connector Validation | `validateParameters()` | POST /connectors/{id}/validate |
 | Items | `createItem()`, `fetchItem()`, `updateItem()`, `deleteItem()` | /items |
+| Item listing (opt-in, paid plans; 403 `LIST_ITEMS_FEATURE_NOT_ENABLED` otherwise) | `fetchItemsCursor()` (single page) + `fetchAllItems()` (full sweep) | GET /v2/items |
 | Item MFA | `updateItemMFA()` | POST /items/{id}/mfa |
 | Item Resources | `fetchItemResources()` | GET /items/{id}/resources |
 | SCR (opt-in) | `fetchItemScr()` | GET /items/{id}/scr |
