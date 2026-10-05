@@ -173,4 +173,11 @@ export type CreditData = {
   holderType: 'MAIN' | 'ADDITIONAL' | null
   /** Detailed credit limit information, broken down by credit line. Only returned for Open Finance connectors */
   disaggregatedCreditLimits?: DisaggregatedCreditLimit[]
+  /** Additional credit cards associated with the main one */
+  additionalCards?: AdditionalCard[] | null
+}
+
+export type AdditionalCard = {
+  /** Number of the additional credit card */
+  number: string
 }

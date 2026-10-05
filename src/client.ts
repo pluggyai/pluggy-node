@@ -30,6 +30,16 @@ import {
   PageFilters,
   InvestmentsFilters,
   AccountStatement,
+  ScrFilters,
+  ScrResponse,
+  MerchantsResponse,
+  ClientCategoryRule,
+  CreateClientCategoryRule,
+  BoletoConnection,
+  CreateBoletoConnection,
+  CreateBoletoConnectionFromItem,
+  CreateBoleto,
+  IssuedBoleto,
 } from './types'
 import { CreditCardBills } from './types/creditCardBills'
 import { ValidationResult } from './types/validation'
@@ -153,6 +163,24 @@ export class PluggyClient extends BaseApi {
     options: ItemResourceFilters = {}
   ): Promise<PageResponse<ItemResource>> {
     return await this.createGetRequest(`items/${itemId}/resources`, options)
+  }
+
+  /**
+   * Fetch the SCR (Bacen's Sistema de Informações de Crédito) for the document behind an Item.
+   *
+   * Opt-in: requires the SCR feature to be enabled for your team (ask Pluggy support); otherwise
+   * 403 SCR_FEATURE_NOT_ENABLED. Only available for Open Finance items with a known CPF/CNPJ
+   * (otherwise 422 SCR_ITEM_NOT_SUPPORTED).
+   *
+   * The response is Bacen's own payload, forwarded unchanged. Base dates are months (YYYYMM) and
+   * Bacen consolidates each one with a few months of delay: when `from` and `to` are omitted the
+   * last 4 available base dates are consulted, ending 2 months before the current one.
+   * @param itemId The Item id
+   * @param {ScrFilters} options - optional `from` / `to` base dates, as YYYYMM
+   * @returns {ScrResponse} the SCR data for the Item's document
+   */
+  async fetchItemScr(itemId: string, options: ScrFilters = {}): Promise<ScrResponse> {
+    return await this.createGetRequest(`items/${itemId}/scr`, { ...options })
   }
 
   /**
@@ -432,6 +460,97 @@ export class PluggyClient extends BaseApi {
    */
   async fetchCategory(id: string): Promise<Category> {
     return await this.createGetRequest(`categories/${id}`)
+  }
+
+  /**
+   * Fetch the category rules of your client
+   * @returns {PageResponse<ClientCategoryRule>} paged response of category rules
+   */
+  async fetchCategoryRules(): Promise<PageResponse<ClientCategoryRule>> {
+    return await this.createGetRequest('categories/rules')
+  }
+
+  /**
+   * Create a category rule: transactions matching the description are assigned the given category
+   * @param rule - the rule to create
+   * @returns {ClientCategoryRule} the created category rule
+   */
+  async createCategoryRule(rule: CreateClientCategoryRule): Promise<ClientCategoryRule> {
+    return await this.createPostRequest('categories/rules', null, rule)
+  }
+
+  /**
+   * Delete a category rule. Clients can only delete their own rules.
+   * @param id - the category rule id
+   */
+  async deleteCategoryRule(id: string): Promise<void> {
+    await this.createDeleteRequest(`categories/rules/${id}`)
+  }
+
+  /**
+   * Fetch merchant information for a list of CNPJs
+   * @param cnpjs - list of CNPJs to look up (sent as a comma-separated list)
+   * @returns {MerchantsResponse} found merchants, valid CNPJs that were not found, and invalid CNPJs
+   */
+  async fetchMerchants(cnpjs: string[]): Promise<MerchantsResponse> {
+    return await this.createGetRequest('merchants', { cnpjs: cnpjs.join(',') })
+  }
+
+  /**
+   * BETA: Boleto Management is in beta and may change.
+   *
+   * Create a boleto connection from the institution's credentials
+   * @param payload - the connector id (with `supportsBoletoManagement`) and its credentials
+   * @returns {BoletoConnection} the created boleto connection
+   */
+  async createBoletoConnection(payload: CreateBoletoConnection): Promise<BoletoConnection> {
+    return await this.createPostRequest('boleto-connections', null, payload)
+  }
+
+  /**
+   * BETA: Boleto Management is in beta and may change.
+   *
+   * Create a boleto connection from an existing Item
+   * @param payload - the Item id
+   * @returns {BoletoConnection} the created boleto connection
+   */
+  async createBoletoConnectionFromItem(
+    payload: CreateBoletoConnectionFromItem
+  ): Promise<BoletoConnection> {
+    return await this.createPostRequest('boleto-connections/from-item', null, payload)
+  }
+
+  /**
+   * BETA: Boleto Management is in beta and may change.
+   *
+   * Issue a boleto through a boleto connection
+   * @param payload - the boleto connection id and the boleto data
+   * @returns {IssuedBoleto} the issued boleto
+   */
+  async createBoleto(payload: CreateBoleto): Promise<IssuedBoleto> {
+    return await this.createPostRequest('boletos', null, payload)
+  }
+
+  /**
+   * BETA: Boleto Management is in beta and may change.
+   *
+   * Fetch a single issued boleto
+   * @param id - the boleto id
+   * @returns {IssuedBoleto} the issued boleto
+   */
+  async fetchBoleto(id: string): Promise<IssuedBoleto> {
+    return await this.createGetRequest(`boletos/${id}`)
+  }
+
+  /**
+   * BETA: Boleto Management is in beta and may change.
+   *
+   * Cancel an issued boleto
+   * @param id - the boleto id
+   * @returns {IssuedBoleto} the cancelled boleto
+   */
+  async cancelBoleto(id: string): Promise<IssuedBoleto> {
+    return await this.createPostRequest(`boletos/${id}/cancel`)
   }
 
   /**

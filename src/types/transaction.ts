@@ -70,6 +70,11 @@ export type TransactionPaymentData = {
   reason?: string
   /** Additional data related to boleto transaction */
   boletoMetadata: TransactionBoletoMetadataResponse | null
+  /**
+   * Authentication code of the payment receipt, as printed by the institution on the proof of payment.
+   * It identifies the operation itself, so it can be present for any payment method (PIX, TED, DOC, BOLETO).
+   */
+  authenticationCode?: string
 }
 
 export type TransactionMerchantData = {
@@ -113,6 +118,13 @@ export const CREDIT_CARD_ACCOUNT_OTHER_CREDIT_TYPES = [
  */
 export type CreditCardAccountOtherCreditType = typeof CREDIT_CARD_ACCOUNT_OTHER_CREDIT_TYPES[number]
 
+export const CREDIT_CARD_ACCOUNT_PAYMENT_TYPES = ['SINGLE', 'INSTALLMENT'] as const
+/**
+ * @typedef CreditCardAccountPaymentType
+ * Whether a credit card purchase is charged in full on a single bill or split into installments.
+ */
+export type CreditCardAccountPaymentType = typeof CREDIT_CARD_ACCOUNT_PAYMENT_TYPES[number]
+
 export type CreditCardMetadata = {
   /** The number of the installment */
   installmentNumber?: number
@@ -138,6 +150,16 @@ export type CreditCardMetadata = {
   otherCreditsAdditionalInfo?: string
   /** Forecasted bill period (formatted as YYYY-MM) in which this transaction is expected to be charged. Unlike billId, it is provided for pending and future transactions too. Only returned for Open Finance connectors */
   billForecastDate?: string
+  /** Whether the purchase is charged in full on a single bill (SINGLE) or split into installments (INSTALLMENT). Only returned for Open Finance connectors */
+  paymentType?: CreditCardAccountPaymentType
+  /** Date (YYYY-MM-DD) the institution posted the transaction to a bill, as reported by the institution and never adjusted by Pluggy. Null when the transaction is not posted to a bill yet or the institution does not report it. Only returned for Open Finance connectors */
+  billPostDate?: string | null
+  /**
+   * Date and time of the transaction as reported by the institution, normalized to ISO-8601. Only returned for Open Finance connectors.
+   * The value is passed through as the institution sends it, so it is parsed into a Date only when it has the exact
+   * `YYYY-MM-DDTHH:mm:ss.sssZ` shape; any other valid ISO-8601 form (no milliseconds, an offset instead of `Z`) stays a string.
+   */
+  transactionDateTime?: Date | string
 }
 
 export type TransactionFilters = PageFilters & {
@@ -205,6 +227,8 @@ export type Transaction = {
   operationTypeAdditionalInfo: string | null
   /** Provider ID of the transaction. Only returned for Open Finance connectors */
   providerId: string | null
+  /** Sequential position of the transaction within the same day, used to preserve ordering when multiple transactions share the same date. */
+  order?: number
   /** Date when the transaction was created in Pluggy */
   createdAt: Date
   /** Date when the transaction was last updated in Pluggy */

@@ -233,3 +233,49 @@ describe('fetchAllTransactions (cursor-based)', () => {
     expect(mock.isDone()).toBeTruthy()
   })
 })
+
+describe('creditCardMetadata deserialization', () => {
+  beforeEach(() => {
+    nock.cleanAll()
+    setupAuth()
+  })
+
+  it('exposes paymentType, billPostDate and transactionDateTime as the institution reports them', async () => {
+    const withMetadata = (
+      id: string,
+      transactionDateTime: string,
+      billPostDate: string | null
+    ) => ({
+      ...mockTransaction(id),
+      creditCardMetadata: {
+        installmentNumber: 2,
+        totalInstallments: 10,
+        paymentType: 'INSTALLMENT',
+        billPostDate,
+        transactionDateTime,
+      },
+    })
+    nock(API_URL)
+      .get('/v2/transactions')
+      .query({ accountId: ACCOUNT_ID })
+      .reply(200, {
+        results: [
+          withMetadata('tx-1', '2026-04-09T16:43:35.203Z', '2026-10-12'),
+          withMetadata('tx-2', '2026-04-09T16:43:35-03:00', null),
+        ],
+        next: null,
+      })
+
+    const client = new PluggyClient({ clientId: '123', clientSecret: '456' })
+    const { results } = await client.fetchTransactionsCursor(ACCOUNT_ID)
+
+    const [first, second] = results.map(tx => tx.creditCardMetadata!)
+    expect(first.paymentType).toBe('INSTALLMENT')
+    // a date-only value is never turned into a Date, so it cannot shift by timezone
+    expect(first.billPostDate).toBe('2026-10-12')
+    // the exact YYYY-MM-DDTHH:mm:ss.sssZ shape is revived into a Date; any other ISO form stays a string
+    expect(first.transactionDateTime).toEqual(new Date('2026-04-09T16:43:35.203Z'))
+    expect(second.transactionDateTime).toBe('2026-04-09T16:43:35-03:00')
+    expect(second.billPostDate).toBeNull()
+  })
+})

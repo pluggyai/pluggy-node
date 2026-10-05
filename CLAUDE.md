@@ -68,6 +68,7 @@ Current SDK methods in `client.ts` (PluggyClient):
 | Items | `createItem()`, `fetchItem()`, `updateItem()`, `deleteItem()` | /items |
 | Item MFA | `updateItemMFA()` | POST /items/{id}/mfa |
 | Item Resources | `fetchItemResources()` | GET /items/{id}/resources |
+| SCR (opt-in) | `fetchItemScr()` | GET /items/{id}/scr |
 | Accounts | `fetchAccounts()`, `fetchAccount()` | /accounts |
 | Account Statements | `fetchAccountStatements()` | GET /accounts/{id}/statements |
 | Transactions | `fetchTransactionsCursor()` (single page) + `fetchAllTransactions()` (full sweep) for the v2 cursor endpoint; `fetchTransactions()` page-based is `@deprecated`; `fetchTransaction()` by id | GET /v2/transactions, GET /transactions/{id} |
@@ -79,6 +80,9 @@ Current SDK methods in `client.ts` (PluggyClient):
 | Identity | `fetchIdentity()`, `fetchIdentityByItemId()` | /identity |
 | Credit Card Bills | `fetchCreditCardBills()`, `fetchCreditCardBill()` | /bills |
 | Categories | `fetchCategories()`, `fetchCategory()` | /categories |
+| Category Rules | `fetchCategoryRules()`, `createCategoryRule()`, `deleteCategoryRule()` | /categories/rules |
+| Merchants | `fetchMerchants()` | GET /merchants |
+| Boleto Management (beta) | `createBoletoConnection()`, `createBoletoConnectionFromItem()`, `createBoleto()`, `fetchBoleto()`, `cancelBoleto()` | /boleto-connections, /boletos |
 | Webhooks | Full CRUD | /webhooks |
 | Connect Token | `createConnectToken()` | POST /connect_token |
 
@@ -87,7 +91,7 @@ Current SDK methods in `paymentsClient.ts` (PluggyPaymentsClient):
 | Resource | SDK Methods |
 |----------|-------------|
 | Payment Recipients | `createPaymentRecipient()`, `fetchPaymentRecipient()`, `fetchPaymentRecipients()`, `updatePaymentRecipient()`, `deletePaymentRecipient()` |
-| Payment Requests | `createPaymentRequest()`, `fetchPaymentRequest()`, `fetchPaymentRequests()`, `deletePaymentRequest()` |
+| Payment Requests | `createPaymentRequest()`, `createPixQrPaymentRequest()`, `fetchPaymentRequest()`, `fetchPaymentRequests()`, `deletePaymentRequest()` |
 | Payment Intents | `createPaymentIntent()`, `fetchPaymentIntent()`, `fetchPaymentIntents()` |
 | Payment Customers | Full CRUD |
 | Payment Institutions | `fetchPaymentInstitution()`, `fetchPaymentInstitutions()` |
@@ -95,7 +99,7 @@ Current SDK methods in `paymentsClient.ts` (PluggyPaymentsClient):
 | Smart Accounts | `createSmartAccount()`, `fetchSmartAccount()`, `fetchSmartAccountBalance()`, `fetchSmartAccounts()` |
 | Automatic PIX | Multiple methods for PIX automático |
 | Scheduled Payments | Multiple methods |
-| Smart Transfers | Multiple methods |
+| Smart Transfers | Multiple methods, incl. `fetchSmartTransferPreauthorizationPayments()` |
 
 ### 3. Type Definition Patterns
 
@@ -226,5 +230,5 @@ Type-only gap fixes from comparing `src/types/` against the OpenAPI spec (`oas3.
 - **CreditCardBills**: `payments` (new `CreditCardBillPayment` type + `valueType`/`paymentMode` enums)
 - Re-exported `creditCardBills` types from `src/types/index.ts` (were public via `fetchCreditCardBill()` return type but not importable)
 
-### Not Implemented (Intentional)
-- Boleto Management: Beta feature, not added to SDK (the `Connector.supportsBoletoManagement` flag is exposed as read-only metadata, but no boleto endpoints/types are implemented)
+### Boleto Management (beta)
+Boleto endpoints (`/boleto-connections`, `/boletos`) are implemented on `PluggyClient` and marked BETA in their JSDoc, since the API still flags them as beta.

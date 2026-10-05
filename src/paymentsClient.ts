@@ -34,6 +34,8 @@ import {
   SmartTransferPayment,
   CreateSmartTransferPayment,
   SmartTransferPreauthorizationsFilters,
+  SmartTransferPreauthorizationPaymentsFilters,
+  CreatePixQrPaymentRequest,
 } from './types'
 
 /**
@@ -49,6 +51,15 @@ export class PluggyPaymentsClient extends BaseApi {
    */
   async createPaymentRequest(paymentRequest: CreatePaymentRequest): Promise<PaymentRequest> {
     return await this.createPostRequest(`payments/requests`, null, paymentRequest)
+  }
+
+  /**
+   * Creates a payment request from a PIX QR code
+   * @param payload CreatePixQrPaymentRequest with the PIX QR code
+   * @returns {PaymentRequest} PaymentRequest object
+   */
+  async createPixQrPaymentRequest(payload: CreatePixQrPaymentRequest): Promise<PaymentRequest> {
+    return await this.createPostRequest('payments/requests/pix-qr', null, payload)
   }
 
   /**
@@ -445,6 +456,21 @@ export class PluggyPaymentsClient extends BaseApi {
    */
   async fetchSmartTransferPreauthorization(id: string): Promise<SmartTransferPreauthorization> {
     return await this.createGetRequest(`smart-transfers/preauthorizations/${id}`)
+  }
+
+  /**
+   * Fetch the payments of a smart transfer preauthorization, ordered by date descending
+   * @param id ID of the smart transfer preauthorization
+   * @param options SmartTransferPreauthorizationPaymentsFilters with from, to, page and pageSize
+   * @returns {PageResponse<SmartTransferPayment>} paged response of smart transfer payments
+   */
+  async fetchSmartTransferPreauthorizationPayments(
+    id: string,
+    options: SmartTransferPreauthorizationPaymentsFilters = {}
+  ): Promise<PageResponse<SmartTransferPayment>> {
+    return await this.createGetRequest(`smart-transfers/preauthorizations/${id}/payments`, {
+      ...options,
+    })
   }
 
   /**

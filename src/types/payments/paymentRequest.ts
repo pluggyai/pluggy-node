@@ -51,6 +51,17 @@ export type CreatePaymentRequest = {
   isSandbox: boolean
 }
 
+export type CreatePixQrPaymentRequest = {
+  /** Pix QR code */
+  pixQrCode: string
+  /** Redirect urls after the payment was completed or ended in error status */
+  callbackUrls?: CallbackUrls | null
+  /** Customer identifier associated to the payment */
+  customerId?: string
+  /** Indicates if this payment request should be created in sandbox mode. Default: false */
+  isSandbox?: boolean
+}
+
 export type PaymentRequestSchedule =
   | SingleSchedule
   | DailySchedule
