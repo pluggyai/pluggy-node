@@ -200,3 +200,24 @@ export type ItemResourceFilters = PageFilters & {
   /** Only return resources with this status. */
   status?: ItemResourceStatus
 }
+
+/**
+ * Filters for {@link PluggyClient.fetchItemsCursor} / {@link PluggyClient.fetchAllItems}
+ * (`GET /v2/items`).
+ *
+ * ⚠️ Opt-in, paid plans only. Listing items is disabled by default and is only available to
+ * paid-plan teams that have explicitly requested it from Pluggy support. Teams without it
+ * enabled get `403 LIST_ITEMS_FEATURE_NOT_ENABLED`. For most integrations, store each `itemId`
+ * when it is created (Pluggy Connect `onSuccess` or the `item/created` webhook) and use
+ * `fetchItem(id)` instead.
+ *
+ * Only these fields are sent; the endpoint rejects any other query parameter.
+ */
+export type ItemCursorFilters = {
+  /** Only return items created with this `clientUserId`. Max 255 characters. */
+  clientUserId?: string
+  /** Only return items of this connector. Integer >= 0. */
+  connectorId?: number
+  /** Opaque cursor taken from the `after` query parameter of the previous page's `next` field */
+  after?: string
+}

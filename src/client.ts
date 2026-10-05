@@ -18,6 +18,7 @@ import {
   Item,
   ItemResource,
   ItemResourceFilters,
+  ItemCursorFilters,
   CursorPageResponse,
   PageResponse,
   Parameters,
@@ -82,6 +83,58 @@ export class PluggyClient extends BaseApi {
    */
   async fetchItem(id: string): Promise<Item> {
     return await this.createGetRequest(`items/${id}`)
+  }
+
+  /**
+   * Fetch a single page of the team's items using cursor-based pagination (`GET /v2/items`),
+   * newest first.
+   *
+   * ⚠️ Opt-in, paid plans only. Listing items is disabled by default and is only available to
+   * paid-plan teams that have explicitly requested it from Pluggy support. Teams without it
+   * enabled get `403 LIST_ITEMS_FEATURE_NOT_ENABLED`. For most integrations, store each `itemId`
+   * when it is created (Pluggy Connect `onSuccess` or the `item/created` webhook) and use
+   * {@link fetchItem} instead.
+   *
+   * @param {ItemCursorFilters} options Optional filters (clientUserId, connectorId, after cursor)
+   * @returns {CursorPageResponse<Item>} object with results and the `next` page query string
+   *   (e.g. `?connectorId=1&after=<cursor>`), or null on the last page
+   */
+  async fetchItemsCursor(options: ItemCursorFilters = {}): Promise<CursorPageResponse<Item>> {
+    // Only whitelisted params are sent: the endpoint rejects unknown query parameters.
+    const { clientUserId, connectorId, after } = options
+    return await this.createGetRequest('v2/items', { clientUserId, connectorId, after })
+  }
+
+  /**
+   * Fetch all of the team's items, following the cursor across every page (`GET /v2/items`),
+   * newest first.
+   *
+   * ⚠️ Opt-in, paid plans only. Listing items is disabled by default and is only available to
+   * paid-plan teams that have explicitly requested it from Pluggy support. Teams without it
+   * enabled get `403 LIST_ITEMS_FEATURE_NOT_ENABLED`. For most integrations, store each `itemId`
+   * when it is created (Pluggy Connect `onSuccess` or the `item/created` webhook) and use
+   * {@link fetchItem} instead.
+   *
+   * @param {ItemCursorFilters} options Optional filters (clientUserId, connectorId)
+   * @returns {Item[]} an array of all matching items
+   */
+  async fetchAllItems(options: Omit<ItemCursorFilters, 'after'> = {}): Promise<Item[]> {
+    const firstPage = await this.fetchItemsCursor(options)
+    const items: Item[] = [...firstPage.results]
+
+    let next = firstPage.next
+
+    while (next !== null) {
+      const afterParam = new URL(next, this.baseUrl).searchParams.get('after')
+      if (!afterParam) {
+        break
+      }
+      const page = await this.fetchItemsCursor({ ...options, after: afterParam })
+      items.push(...page.results)
+      next = page.next
+    }
+
+    return items
   }
 
   /**
