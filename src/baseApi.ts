@@ -194,9 +194,17 @@ export class BaseApi {
       return ''
     }
 
+    // Values must be URL-encoded: cursors are base64 and carry '+', '/' and '=', and an unencoded
+    // '+' reaches the server as a space. Array items are encoded one by one and joined with a
+    // literal comma, which is how the API expects list params such as `ids`.
+    const encode = (value: number | string | boolean): string => encodeURIComponent(String(value))
     const query = Object.keys(params)
       .filter(key => params[key] !== undefined && params[key] !== null)
-      .map(key => key + '=' + params[key])
+      .map(key => {
+        const value = params[key]
+        const encoded = Array.isArray(value) ? value.map(encode).join(',') : encode(value)
+        return `${encodeURIComponent(key)}=${encoded}`
+      })
       .join('&')
     return `?${query}`
   }
