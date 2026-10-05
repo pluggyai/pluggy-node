@@ -259,6 +259,12 @@ export type Connector = {
   resetPasswordUrl?: string
   /** list of products supported by the institution */
   products: ProductType[]
+  /**
+   * Which sub-products the institution serves, in the Open Finance directory's own vocabulary
+   * (for example `INVESTMENTS:TREASURE_TITLES`, `CREDIT_OPERATIONS:INVOICE_FINANCINGS`).
+   * Absent for direct connectors, which have no Open Finance participant.
+   */
+  productCoverage?: string[]
   /** Connector creation date */
   createdAt: Date
   /** Date of last modification of the connector */

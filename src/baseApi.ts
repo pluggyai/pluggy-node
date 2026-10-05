@@ -172,7 +172,7 @@ export class BaseApi {
         json: body,
       })
 
-      if (statusCode !== 200) {
+      if (statusCode < 200 || statusCode >= 300) {
         return Promise.reject(body)
       }
 

@@ -70,6 +70,11 @@ export type TransactionPaymentData = {
   reason?: string
   /** Additional data related to boleto transaction */
   boletoMetadata: TransactionBoletoMetadataResponse | null
+  /**
+   * Authentication code of the payment receipt, as printed by the institution on the proof of payment.
+   * It identifies the operation itself, so it can be present for any payment method (PIX, TED, DOC, BOLETO).
+   */
+  authenticationCode?: string
 }
 
 export type TransactionMerchantData = {
@@ -222,6 +227,8 @@ export type Transaction = {
   operationTypeAdditionalInfo: string | null
   /** Provider ID of the transaction. Only returned for Open Finance connectors */
   providerId: string | null
+  /** Sequential position of the transaction within the same day, used to preserve ordering when multiple transactions share the same date. */
+  order?: number
   /** Date when the transaction was created in Pluggy */
   createdAt: Date
   /** Date when the transaction was last updated in Pluggy */
