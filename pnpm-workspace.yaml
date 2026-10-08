@@ -33,10 +33,17 @@ minimumReleaseAgeIgnoreMissingTime: true
 # the standard `@pluggyai/*` wildcard from the skill template is
 # omitted here; re-add it the first time we pull one in.)
 #
-# Currently empty: the previous `brace-expansion` bypass (GHSA-jxxr-4gwj-5jf2,
-# patched in 5.0.6) was removed once its 14-day window closed on 2026-05-22.
-# 5.0.6 is now pinned via the override below and resolves on its own.
-minimumReleaseAgeExclude: []
+minimumReleaseAgeExclude:
+  # Remove after 2026-10-20 — GHSA-8r5x-fm3f-whwj, GHSA-p8wg-vrv2-v86f
+  # (CRITICAL) and GHSA-xw65-4hp5-5hc7, fixed only in 4.7.10 (published
+  # 2026-10-05). Reaches us through semantic-release >
+  # conventional-changelog-writer, whose ^4.7.7 range picks it up.
+  - handlebars@4.7.10
+  # Remove after 2026-10-18 — GHSA-ch52-4w7c-c8xp (HIGH), fixed in 4.3.0
+  # (published 2026-10-04). Reaches us through got@11 > cacheable-request,
+  # whose ^4.0.0 range picks it up; got 12+ is ESM-only, so the parent
+  # cannot move.
+  - http-cache-semantics@4.3.0
 
 # With exact pins in `package.json` (enforced by `savePrefix: ""`
 # below) there is only one version that satisfies each dep, so this
@@ -114,6 +121,19 @@ allowBuilds:
   # package to work at runtime. Leaving it off keeps install hermetic.
   unrs-resolver: false
 
+# Advisories with no fixed release yet. Each entry says where the package
+# reaches us and why that path is not exploitable here; drop it as soon as
+# a fix ships and resolves through the parent's range.
+auditConfig:
+  ignoreGhsas:
+    # braces GHSA-vfj7-8cjw-p6xm (stack-exhaustion DoS via deeply nested
+    # patterns, HIGH): every version up to 3.0.3, the latest, with no
+    # patched release. Reaches us only through the release tooling
+    # (semantic-release and @semantic-release/commit-analyzer / git >
+    # micromatch), which only expands the glob patterns in our own release
+    # config, never untrusted input.
+    - GHSA-vfj7-8cjw-p6xm
+
 # Force a specific version on transitive dependencies, regardless
 # of what the parent's `package.json` range allows. Use sparingly —
 # an override can break the parent if it relied on an older API of
@@ -129,27 +149,12 @@ overrides:
   # `brace-expansion >=1.1.13` that ends up resolving to the 5.x
   # stream and violating semver against parents that declared `^1.x`.
   #
-  # Patches for transitives reaching us through the @semantic-release
-  # plugin tree. @semantic-release/git@10.0.1 has been unmaintained
-  # since 2021 so the parent will not pull these in on its own. All
-  # four are patch-level within the same major (drop-in API-compat).
-  #
-  # lodash GHSA-r5fr-rjxr-66jc (Code Injection via _.template, HIGH)
-  # and GHSA-f23m-r3pf-42rh (Prototype Pollution, MODERATE).
-  lodash: '4.18.1'
-  lodash-es: '4.18.1'
-  # braces GHSA-grv7-fg5c-xmjg (ReDoS, HIGH).
-  braces: '3.0.3'
-  # micromatch GHSA-952p-6rrq-rcjv (ReDoS, MODERATE).
-  micromatch: '4.0.8'
-  # Patches for transitives reaching us through the jest tree.
-  #
-  # @babel/helpers GHSA-968p-4wvh-cqc8 (inefficient RegExp, MODERATE)
-  # no longer needs an override: @babel/core is now resolved to 7.29.7
-  # (the highest in-range version, refreshed from the jest tree rather
-  # than pinned), which pulls @babel/helpers ^7.29.7 natively — well
-  # past the 7.29.2 fix. Per the policy above, the override came back
-  # out once the parent picked up the fix on its own.
+  # Overrides that the parents now make redundant were removed once
+  # each one was proven unnecessary: drop it, `pnpm update <pkg>`, and
+  # `pnpm audit` stays clean. On 2026-10-08 that retired lodash,
+  # lodash-es, braces, micromatch and undici (both majors) and the
+  # brace-expansion pins. Their in-range versions already carry every
+  # fix those pins existed for.
   #
   # js-yaml — two DoS advisories, both reaching us only through the
   # jest tree (@istanbuljs/load-nyc-config, unmaintained and pinned to
@@ -167,39 +172,3 @@ overrides:
   #   GHSA-5p4m-2wfm-xmqj (HIGH) → patched in 4.3.1.
   #   GHSA-2883-xcg3-v3hh (HIGH) → patched in 4.3.2.
   js-yaml: '4.3.2'
-  # brace-expansion has three separate advisories — one per major
-  # in active use. Version-scoped overrides keep each parent within
-  # its expected semver range so 1.x consumers stay on 1.x, etc:
-  #   GHSA-v6h2-p8h4-qcjw (LOW)      → patched in 1.1.12
-  #   GHSA-f886-m6hf-6m8v (MODERATE) → patched in 1.1.13 / 2.0.3
-  #   GHSA-jxxr-4gwj-5jf2 (MODERATE) → patched in 5.0.6
-  #   GHSA-3jxr-9vmj-r5cp (DoS via exponential-time expansion, HIGH)
-  #     → hits all three majors in their own ranges: patched in
-  #     1.1.16, 2.1.2 and 5.0.7 respectively.
-  #   GHSA-mh99-v99m-4gvg (DoS via unbounded expansion length, HIGH)
-  #     → patched in 1.1.17, 2.1.3 and 5.0.8.
-  #   GHSA-rgw5-rvv9-x895 (HIGH) → patched in 1.1.18, 2.1.4 and 5.0.9.
-  'brace-expansion@1': '1.1.18'
-  'brace-expansion@2': '2.1.4'
-  'brace-expansion@5': '5.0.9'
-  # undici reaches us only through the release tooling — the
-  # @semantic-release/github client and @semantic-release/npm via
-  # @actions/core > @actions/http-client. Both majors are present in
-  # the tree and each has its own advisory set, so they are pinned
-  # separately to keep every parent inside its declared range:
-  #   GHSA-vxpw-j846-p89q (TLS certificate validation bypass, HIGH),
-  #   GHSA-p88m-4jfj-68fv (HTTP header injection, MODERATE),
-  #   GHSA-35p6-xmwp-9g52 (response queue poisoning, LOW) and
-  #   GHSA-g8m3-5g58-fq7m (Set-Cookie SameSite downgrade, LOW)
-  #     → all patched in 6.27.0.
-  #   GHSA-vmh5-mc38-953g (WebSocket client DoS, HIGH),
-  #   GHSA-hm92-r4w5-c3mj (WebSocket client DoS, HIGH) and
-  #   GHSA-pr7r-676h-xcf6 (cross-user information disclosure,
-  #     MODERATE) → all patched in 7.28.0.
-  #   GHSA-4cwx-7wf7-3272 (HIGH), GHSA-8xcm-r25x-g524,
-  #   GHSA-m8rv-5g2x-5cg5, GHSA-jr45-8vmc-qm54 and GHSA-v3r7-h72x-cjcm
-  #     (MODERATE) → patched in 6.28.0 / 7.29.0.
-  #   GHSA-3wwx-pv8p-q78v (DoS via WebSocket permessage-deflate
-  #     decompression, MODERATE) → patched in 6.28.1 / 7.29.1.
-  'undici@6': '6.28.1'
-  'undici@7': '7.29.1'
