@@ -3,6 +3,7 @@ import {
   CreateSmartTransferPreauthorization,
   SmartTransferPayment,
   CreateSmartTransferPayment,
+  SmartTransferPreauthorizationBalance,
   PageResponse,
 } from '../../src/types'
 import { API_URL, createPaymentsClient, mockAs, nock } from './utils'
@@ -10,6 +11,53 @@ import { API_URL, createPaymentsClient, mockAs, nock } from './utils'
 describe('PluggyPaymentsClient — smart transfers', () => {
   beforeEach(() => {
     nock.cleanAll()
+  })
+
+  it('fetchSmartTransferPreauthorizationBalance GETs the preauthorization balance', async () => {
+    const mock = nock(API_URL)
+      .get('/smart-transfers/preauthorizations/pre-1/balance')
+      .reply(200, {
+        balance: 5.48,
+        overdraft: { contracted: 1000, used: 0, available: 1000 },
+      } as SmartTransferPreauthorizationBalance)
+
+    const client = createPaymentsClient()
+    const result = await client.fetchSmartTransferPreauthorizationBalance('pre-1')
+
+    expect(result).toEqual({
+      balance: 5.48,
+      overdraft: { contracted: 1000, used: 0, available: 1000 },
+    })
+    expect(mock.isDone()).toBe(true)
+  })
+
+  it('fetchSmartTransferPreauthorizationBalance returns a null overdraft as is', async () => {
+    nock(API_URL)
+      .get('/smart-transfers/preauthorizations/pre-1/balance')
+      .reply(200, { balance: 5.48, overdraft: null } as SmartTransferPreauthorizationBalance)
+
+    const client = createPaymentsClient()
+    const result = await client.fetchSmartTransferPreauthorizationBalance('pre-1')
+
+    expect(result.overdraft).toBeNull()
+  })
+
+  it('cancelSmartTransferPreauthorizationDataConsent DELETEs the data consent', async () => {
+    const mock = nock(API_URL)
+      .delete('/smart-transfers/preauthorizations/pre-1/data-consent')
+      .reply(
+        200,
+        mockAs<SmartTransferPreauthorization>({
+          id: 'pre-1',
+          dataConsent: { status: 'REJECTED', rejectionReason: 'CUSTOMER_MANUALLY_REVOKED', updatedAt: new Date() },
+        })
+      )
+
+    const client = createPaymentsClient()
+    const result = await client.cancelSmartTransferPreauthorizationDataConsent('pre-1')
+
+    expect(result.dataConsent?.status).toBe('REJECTED')
+    expect(mock.isDone()).toBe(true)
   })
 
   it('fetchSmartTransferPreauthorizations GETs smart-transfers/preauthorizations', async () => {
