@@ -30,6 +30,7 @@ import {
   AutomaticPixPaymentListResponse,
   PaymentPixAutomaticFilters,
   SmartTransferPreauthorization,
+  SmartTransferPreauthorizationBalance,
   CreateSmartTransferPreauthorization,
   SmartTransferPayment,
   CreateSmartTransferPayment,
@@ -456,6 +457,29 @@ export class PluggyPaymentsClient extends BaseApi {
    */
   async fetchSmartTransferPreauthorization(id: string): Promise<SmartTransferPreauthorization> {
     return await this.createGetRequest(`smart-transfers/preauthorizations/${id}`)
+  }
+
+  /**
+   * Fetch the source account balance of a smart transfer preauthorization created with linkedJourney.
+   * Each call reads the balance from the institution and counts toward its monthly quota.
+   * @param id ID of the smart transfer preauthorization
+   * @returns {SmartTransferPreauthorizationBalance} the balance in BRL
+   */
+  async fetchSmartTransferPreauthorizationBalance(
+    id: string
+  ): Promise<SmartTransferPreauthorizationBalance> {
+    return await this.createGetRequest(`smart-transfers/preauthorizations/${id}/balance`)
+  }
+
+  /**
+   * Cancel only the balance permission of a smart transfer preauthorization. The preauthorization stays active.
+   * @param id ID of the smart transfer preauthorization
+   * @returns {SmartTransferPreauthorization} the preauthorization with the cancelled permission
+   */
+  async cancelSmartTransferPreauthorizationDataConsent(
+    id: string
+  ): Promise<SmartTransferPreauthorization> {
+    return await this.createDeleteRequest(`smart-transfers/preauthorizations/${id}/data-consent`)
   }
 
   /**
