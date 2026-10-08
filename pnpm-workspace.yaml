@@ -120,6 +120,11 @@ allowBuilds:
   # automatically), so the postinstall script is not required for the
   # package to work at runtime. Leaving it off keeps install hermetic.
   unrs-resolver: false
+  # File watcher pulled in by jest@30.5 (via jest-haste-map). Platform
+  # binaries ship via optionalDependencies, and its install script only
+  # compiles from source when `npm_config_build_from_source=true`, so it
+  # is a no-op for us. Leaving it off keeps install hermetic.
+  '@parcel/watcher': false
 
 # Advisories with no fixed release yet. Each entry says where the package
 # reaches us and why that path is not exploitable here; drop it as soon as
