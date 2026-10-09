@@ -43,6 +43,19 @@ export type Account = {
   creditData: CreditData | null
 }
 
+export type AccountBalance = {
+  /** Available balance of the account, same as balance in the account resource. */
+  balance: number
+  /** Amount currently blocked or held on the account. Only present when the institution reports it. */
+  blockedBalance?: number
+  /** Amount held in the account's automatic investment facility. Only present when the institution reports it. */
+  automaticallyInvestedBalance?: number
+  /** ISO Currency code of the balance amounts */
+  currencyCode: CurrencyCode
+  /** Date and time when the balance was last updated */
+  updateDateTime: string
+}
+
 export type BankData = {
   /** primary identifier of the account to make bank transfers */
   transferNumber: string | null
