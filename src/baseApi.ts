@@ -12,6 +12,17 @@ const _30_SECONDS = 30 * 1000
 
 type QueryParameters = { [key: string]: number | number[] | string | string[] | boolean }
 
+/**
+ * Tagged template for request paths: every interpolated value is encoded as a single path
+ * segment, so ids containing `?`, `&`, `/`, `#` or spaces cannot alter the request.
+ * Literal parts of the template are left untouched.
+ */
+export const urlPath = (strings: TemplateStringsArray, ...values: Array<string | number>): string =>
+  strings.reduce(
+    (acc, part, i) => acc + part + (i < values.length ? encodeURIComponent(String(values[i])) : ''),
+    ''
+  )
+
 export type ClientParams = {
   /** Pluggy Client ID */
   clientId: string
