@@ -1,22 +1,38 @@
 import nock from 'nock'
 import { setupAuth } from './utils'
 import { PluggyClient } from '../src/client'
-import { urlPath } from '../src/baseApi'
+import { assertSafeEndpoint } from '../src/baseApi'
 
 const API_URL = process.env.PLUGGY_API_URL!
+const UUID = '3fa85f64-5717-4562-b3fc-2c963f66afa6'
 
-describe('urlPath', () => {
-  it('leaves a plain UUID untouched', () => {
-    const id = '3fa85f64-5717-4562-b3fc-2c963f66afa6'
-    expect(urlPath`items/${id}/mfa`).toBe(`items/${id}/mfa`)
-  })
+describe('assertSafeEndpoint', () => {
+  it.each([`accounts/${UUID}`, `items/${UUID}/mfa`, 'connectors', 'payments/requests'])(
+    'accepts %s',
+    endpoint => {
+      expect(() => assertSafeEndpoint(endpoint)).not.toThrow()
+    }
+  )
 
-  it('encodes reserved characters in every interpolated segment', () => {
-    expect(urlPath`a/${'x/y'}/b/${'p q'}`).toBe('a/x%2Fy/b/p%20q')
+  it.each([
+    ['a query delimiter', 'accounts/abc?x=1&y=2'],
+    ['a fragment', 'accounts/abc#frag'],
+    ['a percent-encoded sequence', 'accounts/abc%2F..'],
+    ['a dot segment', 'accounts/../items'],
+    ['a current-dir segment', 'accounts/./x'],
+    ['an empty segment', 'accounts//x'],
+    ['a trailing slash (empty id)', 'accounts/'],
+    ['a leading slash', '/accounts'],
+    ['whitespace', 'accounts/a b'],
+    ['a control character', 'accounts/a\nb'],
+    ['a backslash', 'accounts/a\\b'],
+    ['an empty endpoint', ''],
+  ])('rejects an endpoint with %s', (_label, endpoint) => {
+    expect(() => assertSafeEndpoint(endpoint)).toThrow('unsafe endpoint')
   })
 })
 
-describe('path segment encoding', () => {
+describe('requests with caller-provided ids', () => {
   beforeEach(() => {
     nock.cleanAll()
     setupAuth()
@@ -24,46 +40,39 @@ describe('path segment encoding', () => {
 
   const client = new PluggyClient({ clientId: '123', clientSecret: '456' })
 
-  it.each([
-    ['a query string', 'abc?x=1&y=2', 'abc%3Fx%3D1%26y%3D2'],
-    ['a slash', 'abc/def', 'abc%2Fdef'],
-    ['a fragment', 'abc#frag', 'abc%23frag'],
-    ['spaces', 'abc def', 'abc%20def'],
-  ])('encodes an id containing %s', async (_label, id, encoded) => {
-    const mock = nock(API_URL).get(`/accounts/${encoded}`).reply(200, { id })
+  it('sends a plain UUID unchanged', async () => {
+    const mock = nock(API_URL)
+      .get(`/accounts/${UUID}`)
+      .reply(200, { id: UUID })
 
-    await client.fetchAccount(id)
+    await client.fetchAccount(UUID)
 
     expect(mock.isDone()).toBeTruthy()
   })
 
-  it('does not change the path for a plain UUID', async () => {
-    const id = '3fa85f64-5717-4562-b3fc-2c963f66afa6'
-    const mock = nock(API_URL).get(`/accounts/${id}`).reply(200, { id })
+  it('refuses an id that would add a query string, without sending a request', async () => {
+    const mock = nock(API_URL)
+      .get(/.*/)
+      .reply(200, {})
 
-    await client.fetchAccount(id)
-
-    expect(mock.isDone()).toBeTruthy()
+    await expect(client.fetchAccount(`${UUID}?accountId=other`)).rejects.toThrow('unsafe endpoint')
+    expect(mock.isDone()).toBeFalsy()
   })
 
-  it('encodes ids on nested paths and mutating requests', async () => {
-    const mock = nock(API_URL).delete('/items/a%2Fb%3Fc').reply(200, {})
+  it('refuses an empty id on a mutation', async () => {
+    const mock = nock(API_URL)
+      .delete(/.*/)
+      .reply(204)
 
-    await client.deleteItem('a/b?c')
-
-    expect(mock.isDone()).toBeTruthy()
+    await expect(client.deleteItem('')).rejects.toThrow('unsafe endpoint')
+    expect(mock.isDone()).toBeFalsy()
   })
 
-  it('encodes ids on payments paths', async () => {
-    const mock = nock(API_URL).get('/payments/requests/a%23b/schedules').reply(200, {})
-
-    await client.payments.fetchScheduledPayments('a#b')
-
-    expect(mock.isDone()).toBeTruthy()
-  })
-
-  it('sends the item id of fetchIdentityByItemId as an encoded query value', async () => {
-    const mock = nock(API_URL).get('/identity').query({ itemId: 'a&b=c' }).reply(200, {})
+  it('sends the identity itemId as an encoded query parameter', async () => {
+    const mock = nock(API_URL)
+      .get('/identity')
+      .query({ itemId: 'a&b=c' })
+      .reply(200, {})
 
     await client.fetchIdentityByItemId('a&b=c')
 

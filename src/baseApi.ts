@@ -12,23 +12,27 @@ const _30_SECONDS = 30 * 1000
 
 type QueryParameters = { [key: string]: number | number[] | string | string[] | boolean }
 
-/**
- * Tagged template for request paths: every interpolated value is encoded as a single path
- * segment, so ids containing `?`, `&`, `/`, `#` or spaces cannot alter the request.
- * Literal parts of the template are left untouched.
- */
-export const urlPath = (strings: TemplateStringsArray, ...values: Array<string | number>): string =>
-  strings.reduce(
-    (acc, part, i) => acc + part + (i < values.length ? encodeURIComponent(String(values[i])) : ''),
-    ''
-  )
-
 export type ClientParams = {
   /** Pluggy Client ID */
   clientId: string
   /** Pluggy Client Secret */
   clientSecret: string
   baseUrl?: string
+}
+
+/**
+ * Endpoints are built by interpolating caller-provided ids into a path. Query
+ * parameters always go through `params`, so a legitimate endpoint never has a
+ * query or fragment delimiter, a percent-encoded sequence, a backslash, a
+ * control character or whitespace, a dot segment, or an empty segment. Any of
+ * those means an id changed the shape of the request, so refuse to send it.
+ */
+const UNSAFE_ENDPOINT = /[?#%\\\u0000-\u0020\u007f]|(^|\/)\.{1,2}(\/|$)|\/\/|^\/|\/$/
+
+export function assertSafeEndpoint(endpoint: string): void {
+  if (!endpoint || UNSAFE_ENDPOINT.test(endpoint)) {
+    throw new Error(`Refusing to request an unsafe endpoint: ${JSON.stringify(endpoint)}`)
+  }
 }
 
 export class BaseApi {
@@ -99,6 +103,7 @@ export class BaseApi {
   }
 
   protected async createGetRequest<T>(endpoint: string, params?: QueryParameters): Promise<T> {
+    assertSafeEndpoint(endpoint)
     const apiKey = await this.getApiKey()
     const url = `${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`
 
@@ -167,6 +172,7 @@ export class BaseApi {
     params?: QueryParameters,
     body?: Record<string, unknown>
   ): Promise<T> {
+    assertSafeEndpoint(endpoint)
     const apiKey = await this.getApiKey()
     const url = `${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`
     if (body) {
