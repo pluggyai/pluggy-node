@@ -10,6 +10,8 @@ export type Category = {
 }
 
 export type ClientCategoryRule = {
+  /** Identifier of the rule. Pass it to deleteCategoryRule to remove the rule. */
+  id: string
   /** Description of the transaction rule */
   description: string
   /** Identifier of the category */

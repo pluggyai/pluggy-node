@@ -6,6 +6,7 @@ import { ClientCategoryRule, CreateClientCategoryRule, PageResponse } from '../s
 const API_URL = process.env.PLUGGY_API_URL!
 
 const rule: ClientCategoryRule = {
+  id: '7c1d2e3f-4a5b-4c6d-8e9f-0a1b2c3d4e5f',
   description: 'uber payment',
   category: 'Taxi and ride-hailing',
   categoryId: '19050000',
