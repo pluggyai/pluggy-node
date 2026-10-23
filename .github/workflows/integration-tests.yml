@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6.4.0
         with:
-          node-version: '24'
+          node-version: '24.22.1'
 
       - name: Enable corepack
         run: corepack enable
@@ -25,7 +25,7 @@ jobs:
       - name: Setup pnpm cache
         uses: actions/setup-node@v6.4.0
         with:
-          node-version: '24'
+          node-version: '24.22.1'
           cache: 'pnpm'
 
       - name: Install dependencies
