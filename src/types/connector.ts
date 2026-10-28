@@ -253,6 +253,8 @@ export type Connector = {
   supportsSmartTransfers: boolean
   /** Indicates that the connector supports Automatic Pix */
   supportsAutomaticPix: boolean
+  /** Indicates that the connector supports Pix por biometria */
+  supportsPixBiometric?: boolean
   /** Indicates that the connector supports Boleto Management */
   supportsBoletoManagement: boolean
   /** Url where user can reset their account password */
@@ -284,4 +286,6 @@ export type ConnectorFilters = {
   isOpenFinance?: boolean
   /** filters in (true) or out (false) payment initiation connectors. Default: undefined */
   supportsPaymentInitiation?: boolean
+  /** filters in (true) or out (false) connectors that support Pix por biometria. Default: undefined */
+  supportsPixBiometric?: boolean
 }

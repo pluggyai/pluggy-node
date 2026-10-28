@@ -32,7 +32,10 @@ export const WEBHOOK_EVENTS = [
   "smart_transfer_preauthorization/completed",
   "smart_transfer_preauthorization/error",
   "smart_transfer_payment/completed",
-  "smart_transfer_payment/error"
+  "smart_transfer_payment/error",
+  'pix_biometric_enrollment/authorized',
+  'pix_biometric_enrollment/revoked',
+  'pix_biometric_enrollment/error'
 ] as const
 /**
  * @typedef WebhookEvent
@@ -177,5 +180,18 @@ export type WebhookEventPayload = {
         description: string
         detail: string
       }
+    }
+    /** The `id` field is not sent for these events; use `eventId`. */
+    | {
+      event:
+      | 'pix_biometric_enrollment/authorized'
+      | 'pix_biometric_enrollment/revoked'
+      | 'pix_biometric_enrollment/error'
+      /** Primary identifier of the enrollment (linked account) */
+      enrollmentId: string
+      /** Payment Customer of the payment request where the link was created; null when the payer typed their CPF */
+      customerId: string | null
+      /** Primary identifier of the payment request where the link was created */
+      paymentRequestId: string
     }
   )

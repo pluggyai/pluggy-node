@@ -37,6 +37,10 @@ import {
   SmartTransferPreauthorizationsFilters,
   SmartTransferPreauthorizationPaymentsFilters,
   CreatePixQrPaymentRequest,
+  CreatePaymentRequestPixBiometric,
+  PixBiometricEnrollment,
+  PixBiometricBalance,
+  PixBiometricEnrollmentsFilters,
 } from './types'
 
 /**
@@ -515,5 +519,64 @@ export class PluggyPaymentsClient extends BaseApi {
    */
   async fetchSmartTransferPayment(id: string): Promise<SmartTransferPayment> {
     return await this.createGetRequest(`smart-transfers/payments/${id}`)
+  }
+
+  /**
+   * Creates a PIX por biometria payment request
+   * @param payload CreatePaymentRequestPixBiometric
+   * @returns {PaymentRequest} PaymentRequest object
+   */
+  async createPaymentRequestPixBiometric(
+    payload: CreatePaymentRequestPixBiometric
+  ): Promise<PaymentRequest> {
+    return await this.createPostRequest('payments/requests/pix-biometric', null, payload)
+  }
+
+  /**
+   * Fetch all PIX por biometria enrollments
+   * @param options PixBiometricEnrollmentsFilters with page and pageSize
+   * @returns {PageResponse<PixBiometricEnrollment>} paged response of enrollments
+   */
+  async fetchPixBiometricEnrollments(
+    options: PixBiometricEnrollmentsFilters = {}
+  ): Promise<PageResponse<PixBiometricEnrollment>> {
+    return await this.createGetRequest('pix-biometric/enrollments', { ...options })
+  }
+
+  /**
+   * Fetch a single PIX por biometria enrollment
+   * @param id ID of the enrollment
+   * @returns {PixBiometricEnrollment} PixBiometricEnrollment object
+   */
+  async fetchPixBiometricEnrollment(id: string): Promise<PixBiometricEnrollment> {
+    return await this.createGetRequest(`pix-biometric/enrollments/${id}`)
+  }
+
+  /**
+   * Fetch the account balance of a PIX por biometria enrollment created with linkedJourney.
+   * Each call reads the balance from the institution and counts toward its monthly quota.
+   * @param id ID of the enrollment
+   * @returns {PixBiometricBalance} the balance in BRL
+   */
+  async fetchPixBiometricEnrollmentBalance(id: string): Promise<PixBiometricBalance> {
+    return await this.createGetRequest(`pix-biometric/enrollments/${id}/balance`)
+  }
+
+  /**
+   * Revoke a PIX por biometria enrollment. This cannot be undone: the payer must link again.
+   * @param id ID of the enrollment
+   * @returns {PixBiometricEnrollment} the revoked enrollment
+   */
+  async revokePixBiometricEnrollment(id: string): Promise<PixBiometricEnrollment> {
+    return await this.createPostRequest(`pix-biometric/enrollments/${id}/revoke`)
+  }
+
+  /**
+   * Cancel only the balance permission of a PIX por biometria enrollment. The enrollment stays active.
+   * @param id ID of the enrollment
+   * @returns {PixBiometricEnrollment} the enrollment with the cancelled permission
+   */
+  async cancelPixBiometricEnrollmentDataConsent(id: string): Promise<PixBiometricEnrollment> {
+    return await this.createDeleteRequest(`pix-biometric/enrollments/${id}/data-consent`)
   }
 }
