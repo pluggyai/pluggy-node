@@ -181,6 +181,7 @@ export type WebhookEventPayload = {
         detail: string
       }
     }
+    /** The `id` field is not sent for these events; use `eventId`. */
     | {
       event:
       | 'pix_biometric_enrollment/authorized'

@@ -1,6 +1,6 @@
-import type { PageFilters } from '../common'
-import type { CreatePaymentRequest } from './paymentRequest'
-import type { SmartTransferOverdraft } from './smartTransfers'
+import { PageFilters } from '../common'
+import { CreatePaymentRequest } from './paymentRequest'
+import { SmartTransferOverdraft } from './smartTransfers'
 
 export const PIX_BIOMETRIC_ENROLLMENT_STATUS = [
   'CREATED',
@@ -99,9 +99,9 @@ export type PixBiometricEnrollment = PixBiometricEnrollmentSummary & {
   limits: PixBiometricEnrollmentLimits | null
   /** When the link expires. Null until the institution reports it. */
   expiresAt: Date | null
-  /** Permission to read the account balance; null when the payer was not offered it. */
+  /** Permission to read the account balance; null when the payment request did not offer balance sharing or the payer chose not to share. */
   dataConsent: PixBiometricDataConsent | null
-  /** Who revoked the link; null while it was not revoked. */
+  /** Who revoked the link: BANK (the payer or the institution, at the bank), CLIENT (you, through the API) or PAYER (older links only). Null unless `status` is REVOKED. */
   revokedBy: 'BANK' | 'CLIENT' | 'PAYER' | null
   /** Why the link failed; null when it did not. */
   errorDetail: { code: string; description: string } | null
@@ -119,9 +119,9 @@ export type PixBiometricBalance = {
 export type PixBiometricEnrollmentsFilters = PageFilters & {
   /** Filter by Payment Customer. */
   customerId?: string
-  /** Filter by payer CPF. */
+  /** Filter by payer CPF. Digits only: the enrollment returns it masked, so a returned value cannot be passed back. */
   cpf?: string
-  /** Filter by payer CNPJ. */
+  /** Filter by payer CNPJ. Digits only: the enrollment returns it masked, so a returned value cannot be passed back. */
   cnpj?: string
   /** Filter by enrollment status. */
   status?: PixBiometricEnrollmentStatus

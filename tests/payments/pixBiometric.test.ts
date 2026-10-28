@@ -74,6 +74,44 @@ describe('PluggyPaymentsClient — PIX por biometria', () => {
     expect(mock.isDone()).toBe(true)
   })
 
+  it('fetchPixBiometricEnrollment revives date fields', async () => {
+    nock(API_URL)
+      .get('/pix-biometric/enrollments/enr-1')
+      .reply(200, {
+        id: 'enr-1',
+        status: 'AUTHORIZED',
+        connector: {
+          id: 608,
+          name: 'Santander',
+          imageUrl: 'https://example.com/logo.svg',
+        },
+        debtor: {
+          taxNumber: '***.456.789-**',
+          bankAccount: { agency: '1234', account: '****4821', name: 'Santander' },
+        },
+        cpf: '***.456.789-**',
+        cnpj: null,
+        customerId: null,
+        limits: { transaction: 1000, daily: 3000, dailyUsed: 149.9 },
+        expiresAt: '2027-10-28T13:05:00.000Z',
+        dataConsent: {
+          status: 'AUTHORISED',
+          rejectionReason: null,
+          updatedAt: '2026-10-28T13:05:00.000Z',
+        },
+        revokedBy: null,
+        errorDetail: null,
+        createdAt: '2026-10-28T13:00:00.000Z',
+        updatedAt: '2026-10-28T13:05:00.000Z',
+      })
+
+    const client = createPaymentsClient()
+    const result = await client.fetchPixBiometricEnrollment('enr-1')
+
+    expect(result.expiresAt).toBeInstanceOf(Date)
+    expect(result.createdAt).toBeInstanceOf(Date)
+  })
+
   it('fetchPixBiometricEnrollmentBalance GETs the balance', async () => {
     const mock = nock(API_URL)
       .get('/pix-biometric/enrollments/enr-1/balance')

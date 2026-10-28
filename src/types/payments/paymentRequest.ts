@@ -1,6 +1,6 @@
 import { PaymentCustomer } from './paymentCustomer'
 import { PaymentRecipient } from './paymentRecipient'
-import type { PaymentRequestPixBiometricDetails } from './pixBiometric'
+import { PaymentRequestPixBiometricDetails } from './pixBiometric'
 
 export declare const DAYS_OF_WEEK: readonly [
   'MONDAY',
