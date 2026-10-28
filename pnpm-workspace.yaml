@@ -34,6 +34,15 @@ minimumReleaseAgeIgnoreMissingTime: true
 # omitted here; re-add it the first time we pull one in.)
 #
 minimumReleaseAgeExclude:
+  # Remove after 2026-10-29 — GHSA-4qv8-2p9j-2685, GHSA-f72v-6w45-q472,
+  # GHSA-xjj6-f33q-929c, GHSA-4w7w-5xrc-9h26, GHSA-2m5v-pch6-74hx,
+  # GHSA-qrxm-fqhp-jwvm, GHSA-9fm3-97px-rjf6, GHSA-55wc-3pg8-jfw6 (HIGH),
+  # fixed in 7.30.1 / 6.29.1 (published 2026-10-15). Reaches us through
+  # semantic-release > @semantic-release/github (^7.0.0) and
+  # @semantic-release/npm > @actions/core > @actions/http-client (^6.23.0),
+  # whose ranges pick them up. Both versions go in one entry: pnpm keys
+  # the list by package name, so a second `undici@` line is ignored.
+  - undici@7.30.1 || 6.29.1
   # Remove after 2026-10-20 — GHSA-8r5x-fm3f-whwj, GHSA-p8wg-vrv2-v86f
   # (CRITICAL) and GHSA-xw65-4hp5-5hc7, fixed only in 4.7.10 (published
   # 2026-10-05). Reaches us through semantic-release >
@@ -138,6 +147,12 @@ auditConfig:
     # micromatch), which only expands the glob patterns in our own release
     # config, never untrusted input.
     - GHSA-vfj7-8cjw-p6xm
+    # deepmerge GHSA-gcqx-w48m-w2h4 (prototype poisoning of the returned
+    # object, LOW): every version up to 4.3.1, the latest, with no patched
+    # release published. Reaches us only through jest > @jest/core >
+    # jest-config, which merges repository-controlled test configuration at
+    # test time; it is never shipped in the package. Drop it once a fix ships.
+    - GHSA-gcqx-w48m-w2h4
 
 # Force a specific version on transitive dependencies, regardless
 # of what the parent's `package.json` range allows. Use sparingly —
