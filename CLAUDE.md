@@ -101,6 +101,7 @@ Current SDK methods in `paymentsClient.ts` (PluggyPaymentsClient):
 | Automatic PIX | Multiple methods for PIX automático |
 | Scheduled Payments | Multiple methods |
 | Smart Transfers | Multiple methods, incl. `fetchSmartTransferPreauthorizationPayments()` |
+| PIX por biometria | `createPaymentRequestPixBiometric()`, `fetchPixBiometricEnrollments()`, `fetchPixBiometricEnrollment()`, `fetchPixBiometricEnrollmentBalance()`, `revokePixBiometricEnrollment()`, `cancelPixBiometricEnrollmentDataConsent()` | /payments/requests/pix-biometric, /pix-biometric/enrollments |
 
 ### 3. Type Definition Patterns
 
