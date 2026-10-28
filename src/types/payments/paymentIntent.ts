@@ -40,6 +40,10 @@ export type PaymentIntent = {
   paymentRequest: PaymentRequest | null
   bulkPayment: Omit<BulkPayment, 'smartAccount' | 'paymentRequests'> | null
   status: PaymentIntentStatus
+  /** How the payment is made */
+  paymentMethod?: 'PIS' | 'PIX' | 'PIX_BIOMETRIC'
+  /** Linked account (Pix por biometria) the payment was made with; null otherwise */
+  enrollmentId?: string | null
   createdAt: Date
   updatedAt: Date
 }

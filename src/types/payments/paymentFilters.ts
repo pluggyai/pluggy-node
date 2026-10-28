@@ -2,7 +2,13 @@ import { PageFilters, DateFilters } from '../common'
 
 export type PaymentRequestsFilters = PageFilters & DateFilters
 
-export type PaymentIntentsFilters = PageFilters & DateFilters
+export type PaymentIntentsFilters = PageFilters &
+  DateFilters & {
+    /** Filter by payment request */
+    paymentRequestId?: string
+    /** Filter by linked account (Pix por biometria) */
+    enrollmentId?: string
+  }
 
 export type PaymentRecipientsFilters = PageFilters
 

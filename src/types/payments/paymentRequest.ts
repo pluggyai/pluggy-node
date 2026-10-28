@@ -1,5 +1,6 @@
 import { PaymentCustomer } from './paymentCustomer'
 import { PaymentRecipient } from './paymentRecipient'
+import type { PaymentRequestPixBiometricDetails } from './pixBiometric'
 
 export declare const DAYS_OF_WEEK: readonly [
   'MONDAY',
@@ -162,6 +163,8 @@ export type PaymentRequest = {
   schedule: PaymentRequestSchedule | null
   /**! automaticPix of the payment */
   automaticPix: PaymentRequestAutomaticPixDetails | null
+  /**! Pix por biometria details; null (or absent) on other kinds of payment request */
+  pixBiometric?: PaymentRequestPixBiometricDetails | null
   /**! createdAt date */
   createdAt: Date
   /**! updatedAt date */
