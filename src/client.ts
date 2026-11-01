@@ -487,7 +487,7 @@ export class PluggyClient extends BaseApi {
    * @returns {IdentityResponse} an identity object
    */
   async fetchIdentityByItemId(itemId: string): Promise<IdentityResponse> {
-    return await this.createGetRequest(`identity?itemId=${itemId}`)
+    return await this.createGetRequest('identity', { itemId })
   }
 
   /**
