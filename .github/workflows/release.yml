@@ -49,8 +49,6 @@ jobs:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_SECRET }}
           permission-contents: write
-          permission-issues: write
-          permission-pull-requests: write
       - name: Release
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
