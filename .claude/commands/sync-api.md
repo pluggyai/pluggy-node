@@ -78,9 +78,9 @@ async fetchModels(itemId: string, options: ModelFilters = {}): Promise<PageRespo
   return await this.createGetRequest('models', { ...options, itemId })
 }
 
-// GET by ID
+// GET by ID. Ids in a path always go through this.pathId, which refuses a "/".
 async fetchModel(id: string): Promise<Model> {
-  return await this.createGetRequest(`models/${id}`)
+  return await this.createGetRequest(`models/${this.pathId(id)}`)
 }
 
 // POST
@@ -90,12 +90,12 @@ async createModel(payload: CreateModelPayload): Promise<Model> {
 
 // PATCH
 async updateModel(id: string, payload: UpdateModelPayload): Promise<Model> {
-  return await this.createPatchRequest(`models/${id}`, null, payload)
+  return await this.createPatchRequest(`models/${this.pathId(id)}`, null, payload)
 }
 
 // DELETE
 async deleteModel(id: string): Promise<void> {
-  return await this.createDeleteRequest(`models/${id}`)
+  return await this.createDeleteRequest(`models/${this.pathId(id)}`)
 }
 ```
 

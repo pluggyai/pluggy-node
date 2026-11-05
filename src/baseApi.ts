@@ -1,4 +1,4 @@
-import got, { Got, HTTPError, Method } from 'got'
+import got, { Got, HTTPError, Method, RetryObject } from 'got'
 import * as jwt from 'jsonwebtoken'
 import { deserializeJSONWithDates } from './transforms'
 
@@ -17,7 +17,32 @@ export type ClientParams = {
   clientId: string
   /** Pluggy Client Secret */
   clientSecret: string
+  /** API base URL. Takes precedence over the PLUGGY_API_URL environment variable. */
   baseUrl?: string
+}
+
+/**
+ * Endpoints are built by interpolating caller-provided ids into a path. Query
+ * parameters always go through `params`, so a legitimate endpoint never has a
+ * query or fragment delimiter, a percent-encoded sequence, a backslash, a
+ * control character or whitespace, a dot segment, or an empty segment. Any of
+ * those means an id changed the shape of the request, so refuse to send it.
+ */
+// eslint-disable-next-line no-control-regex
+const UNSAFE_ENDPOINT = /[?#%\\\u0000-\u0020\u007f]|(^|\/)\.{1,2}(\/|$)|\/\/|^\/|\/$/
+
+export function assertSafeEndpoint(endpoint: string): void {
+  if (!endpoint || UNSAFE_ENDPOINT.test(endpoint)) {
+    throw new Error(`Refusing to request an unsafe endpoint: ${JSON.stringify(endpoint)}`)
+  }
+}
+
+/**
+ * Retry delay for API requests. got also retries network errors and timeouts by default. The API
+ * may already have processed a write that failed that way, so only a 429 or a read is sent again.
+ */
+export function retryDelay({ error, computedValue }: RetryObject): number {
+  return error.response || error.options.method === 'GET' ? computedValue : 0
 }
 
 export class BaseApi {
@@ -29,9 +54,9 @@ export class BaseApi {
   protected serviceInstance: Got
 
   constructor(params: ClientParams) {
-    const { clientId, clientSecret } = params
+    const { clientId, clientSecret, baseUrl } = params
     const { PLUGGY_API_URL } = process.env
-    this.baseUrl = PLUGGY_API_URL || 'https://api.pluggy.ai'
+    this.baseUrl = (baseUrl || PLUGGY_API_URL || 'https://api.pluggy.ai').replace(/\/+$/, '')
 
     if (clientSecret && clientId) {
       this.clientId = clientId
@@ -51,6 +76,7 @@ export class BaseApi {
 
   private getServiceInstance(): Got {
     if (!this.serviceInstance) {
+      const apiOrigin = new URL(this.baseUrl).origin
       this.serviceInstance = got.extend({
         headers: this.defaultHeaders,
         responseType: 'json',
@@ -60,6 +86,20 @@ export class BaseApi {
           limit: 2,
           methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
           statusCodes: [429],
+          calculateDelay: retryDelay,
+        },
+        hooks: {
+          // got keeps custom headers such as X-API-KEY and JSON bodies across redirects, even to
+          // another host or from HTTPS to HTTP, so credentials must not follow one off the API.
+          beforeRedirect: [
+            options => {
+              if (options.url.origin !== apiOrigin) {
+                throw new Error(
+                  '[Pluggy SDK] Refusing to follow a redirect away from the configured API origin'
+                )
+              }
+            },
+          ],
         },
       })
     }
@@ -80,6 +120,8 @@ export class BaseApi {
           nonExpiring: false,
         },
         responseType: 'json',
+        // Exchanging credentials only mints a key, so it is safe to retry on a network error.
+        retry: { calculateDelay: ({ computedValue }) => computedValue },
       }
     )
 
@@ -88,6 +130,7 @@ export class BaseApi {
   }
 
   protected async createGetRequest<T>(endpoint: string, params?: QueryParameters): Promise<T> {
+    assertSafeEndpoint(endpoint)
     const apiKey = await this.getApiKey()
     const url = `${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`
 
@@ -108,10 +151,7 @@ export class BaseApi {
       return body
     } catch (error) {
       if (error instanceof HTTPError) {
-        console.error(
-          `[Pluggy SDK] HTTP request failed: ${error.message || ''}`,
-          error.response.body
-        )
+        console.error(`[Pluggy SDK] HTTP request failed: ${error.message || ''}`)
         return Promise.reject(error.response.body)
       }
       return Promise.reject(error)
@@ -156,6 +196,7 @@ export class BaseApi {
     params?: QueryParameters,
     body?: Record<string, unknown>
   ): Promise<T> {
+    assertSafeEndpoint(endpoint)
     const apiKey = await this.getApiKey()
     const url = `${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`
     if (body) {
@@ -173,16 +214,13 @@ export class BaseApi {
       })
 
       if (statusCode < 200 || statusCode >= 300) {
-        return Promise.reject(body)
+        return Promise.reject(responseBody)
       }
 
       return responseBody
     } catch (error) {
       if (error instanceof HTTPError) {
-        console.error(
-          `[Pluggy SDK] HTTP request failed: ${error.message || ''}`,
-          error.response.body
-        )
+        console.error(`[Pluggy SDK] HTTP request failed: ${error.message || ''}`)
         return Promise.reject(error.response.body)
       }
       return Promise.reject(error)
@@ -207,6 +245,19 @@ export class BaseApi {
       })
       .join('&')
     return `?${query}`
+  }
+
+  /**
+   * Checks an id before it goes into an endpoint path. `assertSafeEndpoint` sees the whole
+   * endpoint, so it cannot tell whether a `/` came from the path template or from an id. An id
+   * holding one would reach another route under the same prefix.
+   */
+  protected pathId(id: string | number): string {
+    const value = String(id)
+    if (value.includes('/')) {
+      throw new TypeError('Invalid resource id')
+    }
+    return value
   }
 
   protected isJwtExpired(token: string): boolean {
