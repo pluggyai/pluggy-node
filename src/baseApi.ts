@@ -75,6 +75,10 @@ export class BaseApi {
           limit: 2,
           methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
           statusCodes: [429],
+          // got also retries network errors and timeouts by default. The API may already have
+          // processed a write that failed that way, so only a 429 or a read is sent again.
+          calculateDelay: ({ error, computedValue }) =>
+            error.response || error.options.method === 'GET' ? computedValue : 0,
         },
       })
     }
@@ -95,6 +99,8 @@ export class BaseApi {
           nonExpiring: false,
         },
         responseType: 'json',
+        // Exchanging credentials only mints a key, so it is safe to retry on a network error.
+        retry: { calculateDelay: ({ computedValue }) => computedValue },
       }
     )
 
