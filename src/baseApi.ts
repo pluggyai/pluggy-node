@@ -66,6 +66,7 @@ export class BaseApi {
 
   private getServiceInstance(): Got {
     if (!this.serviceInstance) {
+      const apiOrigin = new URL(this.baseUrl).origin
       this.serviceInstance = got.extend({
         headers: this.defaultHeaders,
         responseType: 'json',
@@ -79,6 +80,19 @@ export class BaseApi {
           // processed a write that failed that way, so only a 429 or a read is sent again.
           calculateDelay: ({ error, computedValue }) =>
             error.response || error.options.method === 'GET' ? computedValue : 0,
+        },
+        hooks: {
+          // got keeps custom headers such as X-API-KEY and JSON bodies across redirects, even to
+          // another host or from HTTPS to HTTP, so credentials must not follow one off the API.
+          beforeRedirect: [
+            options => {
+              if (options.url.origin !== apiOrigin) {
+                throw new Error(
+                  '[Pluggy SDK] Refusing to follow a redirect away from the configured API origin'
+                )
+              }
+            },
+          ],
         },
       })
     }
