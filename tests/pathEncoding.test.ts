@@ -1,5 +1,5 @@
 import nock from 'nock'
-import { setupAuth } from './utils'
+import { MOCK_API_KEY, recordRequests, setupAuth } from './utils'
 import { PluggyClient } from '../src/client'
 import { assertSafeEndpoint } from '../src/baseApi'
 
@@ -77,5 +77,115 @@ describe('requests with caller-provided ids', () => {
     await client.fetchIdentityByItemId('a&b=c')
 
     expect(mock.isDone()).toBeTruthy()
+  })
+
+  it('sends a numeric id unchanged', async () => {
+    const mock = nock(API_URL)
+      .get('/connectors/201')
+      .reply(200, { id: 201 })
+
+    await client.fetchConnector(201)
+
+    expect(mock.isDone()).toBeTruthy()
+  })
+})
+
+describe('an id that holds a path separator', () => {
+  const PLAIN_ID = 'plainid'
+  const ID_WITH_SLASH = 'plain/id'
+  const FILLER = 'filler'
+  // No SDK method takes more than three arguments, and none puts more than two ids in a path.
+  const POSITIONS = [0, 1, 2]
+
+  type SdkMethod = { name: string; call: (args: string[]) => Promise<unknown> }
+
+  // Every public method, so a method added later is covered without touching this test.
+  function allSdkMethods(): SdkMethod[] {
+    const client = new PluggyClient({ clientId: '123', clientSecret: '456' })
+    return [client, client.payments].flatMap(owner =>
+      Object.getOwnPropertyNames(Object.getPrototypeOf(owner))
+        .filter(name => name !== 'constructor')
+        .map(name => ({
+          name,
+          call: async (args: string[]): Promise<unknown> =>
+            ((owner as unknown) as Record<string, (...args: string[]) => Promise<unknown>>)[name](
+              ...args
+            ),
+        }))
+    )
+  }
+
+  /** Arguments that hold `value` at `position` and a valid id everywhere else. */
+  const argsWith = (position: number, value: string): string[] =>
+    POSITIONS.map(index => (index === position ? value : FILLER))
+
+  const pathsOf = (requests: string[]): string[] => requests.map(request => request.split('?')[0])
+
+  let requests: string[]
+
+  beforeEach(() => {
+    nock.cleanAll()
+    nock.disableNetConnect()
+    requests = recordRequests(API_URL, {
+      apiKey: MOCK_API_KEY,
+      results: [],
+      next: null,
+      page: 1,
+      totalPages: 1,
+    })
+  })
+
+  /** Each method and argument position whose value ends up in the request path. */
+  async function idArguments(): Promise<{ method: SdkMethod; position: number }[]> {
+    const found: { method: SdkMethod; position: number }[] = []
+    for (const method of allSdkMethods()) {
+      for (const position of POSITIONS) {
+        requests.length = 0
+        await method.call(argsWith(position, PLAIN_ID)).catch(() => undefined)
+        if (pathsOf(requests).some(path => path.includes(`/${PLAIN_ID}`))) {
+          found.push({ method, position })
+        }
+      }
+    }
+    return found
+  }
+
+  it('finds the id arguments this suite relies on', async () => {
+    const found = (await idArguments()).map(({ method, position }) => `${method.name}#${position}`)
+
+    expect(found).toEqual(
+      expect.arrayContaining([
+        'fetchItem#0',
+        'updateItemMFA#0',
+        'deleteItem#0',
+        'validateParameters#0',
+        'cancelBoleto#0',
+        'deleteWebhook#0',
+        'fetchPaymentRequest#0',
+        'deletePaymentRecipient#0',
+        'revokePixBiometricEnrollment#0',
+        'cancelScheduledPayment#0',
+        'cancelScheduledPayment#1',
+        'fetchScheduledPayment#1',
+        'retryAutomaticPixPayment#1',
+        'cancelAutomaticPixPayment#1',
+      ])
+    )
+  })
+
+  it('is refused at every argument that puts an id in the path', async () => {
+    const accepted: string[] = []
+    for (const { method, position } of await idArguments()) {
+      requests.length = 0
+      const refused = await method.call(argsWith(position, ID_WITH_SLASH)).then(
+        () => false,
+        error => String(error.message).includes('Invalid resource id')
+      )
+      if (!refused || pathsOf(requests).some(path => path.includes(ID_WITH_SLASH))) {
+        accepted.push(`${method.name}#${position}`)
+      }
+    }
+
+    expect(accepted).toEqual([])
   })
 })

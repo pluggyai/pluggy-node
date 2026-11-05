@@ -28,6 +28,7 @@ export type ClientParams = {
  * control character or whitespace, a dot segment, or an empty segment. Any of
  * those means an id changed the shape of the request, so refuse to send it.
  */
+// eslint-disable-next-line no-control-regex
 const UNSAFE_ENDPOINT = /[?#%\\\u0000-\u0020\u007f]|(^|\/)\.{1,2}(\/|$)|\/\/|^\/|\/$/
 
 export function assertSafeEndpoint(endpoint: string): void {
@@ -36,7 +37,6 @@ export function assertSafeEndpoint(endpoint: string): void {
   }
 }
 
-export class BaseApi {
 /**
  * Retry delay for API requests. got also retries network errors and timeouts by default. The API
  * may already have processed a write that failed that way, so only a 429 or a read is sent again.
@@ -45,6 +45,7 @@ export function retryDelay({ error, computedValue }: RetryObject): number {
   return error.response || error.options.method === 'GET' ? computedValue : 0
 }
 
+export class BaseApi {
   protected apiKey: string
   protected clientId: string
   protected clientSecret: string
@@ -244,6 +245,19 @@ export function retryDelay({ error, computedValue }: RetryObject): number {
       })
       .join('&')
     return `?${query}`
+  }
+
+  /**
+   * Checks an id before it goes into an endpoint path. `assertSafeEndpoint` sees the whole
+   * endpoint, so it cannot tell whether a `/` came from the path template or from an id. An id
+   * holding one would reach another route under the same prefix.
+   */
+  protected pathId(id: string | number): string {
+    const value = String(id)
+    if (value.includes('/')) {
+      throw new TypeError('Invalid resource id')
+    }
+    return value
   }
 
   protected isJwtExpired(token: string): boolean {

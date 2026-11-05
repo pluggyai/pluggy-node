@@ -74,7 +74,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Connector} a connector object
    */
   async fetchConnector(id: number): Promise<Connector> {
-    return await this.createGetRequest(`connectors/${id}`)
+    return await this.createGetRequest(`connectors/${this.pathId(id)}`)
   }
 
   /**
@@ -83,7 +83,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Item} a item object
    */
   async fetchItem(id: string): Promise<Item> {
-    return await this.createGetRequest(`items/${id}`)
+    return await this.createGetRequest(`items/${this.pathId(id)}`)
   }
 
   /**
@@ -145,7 +145,7 @@ export class PluggyClient extends BaseApi {
    * @returns {ValidationResult} an object with the info of which parameters are wrong
    */
   async validateParameters(id: number, parameters: Parameters): Promise<ValidationResult> {
-    return await this.createPostRequest(`connectors/${id}/validate`, null, parameters)
+    return await this.createPostRequest(`connectors/${this.pathId(id)}/validate`, null, parameters)
   }
 
   /**
@@ -179,7 +179,7 @@ export class PluggyClient extends BaseApi {
     parameters?: Parameters,
     options?: CreateItemOptions
   ): Promise<Item> {
-    return await this.createPatchRequest(`items/${id}`, null, {
+    return await this.createPatchRequest(`items/${this.pathId(id)}`, null, {
       id,
       parameters,
       ...(options || {}),
@@ -193,14 +193,14 @@ export class PluggyClient extends BaseApi {
    * @returns {Item} a item object
    */
   async updateItemMFA(id: string, parameters: Parameters = undefined): Promise<Item> {
-    return await this.createPostRequest(`items/${id}/mfa`, null, parameters)
+    return await this.createPostRequest(`items/${this.pathId(id)}/mfa`, null, parameters)
   }
 
   /**
    * Deletes an item
    */
   async deleteItem(id: string): Promise<void> {
-    await this.createDeleteRequest(`items/${id}`)
+    await this.createDeleteRequest(`items/${this.pathId(id)}`)
   }
 
   /**
@@ -216,7 +216,7 @@ export class PluggyClient extends BaseApi {
     itemId: string,
     options: ItemResourceFilters = {}
   ): Promise<PageResponse<ItemResource>> {
-    return await this.createGetRequest(`items/${itemId}/resources`, options)
+    return await this.createGetRequest(`items/${this.pathId(itemId)}/resources`, options)
   }
 
   /**
@@ -234,7 +234,7 @@ export class PluggyClient extends BaseApi {
    * @returns {ScrResponse} the SCR data for the Item's document
    */
   async fetchItemScr(itemId: string, options: ScrFilters = {}): Promise<ScrResponse> {
-    return await this.createGetRequest(`items/${itemId}/scr`, { ...options })
+    return await this.createGetRequest(`items/${this.pathId(itemId)}/scr`, { ...options })
   }
 
   /**
@@ -251,7 +251,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Account} an account object
    */
   async fetchAccount(id: string): Promise<Account> {
-    return await this.createGetRequest(`accounts/${id}`)
+    return await this.createGetRequest(`accounts/${this.pathId(id)}`)
   }
 
   /**
@@ -261,7 +261,7 @@ export class PluggyClient extends BaseApi {
    * @returns {AccountBalance} an account balance object
    */
   async fetchAccountBalance(id: string): Promise<AccountBalance> {
-    return await this.createGetRequest(`accounts/${id}/balance`)
+    return await this.createGetRequest(`accounts/${this.pathId(id)}/balance`)
   }
 
   /**
@@ -333,7 +333,7 @@ export class PluggyClient extends BaseApi {
    * @returns {PageResponse<AccountStatement[]>} object which contains the Account statements list and related paging data
    */
   async fetchAccountStatements(accountId: string): Promise<PageResponse<AccountStatement>> {
-    return await this.createGetRequest(`accounts/${accountId}/statements`)
+    return await this.createGetRequest(`accounts/${this.pathId(accountId)}/statements`)
   }
 
   /**
@@ -343,7 +343,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Transaction} updated transaction object
    */
   async updateTransactionCategory(id: string, categoryId: string): Promise<Transaction> {
-    return await this.createPatchRequest(`transactions/${id}`, null, {
+    return await this.createPatchRequest(`transactions/${this.pathId(id)}`, null, {
       categoryId,
     })
   }
@@ -354,7 +354,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Transaction} an transaction object
    */
   async fetchTransaction(id: string): Promise<Transaction> {
-    return await this.createGetRequest(`transactions/${id}`)
+    return await this.createGetRequest(`transactions/${this.pathId(id)}`)
   }
 
   /**
@@ -381,7 +381,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Investment} an investment object
    */
   async fetchInvestment(id: string): Promise<Investment> {
-    return await this.createGetRequest(`investments/${id}`)
+    return await this.createGetRequest(`investments/${this.pathId(id)}`)
   }
 
   /**
@@ -395,7 +395,7 @@ export class PluggyClient extends BaseApi {
     investmentId: string,
     options: TransactionFilters = {}
   ): Promise<PageResponse<InvestmentTransaction>> {
-    return await this.createGetRequest(`investments/${investmentId}/transactions`, {
+    return await this.createGetRequest(`investments/${this.pathId(investmentId)}/transactions`, {
       ...options,
       investmentId,
     })
@@ -450,7 +450,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Promise<Loan>} - loan object, if found
    */
   async fetchLoan(id: string): Promise<Loan> {
-    return await this.createGetRequest(`loans/${id}`)
+    return await this.createGetRequest(`loans/${this.pathId(id)}`)
   }
 
   /**
@@ -460,7 +460,10 @@ export class PluggyClient extends BaseApi {
    * @param {ConsentFilters} options - request search filters
    * @returns {Promise<PageResponse<Consent>>} - paged response of consents
    */
-  async fetchConsents(itemId: string, options: ConsentFilters = {}): Promise<PageResponse<Consent>> {
+  async fetchConsents(
+    itemId: string,
+    options: ConsentFilters = {}
+  ): Promise<PageResponse<Consent>> {
     return await this.createGetRequest('consents', { ...options, itemId })
   }
 
@@ -471,7 +474,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Promise<Consent>} - consent object, if found
    */
   async fetchConsent(id: string): Promise<Consent> {
-    return await this.createGetRequest(`consents/${id}`)
+    return await this.createGetRequest(`consents/${this.pathId(id)}`)
   }
 
   /**
@@ -479,7 +482,7 @@ export class PluggyClient extends BaseApi {
    * @returns {IdentityResponse} an identity object
    */
   async fetchIdentity(id: string): Promise<IdentityResponse> {
-    return await this.createGetRequest(`identity/${id}`)
+    return await this.createGetRequest(`identity/${this.pathId(id)}`)
   }
 
   /**
@@ -507,7 +510,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Promise<CreditCardBills>} - credit card bill object, if found
    */
   async fetchCreditCardBill(id: string): Promise<CreditCardBills> {
-    return await this.createGetRequest(`bills/${id}`)
+    return await this.createGetRequest(`bills/${this.pathId(id)}`)
   }
 
   /**
@@ -523,7 +526,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Category} a category object
    */
   async fetchCategory(id: string): Promise<Category> {
-    return await this.createGetRequest(`categories/${id}`)
+    return await this.createGetRequest(`categories/${this.pathId(id)}`)
   }
 
   /**
@@ -548,7 +551,7 @@ export class PluggyClient extends BaseApi {
    * @param id - the category rule id
    */
   async deleteCategoryRule(id: string): Promise<void> {
-    await this.createDeleteRequest(`categories/rules/${id}`)
+    await this.createDeleteRequest(`categories/rules/${this.pathId(id)}`)
   }
 
   /**
@@ -603,7 +606,7 @@ export class PluggyClient extends BaseApi {
    * @returns {IssuedBoleto} the issued boleto
    */
   async fetchBoleto(id: string): Promise<IssuedBoleto> {
-    return await this.createGetRequest(`boletos/${id}`)
+    return await this.createGetRequest(`boletos/${this.pathId(id)}`)
   }
 
   /**
@@ -614,7 +617,7 @@ export class PluggyClient extends BaseApi {
    * @returns {IssuedBoleto} the cancelled boleto
    */
   async cancelBoleto(id: string): Promise<IssuedBoleto> {
-    return await this.createPostRequest(`boletos/${id}/cancel`)
+    return await this.createPostRequest(`boletos/${this.pathId(id)}/cancel`)
   }
 
   /**
@@ -622,7 +625,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Webhook} a webhook object
    */
   async fetchWebhook(id: string): Promise<Webhook> {
-    return await this.createGetRequest(`webhooks/${id}`)
+    return await this.createGetRequest(`webhooks/${this.pathId(id)}`)
   }
 
   /**
@@ -660,14 +663,14 @@ export class PluggyClient extends BaseApi {
    * @returns {Webhook} The webhook updated
    */
   async updateWebhook(id: string, updatedWebhookParams: UpdateWebhook): Promise<Webhook> {
-    return await this.createPatchRequest(`webhooks/${id}`, null, updatedWebhookParams)
+    return await this.createPatchRequest(`webhooks/${this.pathId(id)}`, null, updatedWebhookParams)
   }
 
   /**
    * Deletes a Webhook
    */
   async deleteWebhook(id: string): Promise<void> {
-    return await this.createDeleteRequest(`webhooks/${id}`)
+    return await this.createDeleteRequest(`webhooks/${this.pathId(id)}`)
   }
 
   /**
