@@ -17,6 +17,7 @@ export type ClientParams = {
   clientId: string
   /** Pluggy Client Secret */
   clientSecret: string
+  /** API base URL. Takes precedence over the PLUGGY_API_URL environment variable. */
   baseUrl?: string
 }
 
@@ -44,9 +45,9 @@ export class BaseApi {
   protected serviceInstance: Got
 
   constructor(params: ClientParams) {
-    const { clientId, clientSecret } = params
+    const { clientId, clientSecret, baseUrl } = params
     const { PLUGGY_API_URL } = process.env
-    this.baseUrl = PLUGGY_API_URL || 'https://api.pluggy.ai'
+    this.baseUrl = (baseUrl || PLUGGY_API_URL || 'https://api.pluggy.ai').replace(/\/+$/, '')
 
     if (clientSecret && clientId) {
       this.clientId = clientId
