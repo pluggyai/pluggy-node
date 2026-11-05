@@ -144,10 +144,7 @@ export class BaseApi {
       return body
     } catch (error) {
       if (error instanceof HTTPError) {
-        console.error(
-          `[Pluggy SDK] HTTP request failed: ${error.message || ''}`,
-          error.response.body
-        )
+        console.error(`[Pluggy SDK] HTTP request failed: ${error.message || ''}`)
         return Promise.reject(error.response.body)
       }
       return Promise.reject(error)
@@ -210,16 +207,13 @@ export class BaseApi {
       })
 
       if (statusCode < 200 || statusCode >= 300) {
-        return Promise.reject(body)
+        return Promise.reject(responseBody)
       }
 
       return responseBody
     } catch (error) {
       if (error instanceof HTTPError) {
-        console.error(
-          `[Pluggy SDK] HTTP request failed: ${error.message || ''}`,
-          error.response.body
-        )
+        console.error(`[Pluggy SDK] HTTP request failed: ${error.message || ''}`)
         return Promise.reject(error.response.body)
       }
       return Promise.reject(error)
