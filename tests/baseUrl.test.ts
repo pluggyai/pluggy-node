@@ -2,15 +2,19 @@ import nock from 'nock'
 import { MOCK_API_KEY } from './utils'
 import { PluggyClient } from '../src/client'
 
-const ENV_URL = 'https://env-host.example.com'
-const PARAM_URL = 'https://param-host.example.com'
+// The candidates differ by path prefix on the API host instead of by hostname. With other
+// hostnames, nock refused these requests as disallowed net connections when the whole suite ran.
 const DEFAULT_URL = 'https://api.pluggy.ai'
+const ENV_PREFIX = '/from-env'
+const PARAM_PREFIX = '/from-param'
+const ENV_URL = `${DEFAULT_URL}${ENV_PREFIX}`
+const PARAM_URL = `${DEFAULT_URL}${PARAM_PREFIX}`
 
-function mockApi(origin: string): nock.Scope {
-  return nock(origin)
-    .post('/auth')
+function mockApi(prefix = ''): nock.Scope {
+  return nock(DEFAULT_URL)
+    .post(`${prefix}/auth`)
     .reply(200, { apiKey: MOCK_API_KEY })
-    .get('/connectors/1')
+    .get(`${prefix}/connectors/1`)
     .reply(200, { id: 1 })
 }
 
@@ -30,8 +34,8 @@ describe('base URL', () => {
   const credentials = { clientId: 'dummy-id', clientSecret: 'dummy-secret' }
 
   it('sends the credentials to baseUrl, over the environment variable', async () => {
-    const param = mockApi(PARAM_URL)
-    const env = mockApi(ENV_URL)
+    const param = mockApi(PARAM_PREFIX)
+    const env = mockApi(ENV_PREFIX)
 
     await new PluggyClient({ ...credentials, baseUrl: PARAM_URL }).fetchConnector(1)
 
@@ -40,10 +44,10 @@ describe('base URL', () => {
   })
 
   it('applies baseUrl to the payments client too', async () => {
-    const scope = nock(PARAM_URL)
-      .post('/auth')
+    const scope = nock(DEFAULT_URL)
+      .post(`${PARAM_PREFIX}/auth`)
       .reply(200, { apiKey: MOCK_API_KEY })
-      .get('/payments/requests/dummy-request')
+      .get(`${PARAM_PREFIX}/payments/requests/dummy-request`)
       .reply(200, { id: 'dummy-request' })
 
     await new PluggyClient({ ...credentials, baseUrl: PARAM_URL }).payments.fetchPaymentRequest(
@@ -54,7 +58,7 @@ describe('base URL', () => {
   })
 
   it('tolerates a trailing slash on baseUrl', async () => {
-    const scope = mockApi(PARAM_URL)
+    const scope = mockApi(PARAM_PREFIX)
 
     await new PluggyClient({ ...credentials, baseUrl: `${PARAM_URL}/` }).fetchConnector(1)
 
@@ -62,7 +66,7 @@ describe('base URL', () => {
   })
 
   it('uses the environment variable when baseUrl is undefined', async () => {
-    const env = mockApi(ENV_URL)
+    const env = mockApi(ENV_PREFIX)
 
     await new PluggyClient({ ...credentials, baseUrl: undefined }).fetchConnector(1)
 
@@ -71,7 +75,7 @@ describe('base URL', () => {
 
   it('uses the production API when neither is set', async () => {
     delete process.env.PLUGGY_API_URL
-    const production = mockApi(DEFAULT_URL)
+    const production = mockApi()
 
     await new PluggyClient(credentials).fetchConnector(1)
 
