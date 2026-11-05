@@ -1,88 +1,49 @@
-import nock from 'nock'
-import { MOCK_API_KEY, setupAuth } from './utils'
+import { Got, RequestError, RetryObject } from 'got'
+import { retryDelay } from '../src/baseApi'
 import { PluggyClient } from '../src/client'
 
-const API_URL = process.env.PLUGGY_API_URL!
-const CONNECTION_RESET = Object.assign(new Error('socket hang up'), { code: 'ECONNRESET' })
-const TIMED_OUT = Object.assign(new Error('Timeout awaiting request'), { code: 'ETIMEDOUT' })
+// Delay got computed from its own rules, which retryDelay keeps or discards.
+const GOT_DELAY = 1000
 
-const newClient = (): PluggyClient =>
-  new PluggyClient({ clientId: 'dummy-id', clientSecret: 'dummy-secret' })
+// Network errors are not simulated through nock here: nock's replyWithError hangs when another test
+// file using nock ran earlier in the same Jest worker.
+function attempt(method: string, statusCode?: number): RetryObject {
+  const error = {
+    code: statusCode ? undefined : 'ECONNRESET',
+    options: { method },
+    response: statusCode ? { statusCode } : undefined,
+  }
+  return {
+    attemptCount: 1,
+    retryOptions: undefined,
+    error: (error as unknown) as RequestError,
+    computedValue: GOT_DELAY,
+  }
+}
 
-describe('retries after a network error', () => {
-  beforeEach(() => {
-    nock.cleanAll()
-    nock.disableNetConnect()
+describe('retryDelay', () => {
+  it.each(['POST', 'PUT', 'PATCH', 'DELETE'])(
+    'does not resend a %s after a network error or timeout',
+    method => {
+      expect(retryDelay(attempt(method))).toBe(0)
+    }
+  )
+
+  it('resends a GET after a network error or timeout', () => {
+    expect(retryDelay(attempt('GET'))).toBe(GOT_DELAY)
   })
 
-  describe('on writes, where the API may already have processed the request', () => {
-    beforeEach(() => setupAuth())
+  it.each(['GET', 'POST', 'PATCH', 'DELETE'])(
+    'keeps the delay for a %s answered with 429',
+    method => {
+      expect(retryDelay(attempt(method, 429))).toBe(GOT_DELAY)
+    }
+  )
 
-    const payment = { preauthorizationId: 'dummy-pre', recipientId: 'dummy-rcp', amount: 1 }
+  it('is the policy the client requests use', () => {
+    const client = new PluggyClient({ clientId: 'dummy-id', clientSecret: 'dummy-secret' })
+    const instance = ((client as unknown) as { getServiceInstance(): Got }).getServiceInstance()
 
-    it.each([
-      [
-        'POST',
-        CONNECTION_RESET,
-        (): nock.Interceptor => nock(API_URL).post('/smart-transfers/payments'),
-        (client: PluggyClient): Promise<unknown> =>
-          client.payments.createSmartTransferPayment(payment),
-      ],
-      [
-        'POST',
-        TIMED_OUT,
-        (): nock.Interceptor => nock(API_URL).post('/smart-transfers/payments'),
-        (client: PluggyClient): Promise<unknown> =>
-          client.payments.createSmartTransferPayment(payment),
-      ],
-      [
-        'PATCH',
-        CONNECTION_RESET,
-        (): nock.Interceptor => nock(API_URL).patch('/items/dummy-item'),
-        (client: PluggyClient): Promise<unknown> => client.updateItem('dummy-item'),
-      ],
-      [
-        'DELETE',
-        CONNECTION_RESET,
-        (): nock.Interceptor => nock(API_URL).delete('/items/dummy-item'),
-        (client: PluggyClient): Promise<unknown> => client.deleteItem('dummy-item'),
-      ],
-    ])(
-      'rejects a %s after a network error without sending it again',
-      async (_method, error, route, call) => {
-        route().replyWithError(error)
-        const secondSend = route().reply(200, { id: 'second-send' })
-
-        await expect(call(newClient())).rejects.toMatchObject({ code: error.code })
-
-        expect(secondSend.isDone()).toBe(false)
-      }
-    )
-  })
-
-  it('still retries a GET', async () => {
-    setupAuth()
-    nock(API_URL)
-      .get('/items/dummy-item')
-      .replyWithError(CONNECTION_RESET)
-    nock(API_URL)
-      .get('/items/dummy-item')
-      .reply(200, { id: 'dummy-item' })
-
-    await expect(newClient().fetchItem('dummy-item')).resolves.toEqual({ id: 'dummy-item' })
-  })
-
-  it('still retries the token exchange, which only mints a key', async () => {
-    nock(API_URL)
-      .post('/auth')
-      .replyWithError(CONNECTION_RESET)
-    nock(API_URL)
-      .post('/auth')
-      .reply(200, { apiKey: MOCK_API_KEY })
-    nock(API_URL)
-      .get('/items/dummy-item')
-      .reply(200, { id: 'dummy-item' })
-
-    await expect(newClient().fetchItem('dummy-item')).resolves.toEqual({ id: 'dummy-item' })
+    expect(instance.defaults.options.retry.calculateDelay).toBe(retryDelay)
   })
 })

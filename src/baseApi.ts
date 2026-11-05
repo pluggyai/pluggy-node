@@ -1,4 +1,4 @@
-import got, { Got, HTTPError, Method } from 'got'
+import got, { Got, HTTPError, Method, RetryObject } from 'got'
 import * as jwt from 'jsonwebtoken'
 import { deserializeJSONWithDates } from './transforms'
 
@@ -37,6 +37,14 @@ export function assertSafeEndpoint(endpoint: string): void {
 }
 
 export class BaseApi {
+/**
+ * Retry delay for API requests. got also retries network errors and timeouts by default. The API
+ * may already have processed a write that failed that way, so only a 429 or a read is sent again.
+ */
+export function retryDelay({ error, computedValue }: RetryObject): number {
+  return error.response || error.options.method === 'GET' ? computedValue : 0
+}
+
   protected apiKey: string
   protected clientId: string
   protected clientSecret: string
@@ -77,10 +85,7 @@ export class BaseApi {
           limit: 2,
           methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
           statusCodes: [429],
-          // got also retries network errors and timeouts by default. The API may already have
-          // processed a write that failed that way, so only a 429 or a read is sent again.
-          calculateDelay: ({ error, computedValue }) =>
-            error.response || error.options.method === 'GET' ? computedValue : 0,
+          calculateDelay: retryDelay,
         },
         hooks: {
           // got keeps custom headers such as X-API-KEY and JSON bodies across redirects, even to
