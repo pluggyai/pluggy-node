@@ -34,25 +34,20 @@ minimumReleaseAgeIgnoreMissingTime: true
 # omitted here; re-add it the first time we pull one in.)
 #
 minimumReleaseAgeExclude:
-  # Remove after 2026-10-29 — GHSA-4qv8-2p9j-2685, GHSA-f72v-6w45-q472,
-  # GHSA-xjj6-f33q-929c, GHSA-4w7w-5xrc-9h26, GHSA-2m5v-pch6-74hx,
-  # GHSA-qrxm-fqhp-jwvm, GHSA-9fm3-97px-rjf6, GHSA-55wc-3pg8-jfw6 (HIGH),
-  # fixed in 7.30.1 / 6.29.1 (published 2026-10-15). Reaches us through
-  # semantic-release > @semantic-release/github (^7.0.0) and
-  # @semantic-release/npm > @actions/core > @actions/http-client (^6.23.0),
-  # whose ranges pick them up. Both versions go in one entry: pnpm keys
-  # the list by package name, so a second `undici@` line is ignored.
-  - undici@7.30.1 || 6.29.1
-  # Remove after 2026-10-20 — GHSA-8r5x-fm3f-whwj, GHSA-p8wg-vrv2-v86f
-  # (CRITICAL) and GHSA-xw65-4hp5-5hc7, fixed only in 4.7.10 (published
-  # 2026-10-05). Reaches us through semantic-release >
-  # conventional-changelog-writer, whose ^4.7.7 range picks it up.
-  - handlebars@4.7.10
-  # Remove after 2026-10-18 — GHSA-ch52-4w7c-c8xp (HIGH), fixed in 4.3.0
-  # (published 2026-10-04). Reaches us through got@11 > cacheable-request,
-  # whose ^4.0.0 range picks it up; got 12+ is ESM-only, so the parent
-  # cannot move.
-  - http-cache-semantics@4.3.0
+  # Remove after 2026-11-11 — GHSA-3g3m-2fjr-6pw4 (MODERATE), fixed in
+  # glob 14.0.2 (published 2026-10-27). Jest 30.5.2 is already the latest
+  # release but still declares ^13.0.6, so the fixed major is forced below.
+  # path-scurry 3.0.0 is a new dependency of the fixed glob major and was
+  # published the same day.
+  - glob@14.0.2
+  - path-scurry@3.0.0
+  # Remove after 2026-11-11 — GHSA-g3hv-75wg-m249 (MODERATE), fixed in
+  # minimatch 11.0.1 (published 2026-10-27). The latest ESLint and
+  # typescript-eslint parents still declare ^10.x, so the fixed major is
+  # forced below. @isaacs/nonrecursive-glob-match 1.0.1 is a new dependency
+  # of that fixed major and was published the same day.
+  - minimatch@11.0.1
+  - '@isaacs/nonrecursive-glob-match@1.0.1'
 
 # With exact pins in `package.json` (enforced by `savePrefix: ""`
 # below) there is only one version that satisfies each dep, so this
@@ -176,6 +171,17 @@ overrides:
   # brace-expansion pins. Their in-range versions already carry every
   # fix those pins existed for.
   #
+  # glob — AbortSignal cancellation bypass that can continue filesystem
+  # traversal after timeout (GHSA-3g3m-2fjr-6pw4, MODERATE). The vulnerable
+  # 10.x and 13.x lines reach us through Jest 30.5.2, which is already the
+  # latest release and still requires ^13.0.6. Force the first fixed version
+  # until Jest moves to the 14.x line.
+  glob: '14.0.2'
+  # minimatch — globparts amplification DoS (GHSA-g3hv-75wg-m249,
+  # MODERATE). ESLint 10.13.0 and typescript-eslint 8.72.0 are the latest
+  # parents but still require ^10.x; glob 14 also uses the 11.x API. Force
+  # the first fixed version until every parent accepts it naturally.
+  minimatch: '11.0.1'
   # js-yaml — two DoS advisories, both reaching us only through the
   # jest tree (@istanbuljs/load-nyc-config, unmaintained and pinned to
   # ^3.13.1) and the semantic-release tree (cosmiconfig@9, ^4.1.0).

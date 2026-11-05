@@ -53,19 +53,19 @@
     "@types/jest": "30.0.0",
     "@types/jsonwebtoken": "9.0.10",
     "@types/node": "22.19.17",
-    "@typescript-eslint/eslint-plugin": "8.70.1",
-    "@typescript-eslint/parser": "8.70.1",
+    "@typescript-eslint/eslint-plugin": "8.72.0",
+    "@typescript-eslint/parser": "8.72.0",
     "dotenv": "17.4.2",
-    "eslint": "10.11.0",
+    "eslint": "10.13.0",
     "eslint-plugin-n": "17.24.0",
     "globals": "17.6.0",
     "jest": "30.5.2",
     "nock": "14.0.15",
     "prettier": "1.19.1",
     "semantic-release": "25.0.9",
-    "ts-jest": "29.4.9",
+    "ts-jest": "29.4.15",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.70.1"
+    "typescript-eslint": "8.72.0"
   },
   "release": {
     "branches": [
