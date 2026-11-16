@@ -395,10 +395,11 @@ export class PluggyClient extends BaseApi {
     investmentId: string,
     options: TransactionFilters = {}
   ): Promise<PageResponse<InvestmentTransaction>> {
-    return await this.createGetRequest(`investments/${this.pathId(investmentId)}/transactions`, {
-      ...options,
-      investmentId,
-    })
+    // The investment id already goes in the path; repeating it as a query param is redundant.
+    return await this.createGetRequest(
+      `investments/${this.pathId(investmentId)}/transactions`,
+      options
+    )
   }
 
   /**
