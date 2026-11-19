@@ -157,6 +157,46 @@ const webhooks = await client.fetchWebhooks()
 await client.deleteWebhook(webhook.id)
 ```
 
+### Verifying webhook signatures
+
+When webhook signing is enabled for your application, every notification carries an
+`X-Pluggy-Signature` header (`t=<timestamp>,v1=<signature>`). Verify it against the **raw**
+request body (before any JSON parsing) with the signing secret shown in the Dashboard. Pass a
+list of secrets to keep accepting the old one while you rotate it.
+
+```ts
+import express from 'express'
+import { verifyWebhookSignature, WEBHOOK_SIGNATURE_HEADER } from 'pluggy-sdk'
+
+const app = express()
+
+app.post('/webhooks/pluggy', express.raw({ type: 'application/json' }), (req, res) => {
+  const valid = verifyWebhookSignature({
+    payload: req.body, // Buffer with the raw body
+    header: req.get(WEBHOOK_SIGNATURE_HEADER),
+    // unset entries are skipped, so the old secret can simply be removed after the rotation
+    secrets: [process.env.PLUGGY_WEBHOOK_SECRET, process.env.PLUGGY_WEBHOOK_SECRET_OLD],
+    // toleranceInSeconds: 300 (default)
+  })
+  if (!valid) {
+    return res.sendStatus(401)
+  }
+
+  const event = JSON.parse(req.body.toString('utf8'))
+  // handle the event...
+  res.sendStatus(200)
+})
+```
+
+`verifyWebhookSignature` returns `true` only when the header parses, its timestamp is within the
+tolerance (5 minutes by default, in either direction) and the signature matches one of the
+secrets; it never throws. Use `validateWebhookSignature` instead to get the reason of a failure
+(`missing_header`, `malformed_header`, `timestamp_out_of_tolerance`, `signature_mismatch`,
+`no_secret`, `invalid_payload`) for your logs.
+
+See the [webhook security guide](https://docs.pluggy.ai/docs/developer-tools/webhook-security)
+for details.
+
 ## Payments API examples
 
 Use `PluggyPaymentsClient` for payment initiation features.
