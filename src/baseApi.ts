@@ -131,10 +131,12 @@ export class BaseApi {
 
   protected async createGetRequest<T>(endpoint: string, params?: QueryParameters): Promise<T> {
     assertSafeEndpoint(endpoint)
-    const apiKey = await this.getApiKey()
     const url = `${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`
 
     try {
+      // Inside the try so a failed POST /auth (e.g. a 403 CLIENT_IP_NOT_ALLOWED) rejects with the
+      // API error body, like any other request, instead of a raw HTTPError.
+      const apiKey = await this.getApiKey()
       const { statusCode, body } = await this.getServiceInstance()<T>(url, {
         headers: {
           ...this.defaultHeaders,
@@ -197,13 +199,14 @@ export class BaseApi {
     body?: Record<string, unknown>
   ): Promise<T> {
     assertSafeEndpoint(endpoint)
-    const apiKey = await this.getApiKey()
     const url = `${this.baseUrl}/${endpoint}${this.mapToQueryString(params)}`
     if (body) {
       Object.keys(body).forEach(key => (body[key] === undefined ? delete body[key] : {}))
     }
 
     try {
+      // See createGetRequest: a failed POST /auth rejects with the API error body.
+      const apiKey = await this.getApiKey()
       const { statusCode, body: responseBody } = await this.getServiceInstance()<T>(url, {
         method,
         headers: {
