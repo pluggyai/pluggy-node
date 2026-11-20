@@ -135,7 +135,6 @@ export type PaymentRequestPixBiometricDetails = {
   enrollment: PixBiometricEnrollmentSummary | null
 }
 
-/** Pix por biometria has no sandbox, so `isSandbox` is not accepted. */
 export type CreatePaymentRequestPixBiometric = Pick<
   CreatePaymentRequest,
   'amount' | 'description' | 'recipientId' | 'customerId' | 'callbackUrls' | 'clientPaymentId'
@@ -144,4 +143,9 @@ export type CreatePaymentRequestPixBiometric = Pick<
   recipientId: string
   /** Offer the payer to also share their account balance and overdraft limit while the link lasts. */
   linkedJourney?: boolean
+  /**
+   * Create the request in sandbox mode: the payer links a device and pays on Pluggy's sandbox bank,
+   * with no real account and no money. Sandbox and production links never mix. Default: false.
+   */
+  isSandbox?: boolean
 }

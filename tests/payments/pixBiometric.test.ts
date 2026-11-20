@@ -37,6 +37,26 @@ describe('PluggyPaymentsClient — PIX por biometria', () => {
     expect(mock.isDone()).toBe(true)
   })
 
+  it('createPaymentRequestPixBiometric sends isSandbox when asked', async () => {
+    const mock = nock(API_URL)
+      .post('/payments/requests/pix-biometric', {
+        amount: 10,
+        recipientId: 'rec-1',
+        isSandbox: true,
+      })
+      .reply(200, mockAs<PaymentRequest>({ id: 'pr-2', isSandbox: true }))
+
+    const client = createPaymentsClient()
+    const result = await client.createPaymentRequestPixBiometric({
+      amount: 10,
+      recipientId: 'rec-1',
+      isSandbox: true,
+    })
+
+    expect(result.isSandbox).toBe(true)
+    expect(mock.isDone()).toBe(true)
+  })
+
   it('fetchPixBiometricEnrollments sends the filters as query', async () => {
     const mock = nock(API_URL)
       .get('/pix-biometric/enrollments')
