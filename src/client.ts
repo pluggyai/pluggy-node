@@ -623,6 +623,9 @@ export class PluggyClient extends BaseApi {
 
   /**
    * Fetch a single webhook
+   *
+   * Header values come back masked as `****` (keys kept) unless the team has enabled webhook
+   * management with an API key; deliveries still send the real values.
    * @returns {Webhook} a webhook object
    */
   async fetchWebhook(id: string): Promise<Webhook> {
@@ -631,6 +634,9 @@ export class PluggyClient extends BaseApi {
 
   /**
    * Fetch all available webhooks
+   *
+   * Header values come back masked as `****` (keys kept) unless the team has enabled webhook
+   * management with an API key; deliveries still send the real values.
    * @returns {Webhook[]} a paging response of webhooks
    */
   async fetchWebhooks(): Promise<PageResponse<Webhook>> {
@@ -639,6 +645,10 @@ export class PluggyClient extends BaseApi {
 
   /**
    * Creates a Webhook
+   *
+   * ⚠️ Opt-in. Managing webhooks with an API key is disabled by default; teams without it enabled
+   * get `403 WEBHOOKS_API_FEATURE_NOT_ENABLED`. Configure webhooks in the Pluggy Dashboard
+   * (Applications → Configure → Webhooks), or ask Pluggy support to enable API management.
    * @param webhookParams - The webhook params to create, this includes:
    * - url: The url where will receive notifications
    * - event: The event to listen for
@@ -659,6 +669,10 @@ export class PluggyClient extends BaseApi {
 
   /**
    * Updates a Webhook
+   *
+   * ⚠️ Opt-in. Managing webhooks with an API key is disabled by default; teams without it enabled
+   * get `403 WEBHOOKS_API_FEATURE_NOT_ENABLED`. Configure webhooks in the Pluggy Dashboard
+   * (Applications → Configure → Webhooks), or ask Pluggy support to enable API management.
    * @param id - The Webhook ID
    * @param updatedWebhookParams - The webhook params to update
    * @returns {Webhook} The webhook updated
@@ -669,6 +683,10 @@ export class PluggyClient extends BaseApi {
 
   /**
    * Deletes a Webhook
+   *
+   * ⚠️ Opt-in. Managing webhooks with an API key is disabled by default; teams without it enabled
+   * get `403 WEBHOOKS_API_FEATURE_NOT_ENABLED`. Configure webhooks in the Pluggy Dashboard
+   * (Applications → Configure → Webhooks), or ask Pluggy support to enable API management.
    */
   async deleteWebhook(id: string): Promise<void> {
     return await this.createDeleteRequest(`webhooks/${this.pathId(id)}`)

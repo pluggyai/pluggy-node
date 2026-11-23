@@ -146,11 +146,10 @@ const all = await client.fetchAllTransactions(account.id, {
 
 ### Webhooks
 
+> ⚠️ **Opt-in.** Creating, updating or deleting webhooks with an API key is disabled by default, so a leaked client secret cannot redirect or delete your webhooks. Teams without it enabled get `403 WEBHOOKS_API_FEATURE_NOT_ENABLED`: configure webhooks in the Pluggy Dashboard (Applications → Configure → Webhooks), or contact Pluggy support to enable API management. `fetchWebhook` / `fetchWebhooks` keep working, but header values come back masked as `****` (deliveries still send the real values). Passing `webhookUrl` when creating an item, connect token or payment request is not affected.
+
 ```ts
-const webhook = await client.createWebhook({
-  url: 'https://example.com/webhooks/pluggy',
-  event: 'item.created',
-})
+const webhook = await client.createWebhook('item/created', 'https://example.com/webhooks/pluggy')
 
 const webhooks = await client.fetchWebhooks()
 
