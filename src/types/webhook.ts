@@ -57,6 +57,9 @@ export type Webhook = {
   updatedAt: Date
   /** Time of when the webhook was disabled */
   disabledAt: Date | null
+  /** Headers sent with each notification. Values are masked as `****` (keys kept) unless the
+   * team has enabled webhook management with an API key; deliveries always send the real values. */
+  headers?: Record<string, string>
 }
 
 export type CreateWebhook = {
