@@ -160,6 +160,8 @@ async deleteModel(id: string): Promise<void> {
 
 ## Build and Test
 
+Pull requests to `master` run `.github/workflows/build.yml` (install, supply-chain audit, build, unit tests; no secrets). The `main` ruleset requires two status checks to merge: `build` and `Validate Conventional Commits title`. They are matched by job name, so renaming either job means updating the ruleset in the same change, or every PR stays blocked. Integration tests run only on the daily schedule and in the release.
+
 This repo uses **pnpm 11** (managed via corepack — the `packageManager` field in `package.json` pins the version). Development requires **Node 24+** (declared in `devEngines`); the published package itself supports **Node 12+** for consumers (`engines.node`).
 
 ```bash
