@@ -91,8 +91,9 @@ describe('requests with caller-provided ids', () => {
 })
 
 describe('an id that holds a path separator', () => {
-  const PLAIN_ID = 'plainid'
-  const ID_WITH_SLASH = 'plain/id'
+  // Digits, so methods that take numeric ids (categories, connectors) send it too
+  const PLAIN_ID = '1234567'
+  const ID_WITH_SLASH = '1234/567'
   const FILLER = 'filler'
   // No SDK method takes more than three arguments, and none puts more than two ids in a path.
   const POSITIONS = [0, 1, 2]
