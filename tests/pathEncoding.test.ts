@@ -68,6 +68,25 @@ describe('requests with caller-provided ids', () => {
     expect(mock.isDone()).toBeFalsy()
   })
 
+  // got normalizes the URL it is given: `\\` becomes `/` and dot segments resolve, encoded or not.
+  it.each([
+    'x\\..\\..\\categories\\rules',
+    'x\\y',
+    '.',
+    '..',
+    '%2e',
+    '%2e%2e',
+    '..%2fcategories%2frules',
+    '',
+  ])('refuses the id %p, which got would resolve to another route', async id => {
+    const mock = nock(API_URL)
+      .get(/.*/)
+      .reply(200, {})
+
+    await expect(client.fetchItem(id)).rejects.toThrow('unsafe endpoint')
+    expect(mock.isDone()).toBeFalsy()
+  })
+
   it('sends the identity itemId as an encoded query parameter', async () => {
     const mock = nock(API_URL)
       .get('/identity')
@@ -91,8 +110,9 @@ describe('requests with caller-provided ids', () => {
 })
 
 describe('an id that holds a path separator', () => {
-  const PLAIN_ID = 'plainid'
-  const ID_WITH_SLASH = 'plain/id'
+  // Digits, so methods that take numeric ids (categories, connectors) send it too
+  const PLAIN_ID = '1234567'
+  const ID_WITH_SLASH = '1234/567'
   const FILLER = 'filler'
   // No SDK method takes more than three arguments, and none puts more than two ids in a path.
   const POSITIONS = [0, 1, 2]

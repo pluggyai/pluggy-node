@@ -43,6 +43,9 @@ import {
   PixBiometricEnrollmentsFilters,
 } from './types'
 
+/** Other routes under `payments/recipients/`, never a recipient id */
+const RESERVED_RECIPIENT_PATHS = ['institutions']
+
 /**
  * Creates a new client instance for interacting with Pluggy API for the Payments API
  * @constructor
@@ -171,7 +174,9 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {PaymentRecipient} PaymentRecipient object
    */
   async fetchPaymentRecipient(id: string): Promise<PaymentRecipient> {
-    return await this.createGetRequest(`payments/recipients/${this.pathId(id)}`)
+    return await this.createGetRequest(
+      `payments/recipients/${this.pathId(id, RESERVED_RECIPIENT_PATHS)}`
+    )
   }
 
   /**
@@ -188,7 +193,9 @@ export class PluggyPaymentsClient extends BaseApi {
    * Delete a payment recipient
    */
   async deletePaymentRecipient(id: string): Promise<void> {
-    await this.createDeleteRequest(`payments/recipients/${this.pathId(id)}`)
+    await this.createDeleteRequest(
+      `payments/recipients/${this.pathId(id, RESERVED_RECIPIENT_PATHS)}`
+    )
   }
 
   /**
@@ -201,7 +208,11 @@ export class PluggyPaymentsClient extends BaseApi {
     id: string,
     payload: UpdatePaymentRecipient
   ): Promise<PaymentRecipient> {
-    return await this.createPatchRequest(`payments/recipients/${this.pathId(id)}`, null, payload)
+    return await this.createPatchRequest(
+      `payments/recipients/${this.pathId(id, RESERVED_RECIPIENT_PATHS)}`,
+      null,
+      payload
+    )
   }
 
   /**

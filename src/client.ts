@@ -74,7 +74,7 @@ export class PluggyClient extends BaseApi {
    * @returns {Connector} a connector object
    */
   async fetchConnector(id: number): Promise<Connector> {
-    return await this.createGetRequest(`connectors/${this.pathId(id)}`)
+    return await this.createGetRequest(`connectors/${this.numericPathId(id)}`)
   }
 
   /**
@@ -145,7 +145,11 @@ export class PluggyClient extends BaseApi {
    * @returns {ValidationResult} an object with the info of which parameters are wrong
    */
   async validateParameters(id: number, parameters: Parameters): Promise<ValidationResult> {
-    return await this.createPostRequest(`connectors/${this.pathId(id)}/validate`, null, parameters)
+    return await this.createPostRequest(
+      `connectors/${this.numericPathId(id)}/validate`,
+      null,
+      parameters
+    )
   }
 
   /**
@@ -524,10 +528,11 @@ export class PluggyClient extends BaseApi {
 
   /**
    * Fetch a single category
+   * @param id - the category id, a numeric string such as "01000000"; anything else is rejected
    * @returns {Category} a category object
    */
   async fetchCategory(id: string): Promise<Category> {
-    return await this.createGetRequest(`categories/${this.pathId(id)}`)
+    return await this.createGetRequest(`categories/${this.numericPathId(id)}`)
   }
 
   /**

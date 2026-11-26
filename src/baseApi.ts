@@ -252,9 +252,23 @@ export class BaseApi {
    * endpoint, so it cannot tell whether a `/` came from the path template or from an id. An id
    * holding one would reach another route under the same prefix.
    */
-  protected pathId(id: string | number): string {
+  protected pathId(id: string | number, reserved: readonly string[] = []): string {
     const value = String(id)
-    if (value.includes('/')) {
+    // Lowercased: the API matches routes case-insensitively, so `Institutions` hits the same route.
+    if (value.includes('/') || reserved.includes(value.toLowerCase())) {
+      throw new TypeError('Invalid resource id')
+    }
+    return value
+  }
+
+  /**
+   * `pathId` for resources whose ids are numeric (categories, connectors). The API serves other
+   * routes under the same prefix (`categories/rules`, `connectors/unavailable`), so a non-numeric
+   * id would fetch a different resource instead of failing.
+   */
+  protected numericPathId(id: string | number): string {
+    const value = String(id)
+    if (!/^\d+$/.test(value)) {
       throw new TypeError('Invalid resource id')
     }
     return value
