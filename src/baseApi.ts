@@ -254,7 +254,8 @@ export class BaseApi {
    */
   protected pathId(id: string | number, reserved: readonly string[] = []): string {
     const value = String(id)
-    if (value.includes('/') || reserved.includes(value)) {
+    // Lowercased: the API matches routes case-insensitively, so `Institutions` hits the same route.
+    if (value.includes('/') || reserved.includes(value.toLowerCase())) {
       throw new TypeError('Invalid resource id')
     }
     return value

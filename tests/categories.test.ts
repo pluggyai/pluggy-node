@@ -58,6 +58,17 @@ describe('ids that would reach another route under the same prefix', () => {
     expect(mock.isDone()).toBeFalsy()
   })
 
+  it('refuses the reserved segment in any letter case', async () => {
+    const mock = nock(API_URL)
+      .get(/.*/)
+      .reply(200, {})
+
+    await expect(client.payments.fetchPaymentRecipient('Institutions')).rejects.toThrow(
+      'Invalid resource id'
+    )
+    expect(mock.isDone()).toBeFalsy()
+  })
+
   it.each(['fetchPaymentRecipient', 'deletePaymentRecipient'] as const)(
     '%s refuses the reserved "institutions" segment',
     async method => {

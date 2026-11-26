@@ -68,6 +68,25 @@ describe('requests with caller-provided ids', () => {
     expect(mock.isDone()).toBeFalsy()
   })
 
+  // got normalizes the URL it is given: `\\` becomes `/` and dot segments resolve, encoded or not.
+  it.each([
+    'x\\..\\..\\categories\\rules',
+    'x\\y',
+    '.',
+    '..',
+    '%2e',
+    '%2e%2e',
+    '..%2fcategories%2frules',
+    '',
+  ])('refuses the id %p, which got would resolve to another route', async id => {
+    const mock = nock(API_URL)
+      .get(/.*/)
+      .reply(200, {})
+
+    await expect(client.fetchItem(id)).rejects.toThrow('unsafe endpoint')
+    expect(mock.isDone()).toBeFalsy()
+  })
+
   it('sends the identity itemId as an encoded query parameter', async () => {
     const mock = nock(API_URL)
       .get('/identity')
