@@ -241,6 +241,26 @@ try {
 }
 ```
 
+On an HTTP error the SDK rejects with the API error body (`ApiErrorResponse`: `code`, `codeDescription`, `message` and, for some errors, `data`). This includes a failure of the credentials exchange (`POST /auth`) the SDK makes on your behalf.
+
+### Request IP not allowed (`CLIENT_IP_NOT_ALLOWED`)
+
+If your application has an IP allowlist ("Allowed IPs" in the Dashboard), requests made with its credentials from an IP that is not on the list are rejected with a `403` and `codeDescription: 'CLIENT_IP_NOT_ALLOWED'`. The SDK does not retry them. See the [IP allowlist guide](https://docs.pluggy.ai/docs/security/ip-allowlist).
+
+```ts
+import { isClientIpNotAllowedError } from 'pluggy-sdk'
+
+try {
+  await client.createConnectToken()
+} catch (err) {
+  if (isClientIpNotAllowedError(err)) {
+    // This server's outbound IP is not on the application's allowlist
+    console.error(err.message)
+  }
+  throw err
+}
+```
+
 ## TypeScript
 
 This package is written in TypeScript and ships with types. You can import types from the package directly:
