@@ -66,7 +66,10 @@ Current SDK methods in `client.ts` (PluggyClient):
 | Connectors | `fetchConnectors()`, `fetchConnector()` | GET /connectors |
 | Connector Validation | `validateParameters()` | POST /connectors/{id}/validate |
 | Items | `createItem()`, `fetchItem()`, `updateItem()`, `deleteItem()` | /items |
+| Item listing (opt-in, paid plans; 403 `LIST_ITEMS_FEATURE_NOT_ENABLED` otherwise) | `fetchItemsCursor()` (single page) + `fetchAllItems()` (full sweep) | GET /v2/items |
 | Item MFA | `updateItemMFA()` | POST /items/{id}/mfa |
+| Item Resources | `fetchItemResources()` | GET /items/{id}/resources |
+| SCR (opt-in) | `fetchItemScr()` | GET /items/{id}/scr |
 | Accounts | `fetchAccounts()`, `fetchAccount()` | /accounts |
 | Account Statements | `fetchAccountStatements()` | GET /accounts/{id}/statements |
 | Transactions | `fetchTransactionsCursor()` (single page) + `fetchAllTransactions()` (full sweep) for the v2 cursor endpoint; `fetchTransactions()` page-based is `@deprecated`; `fetchTransaction()` by id | GET /v2/transactions, GET /transactions/{id} |
@@ -78,6 +81,9 @@ Current SDK methods in `client.ts` (PluggyClient):
 | Identity | `fetchIdentity()`, `fetchIdentityByItemId()` | /identity |
 | Credit Card Bills | `fetchCreditCardBills()`, `fetchCreditCardBill()` | /bills |
 | Categories | `fetchCategories()`, `fetchCategory()` | /categories |
+| Category Rules | `fetchCategoryRules()`, `createCategoryRule()`, `deleteCategoryRule()` | /categories/rules |
+| Merchants | `fetchMerchants()` | GET /merchants |
+| Boleto Management (beta) | `createBoletoConnection()`, `createBoletoConnectionFromItem()`, `createBoleto()`, `fetchBoleto()`, `cancelBoleto()` | /boleto-connections, /boletos |
 | Webhooks | Full CRUD | /webhooks |
 | Connect Token | `createConnectToken()` | POST /connect_token |
 
@@ -86,7 +92,7 @@ Current SDK methods in `paymentsClient.ts` (PluggyPaymentsClient):
 | Resource | SDK Methods |
 |----------|-------------|
 | Payment Recipients | `createPaymentRecipient()`, `fetchPaymentRecipient()`, `fetchPaymentRecipients()`, `updatePaymentRecipient()`, `deletePaymentRecipient()` |
-| Payment Requests | `createPaymentRequest()`, `fetchPaymentRequest()`, `fetchPaymentRequests()`, `deletePaymentRequest()` |
+| Payment Requests | `createPaymentRequest()`, `createPixQrPaymentRequest()`, `fetchPaymentRequest()`, `fetchPaymentRequests()`, `deletePaymentRequest()` |
 | Payment Intents | `createPaymentIntent()`, `fetchPaymentIntent()`, `fetchPaymentIntents()` |
 | Payment Customers | Full CRUD |
 | Payment Institutions | `fetchPaymentInstitution()`, `fetchPaymentInstitutions()` |
@@ -94,7 +100,8 @@ Current SDK methods in `paymentsClient.ts` (PluggyPaymentsClient):
 | Smart Accounts | `createSmartAccount()`, `fetchSmartAccount()`, `fetchSmartAccountBalance()`, `fetchSmartAccounts()` |
 | Automatic PIX | Multiple methods for PIX automático |
 | Scheduled Payments | Multiple methods |
-| Smart Transfers | Multiple methods |
+| Smart Transfers | Multiple methods, incl. `fetchSmartTransferPreauthorizationPayments()` |
+| PIX por biometria | `createPaymentRequestPixBiometric()`, `fetchPixBiometricEnrollments()`, `fetchPixBiometricEnrollment()`, `fetchPixBiometricEnrollmentBalance()`, `revokePixBiometricEnrollment()`, `cancelPixBiometricEnrollmentDataConsent()` (`/payments/requests/pix-biometric`, `/pix-biometric/enrollments`) |
 
 ### 3. Type Definition Patterns
 
@@ -130,9 +137,9 @@ async fetchModels(itemId: string, options: ModelFilters = {}): Promise<PageRespo
   return await this.createGetRequest('models', { ...options, itemId })
 }
 
-// GET by ID
+// GET by ID. Ids in a path always go through this.pathId, which refuses a "/".
 async fetchModel(id: string): Promise<Model> {
-  return await this.createGetRequest(`models/${id}`)
+  return await this.createGetRequest(`models/${this.pathId(id)}`)
 }
 
 // POST
@@ -142,16 +149,18 @@ async createModel(payload: CreateModelPayload): Promise<Model> {
 
 // PATCH
 async updateModel(id: string, payload: UpdateModelPayload): Promise<Model> {
-  return await this.createPatchRequest(`models/${id}`, null, payload)
+  return await this.createPatchRequest(`models/${this.pathId(id)}`, null, payload)
 }
 
 // DELETE
 async deleteModel(id: string): Promise<void> {
-  return await this.createDeleteRequest(`models/${id}`)
+  return await this.createDeleteRequest(`models/${this.pathId(id)}`)
 }
 ```
 
 ## Build and Test
+
+Pull requests to `master` run `.github/workflows/build.yml` (install, supply-chain audit, build, unit tests; no secrets). The `main` ruleset requires two status checks to merge: `build` and `Validate Conventional Commits title`. They are matched by job name, so renaming either job means updating the ruleset in the same change, or every PR stays blocked. Integration tests run only on the daily schedule and in the release.
 
 This repo uses **pnpm 11** (managed via corepack — the `packageManager` field in `package.json` pins the version). Development requires **Node 24+** (declared in `devEngines`); the published package itself supports **Node 12+** for consumers (`engines.node`).
 
@@ -233,5 +242,5 @@ Type-only gap fixes from comparing `src/types/` against the OpenAPI spec (`oas3.
 - **CreditCardBills**: `payments` (new `CreditCardBillPayment` type + `valueType`/`paymentMode` enums)
 - Re-exported `creditCardBills` types from `src/types/index.ts` (were public via `fetchCreditCardBill()` return type but not importable)
 
-### Not Implemented (Intentional)
-- Boleto Management: Beta feature, not added to SDK (the `Connector.supportsBoletoManagement` flag is exposed as read-only metadata, but no boleto endpoints/types are implemented)
+### Boleto Management (beta)
+Boleto endpoints (`/boleto-connections`, `/boletos`) are implemented on `PluggyClient` and marked BETA in their JSDoc, since the API still flags them as beta.

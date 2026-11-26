@@ -1,5 +1,6 @@
 import { PaymentCustomer } from './paymentCustomer'
 import { PaymentRecipient } from './paymentRecipient'
+import { PaymentRequestPixBiometricDetails } from './pixBiometric'
 
 export declare const DAYS_OF_WEEK: readonly [
   'MONDAY',
@@ -49,6 +50,17 @@ export type CreatePaymentRequest = {
   smartAccountId?: string
   clientPaymentId?: string
   isSandbox: boolean
+}
+
+export type CreatePixQrPaymentRequest = {
+  /** Pix QR code */
+  pixQrCode: string
+  /** Redirect urls after the payment was completed or ended in error status */
+  callbackUrls?: CallbackUrls | null
+  /** Customer identifier associated to the payment */
+  customerId?: string
+  /** Indicates if this payment request should be created in sandbox mode. Default: false */
+  isSandbox?: boolean
 }
 
 export type PaymentRequestSchedule =
@@ -151,6 +163,8 @@ export type PaymentRequest = {
   schedule: PaymentRequestSchedule | null
   /**! automaticPix of the payment */
   automaticPix: PaymentRequestAutomaticPixDetails | null
+  /**! Pix por biometria details; null (or absent) on other kinds of payment request */
+  pixBiometric?: PaymentRequestPixBiometricDetails | null
   /**! createdAt date */
   createdAt: Date
   /**! updatedAt date */

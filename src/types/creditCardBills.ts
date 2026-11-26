@@ -30,6 +30,8 @@ export type CreditCardBillPaymentMode = typeof CREDIT_CARD_BILL_PAYMENT_MODES[nu
 export type CreditCardBills = {
   id: string
   dueDate: Date
+  /** Date when the bill was closed */
+  billClosingDate: Date | null
   totalAmount: number
   totalAmountCurrencyCode: CurrencyCode
   minimumPaymentAmount: number | null

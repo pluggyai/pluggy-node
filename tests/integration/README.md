@@ -30,7 +30,7 @@ Without credentials each spec auto-skips via `describe.skip`, so the suite is sa
 | `categories.test.ts` | `fetchCategories`, `fetchCategory` | No |
 | `connectToken.test.ts` | `createConnectToken` | No |
 | `webhooks.test.ts` | Webhook CRUD (always cleans up its own webhook) | No |
-| `items.test.ts` | `fetchItem` against a freshly-created sandbox item | Yes |
+| `items.test.ts` | `fetchItem` against a freshly-created sandbox item, `fetchItemResources` (empty page: the sandbox connector is not Open Finance) | Yes |
 | `accounts.test.ts` | `fetchAccounts`, `fetchAccount`, `fetchAccountStatements` | Yes |
 | `transactions.test.ts` | Cursor pagination, `fetchTransaction`, `updateTransactionCategory` | Yes |
 | `investments.test.ts` | Investments + `fetchAllInvestmentTransactions` dedup | Yes |

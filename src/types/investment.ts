@@ -270,6 +270,23 @@ export type Investment = {
   owner: string | null
   /** Financial institution holder  of the investment */
   institution: InvestmentInstitution | null
+  /** Coupon-payment schedule for coupon-bearing fixed income / Treasury bonds */
+  couponPayment?: InvestmentCouponPayment | null
+  /** The date when the grace period ends (fixed-income investments only) */
+  gracePeriodDate?: Date | null
+  /** B3 lot/price conversion factor (variable income) */
+  priceFactor?: number | null
+  /** Whether the product is tax-exempt (LCI, LCA, CRI, CRA, debêntures incentivadas) */
+  taxExempt?: boolean | null
+}
+
+export type InvestmentCouponPayment = {
+  /** Whether the paper pays periodic coupons */
+  hasCoupon?: boolean
+  /** Frequency of coupon payments (MONTHLY, QUARTERLY, SEMESTERLY, YEARLY, IRREGULAR) */
+  periodicity?: string
+  /** Free-text detail when periodicity is IRREGULAR */
+  additionalInfo?: string
 }
 
 export type InvestmentsFilters = PageFilters

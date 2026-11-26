@@ -1,0 +1,46 @@
+name: Build & Test
+
+on:
+  pull_request:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  # The job name is a required status check in the `main` ruleset: renaming it blocks every PR.
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24.22.1'
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Setup pnpm cache
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24.22.1'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Supply-chain audit (strict — any vulnerability fails the build)
+        run: pnpm audit && pnpm audit signatures
+
+      - name: Build
+        run: pnpm build
+
+      # Unit tests only: integration tests need secrets, which PR runs never get.
+      - name: Test
+        run: pnpm test

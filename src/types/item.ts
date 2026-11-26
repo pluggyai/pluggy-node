@@ -1,3 +1,4 @@
+import { PageFilters } from './common'
 import { Connector, ConnectorCredential, ProductType } from './connector'
 import { ExecutionErrorResult, ExecutionStatus } from './execution'
 
@@ -115,6 +116,18 @@ export type Item = {
   nextAutoSyncAt: Date | null
   /** Consent expiration date (Open Finance connections). */
   consentExpiresAt: Date | null
+  /**
+   * Open Finance only. When the financial institution's resource list was last read for this Item,
+   * or null if it never was. See `fetchItemResources`.
+   */
+  resourcesCollectedAt: Date | null
+  /**
+   * Open Finance only. True when the financial institution declares at least one of this Item's
+   * resources as 'PENDING_AUTHORISATION', meaning the user still has to approve it at their
+   * institution; false when the resource list was read and none is. Null for non Open Finance
+   * connectors, and while the resource list has not been read yet (`resourcesCollectedAt` is null).
+   */
+  hasResourcesPendingAuthorization: boolean | null
 }
 
 /**
@@ -136,4 +149,75 @@ export type CreateItemOptions = {
   avoidDuplicates?: boolean
   /** Redirect URI required for the Oauth flow */
   oauthRedirectUri?: string
+}
+
+export const ITEM_RESOURCE_STATUSES = [
+  'AVAILABLE',
+  'UNAVAILABLE',
+  'TEMPORARILY_UNAVAILABLE',
+  'PENDING_AUTHORISATION',
+] as const
+/**
+ * What the financial institution reports about a resource of the Item's Open Finance consent.
+ *  AVAILABLE: The institution shares the resource.
+ *  UNAVAILABLE: The institution reports the resource as unavailable.
+ *  TEMPORARILY_UNAVAILABLE: The institution reports the resource as temporarily unavailable.
+ *  PENDING_AUTHORISATION: The user still has to approve sharing the resource at their institution.
+ * Note the British spelling of 'PENDING_AUTHORISATION': it is Open Finance's, kept verbatim.
+ */
+export type ItemResourceStatus = typeof ITEM_RESOURCE_STATUSES[number]
+
+export const ITEM_RESOURCE_TYPES = [
+  'ACCOUNT',
+  'CREDIT_CARD_ACCOUNT',
+  'LOAN',
+  'FINANCING',
+  'UNARRANGED_ACCOUNT_OVERDRAFT',
+  'INVOICE_FINANCING',
+  'BANK_FIXED_INCOME',
+  'CREDIT_FIXED_INCOME',
+  'VARIABLE_INCOME',
+  'TREASURE_TITLE',
+  'FUND',
+] as const
+/**
+ * Open Finance resource type, reported verbatim by the financial institution.
+ * The listed values are the documented ones, but others can appear: handle unknown strings.
+ */
+export type ItemResourceType = typeof ITEM_RESOURCE_TYPES[number] | (string & {})
+
+/** A resource the financial institution declared for the Item's Open Finance consent. */
+export type ItemResource = {
+  /** The institution's identifier for the resource. */
+  resourceId: string
+  /** Open Finance resource type. */
+  type: ItemResourceType
+  /** What the institution reports about this resource. */
+  status: ItemResourceStatus
+}
+
+export type ItemResourceFilters = PageFilters & {
+  /** Only return resources with this status. */
+  status?: ItemResourceStatus
+}
+
+/**
+ * Filters for {@link PluggyClient.fetchItemsCursor} / {@link PluggyClient.fetchAllItems}
+ * (`GET /v2/items`).
+ *
+ * ⚠️ Opt-in, paid plans only. Listing items is disabled by default and is only available to
+ * paid-plan teams that have explicitly requested it from Pluggy support. Teams without it
+ * enabled get `403 LIST_ITEMS_FEATURE_NOT_ENABLED`. For most integrations, store each `itemId`
+ * when it is created (Pluggy Connect `onSuccess` or the `item/created` webhook) and use
+ * `fetchItem(id)` instead.
+ *
+ * Only these fields are sent; the endpoint rejects any other query parameter.
+ */
+export type ItemCursorFilters = {
+  /** Only return items created with this `clientUserId`. Max 255 characters. */
+  clientUserId?: string
+  /** Only return items of this connector. Integer >= 0. */
+  connectorId?: number
+  /** Opaque cursor taken from the `after` query parameter of the previous page's `next` field */
+  after?: string
 }

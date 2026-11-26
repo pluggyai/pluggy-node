@@ -39,6 +39,37 @@ export type SmartTransferRecipient = Pick<
   pixKey: string | null
 }
 
+export const SMART_TRANSFER_DATA_CONSENT_STATUS = [
+  'AWAITING_AUTHORISATION',
+  'AUTHORISED',
+  'REJECTED',
+] as const
+
+export type SmartTransferDataConsentStatus = typeof SMART_TRANSFER_DATA_CONSENT_STATUS[number]
+
+export type SmartTransferDataConsent = {
+  status: SmartTransferDataConsentStatus
+  /** Why the permission is REJECTED (e.g. CUSTOMER_MANUALLY_REVOKED); null otherwise. */
+  rejectionReason: string | null
+  updatedAt: Date
+}
+
+export type SmartTransferOverdraft = {
+  /** Overdraft limit contracted, in BRL. */
+  contracted: number
+  /** Part of the overdraft limit in use, in BRL. */
+  used: number
+  /** Part of the overdraft limit still available, in BRL. */
+  available: number
+}
+
+export type SmartTransferPreauthorizationBalance = {
+  /** Source account balance in BRL. */
+  balance: number
+  /** Overdraft limit of the source account; null when the institution does not share it. */
+  overdraft: SmartTransferOverdraft | null
+}
+
 export type SmartTransferPreauthorization = {
   id: string
   status: SmartTransferPreauthorizationStatus
@@ -50,6 +81,8 @@ export type SmartTransferPreauthorization = {
   } | null
   recipients: SmartTransferRecipient[]
   connector: Connector
+  /** Permission to read the source account balance; null when it was not requested. */
+  dataConsent: SmartTransferDataConsent | null
   createdAt: Date
   updatedAt: Date
 }
@@ -62,6 +95,8 @@ export type CreateSmartTransferPreauthorization = {
     success?: string
     error?: string
   }
+  /** Also ask the customer for permission to read the source account balance. */
+  linkedJourney?: boolean
 }
 
 export type CreateSmartTransferPayment = {

@@ -4,6 +4,8 @@ import { sleep } from './utils'
 
 dotenv.config()
 
+// Requires webhook management with an API key to be enabled for your team (opt-in). Otherwise
+// create/update/delete fail with 403 WEBHOOKS_API_FEATURE_NOT_ENABLED; use the Pluggy Dashboard.
 void (async function(): Promise<void> {
   const { CLIENT_ID = '', CLIENT_SECRET = '', WEBHOOK_URL = '' } = process.env
 
@@ -39,4 +41,14 @@ void (async function(): Promise<void> {
 
   console.log('If the webhook is not needed anymore, you can delete it.')
   await client.deleteWebhook(webhook.id)
-})()
+})().catch((error: { codeDescription?: string; message?: string }) => {
+  // API errors reject with the response body: { code, codeDescription, message }
+  if (error?.codeDescription === 'WEBHOOKS_API_FEATURE_NOT_ENABLED') {
+    console.error(
+      'Managing webhooks with an API key is not enabled for this team. Configure them in the ' +
+        'Pluggy Dashboard (Applications → Configure → Webhooks) or ask Pluggy support to enable it.'
+    )
+    return
+  }
+  console.error(error)
+})

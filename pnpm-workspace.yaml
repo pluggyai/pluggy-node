@@ -33,10 +33,21 @@ minimumReleaseAgeIgnoreMissingTime: true
 # the standard `@pluggyai/*` wildcard from the skill template is
 # omitted here; re-add it the first time we pull one in.)
 #
-# Currently empty: the previous `brace-expansion` bypass (GHSA-jxxr-4gwj-5jf2,
-# patched in 5.0.6) was removed once its 14-day window closed on 2026-05-22.
-# 5.0.6 is now pinned via the override below and resolves on its own.
-minimumReleaseAgeExclude: []
+minimumReleaseAgeExclude:
+  # Remove after 2026-11-11 — GHSA-3g3m-2fjr-6pw4 (MODERATE), fixed in
+  # glob 14.0.2 (published 2026-10-27). Jest 30.5.2 is already the latest
+  # release but still declares ^13.0.6, so the fixed major is forced below.
+  # path-scurry 3.0.0 is a new dependency of the fixed glob major and was
+  # published the same day.
+  - glob@14.0.2
+  - path-scurry@3.0.0
+  # Remove after 2026-11-11 — GHSA-g3hv-75wg-m249 (MODERATE), fixed in
+  # minimatch 11.0.1 (published 2026-10-27). The latest ESLint and
+  # typescript-eslint parents still declare ^10.x, so the fixed major is
+  # forced below. @isaacs/nonrecursive-glob-match 1.0.1 is a new dependency
+  # of that fixed major and was published the same day.
+  - minimatch@11.0.1
+  - '@isaacs/nonrecursive-glob-match@1.0.1'
 
 # With exact pins in `package.json` (enforced by `savePrefix: ""`
 # below) there is only one version that satisfies each dep, so this
@@ -113,6 +124,30 @@ allowBuilds:
   # automatically), so the postinstall script is not required for the
   # package to work at runtime. Leaving it off keeps install hermetic.
   unrs-resolver: false
+  # File watcher pulled in by jest@30.5 (via jest-haste-map). Platform
+  # binaries ship via optionalDependencies, and its install script only
+  # compiles from source when `npm_config_build_from_source=true`, so it
+  # is a no-op for us. Leaving it off keeps install hermetic.
+  '@parcel/watcher': false
+
+# Advisories with no fixed release yet. Each entry says where the package
+# reaches us and why that path is not exploitable here; drop it as soon as
+# a fix ships and resolves through the parent's range.
+auditConfig:
+  ignoreGhsas:
+    # braces GHSA-vfj7-8cjw-p6xm (stack-exhaustion DoS via deeply nested
+    # patterns, HIGH): every version up to 3.0.3, the latest, with no
+    # patched release. Reaches us only through the release tooling
+    # (semantic-release and @semantic-release/commit-analyzer / git >
+    # micromatch), which only expands the glob patterns in our own release
+    # config, never untrusted input.
+    - GHSA-vfj7-8cjw-p6xm
+    # deepmerge GHSA-gcqx-w48m-w2h4 (prototype poisoning of the returned
+    # object, LOW): every version up to 4.3.1, the latest, with no patched
+    # release published. Reaches us only through jest > @jest/core >
+    # jest-config, which merges repository-controlled test configuration at
+    # test time; it is never shipped in the package. Drop it once a fix ships.
+    - GHSA-gcqx-w48m-w2h4
 
 # Force a specific version on transitive dependencies, regardless
 # of what the parent's `package.json` range allows. Use sparingly —
@@ -129,28 +164,24 @@ overrides:
   # `brace-expansion >=1.1.13` that ends up resolving to the 5.x
   # stream and violating semver against parents that declared `^1.x`.
   #
-  # Patches for transitives reaching us through the @semantic-release
-  # plugin tree. @semantic-release/git@10.0.1 has been unmaintained
-  # since 2021 so the parent will not pull these in on its own. All
-  # four are patch-level within the same major (drop-in API-compat).
+  # Overrides that the parents now make redundant were removed once
+  # each one was proven unnecessary: drop it, `pnpm update <pkg>`, and
+  # `pnpm audit` stays clean. On 2026-10-08 that retired lodash,
+  # lodash-es, braces, micromatch and undici (both majors) and the
+  # brace-expansion pins. Their in-range versions already carry every
+  # fix those pins existed for.
   #
-  # lodash GHSA-r5fr-rjxr-66jc (Code Injection via _.template, HIGH)
-  # and GHSA-f23m-r3pf-42rh (Prototype Pollution, MODERATE).
-  lodash: '4.18.1'
-  lodash-es: '4.18.1'
-  # braces GHSA-grv7-fg5c-xmjg (ReDoS, HIGH).
-  braces: '3.0.3'
-  # micromatch GHSA-952p-6rrq-rcjv (ReDoS, MODERATE).
-  micromatch: '4.0.8'
-  # Patches for transitives reaching us through the jest tree.
-  #
-  # @babel/helpers GHSA-968p-4wvh-cqc8 (inefficient RegExp, MODERATE)
-  # no longer needs an override: @babel/core is now resolved to 7.29.7
-  # (the highest in-range version, refreshed from the jest tree rather
-  # than pinned), which pulls @babel/helpers ^7.29.7 natively — well
-  # past the 7.29.2 fix. Per the policy above, the override came back
-  # out once the parent picked up the fix on its own.
-  #
+  # glob — AbortSignal cancellation bypass that can continue filesystem
+  # traversal after timeout (GHSA-3g3m-2fjr-6pw4, MODERATE). The vulnerable
+  # 10.x and 13.x lines reach us through Jest 30.5.2, which is already the
+  # latest release and still requires ^13.0.6. Force the first fixed version
+  # until Jest moves to the 14.x line.
+  glob: '14.0.2'
+  # minimatch — globparts amplification DoS (GHSA-g3hv-75wg-m249,
+  # MODERATE). ESLint 10.13.0 and typescript-eslint 8.72.0 are the latest
+  # parents but still require ^10.x; glob 14 also uses the 11.x API. Force
+  # the first fixed version until every parent accepts it naturally.
+  minimatch: '11.0.1'
   # js-yaml — two DoS advisories, both reaching us only through the
   # jest tree (@istanbuljs/load-nyc-config, unmaintained and pinned to
   # ^3.13.1) and the semantic-release tree (cosmiconfig@9, ^4.1.0).
@@ -162,13 +193,8 @@ overrides:
   #   GHSA-h67p-54hq-rp68 (quadratic-complexity DoS in merge-key
   #     handling via repeated aliases, MODERATE) → patched in 4.2.0
   #     (no v4.1.2 was published; 4.2.0 is the fixed release).
-  js-yaml: '4.2.0'
-  # brace-expansion has three separate advisories — one per major
-  # in active use. Version-scoped overrides keep each parent within
-  # its expected semver range so 1.x consumers stay on 1.x, etc:
-  #   GHSA-v6h2-p8h4-qcjw (LOW)      → patched in 1.1.12
-  #   GHSA-f886-m6hf-6m8v (MODERATE) → patched in 1.1.13 / 2.0.3
-  #   GHSA-jxxr-4gwj-5jf2 (MODERATE) → patched in 5.0.6
-  'brace-expansion@1': '1.1.14'
-  'brace-expansion@2': '2.0.3'
-  'brace-expansion@5': '5.0.6'
+  #   GHSA-52cp-r559-cp3m (quadratic CPU via YAML merge-key chains,
+  #     HIGH) → patched in 4.3.0.
+  #   GHSA-5p4m-2wfm-xmqj (HIGH) → patched in 4.3.1.
+  #   GHSA-2883-xcg3-v3hh (HIGH) → patched in 4.3.2.
+  js-yaml: '4.3.2'

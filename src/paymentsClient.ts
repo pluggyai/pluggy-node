@@ -30,11 +30,21 @@ import {
   AutomaticPixPaymentListResponse,
   PaymentPixAutomaticFilters,
   SmartTransferPreauthorization,
+  SmartTransferPreauthorizationBalance,
   CreateSmartTransferPreauthorization,
   SmartTransferPayment,
   CreateSmartTransferPayment,
   SmartTransferPreauthorizationsFilters,
+  SmartTransferPreauthorizationPaymentsFilters,
+  CreatePixQrPaymentRequest,
+  CreatePaymentRequestPixBiometric,
+  PixBiometricEnrollment,
+  PixBiometricBalance,
+  PixBiometricEnrollmentsFilters,
 } from './types'
+
+/** Other routes under `payments/recipients/`, never a recipient id */
+const RESERVED_RECIPIENT_PATHS = ['institutions']
 
 /**
  * Creates a new client instance for interacting with Pluggy API for the Payments API
@@ -52,11 +62,20 @@ export class PluggyPaymentsClient extends BaseApi {
   }
 
   /**
+   * Creates a payment request from a PIX QR code
+   * @param payload CreatePixQrPaymentRequest with the PIX QR code
+   * @returns {PaymentRequest} PaymentRequest object
+   */
+  async createPixQrPaymentRequest(payload: CreatePixQrPaymentRequest): Promise<PaymentRequest> {
+    return await this.createPostRequest('payments/requests/pix-qr', null, payload)
+  }
+
+  /**
    * Fetch a single payment request
    * @returns {PaymentRequest} PaymentRequest object
    */
   async fetchPaymentRequest(id: string): Promise<PaymentRequest> {
-    return await this.createGetRequest(`payments/requests/${id}`)
+    return await this.createGetRequest(`payments/requests/${this.pathId(id)}`)
   }
 
   /**
@@ -73,7 +92,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * Delete a payment request
    */
   async deletePaymentRequest(id: string): Promise<void> {
-    await this.createDeleteRequest(`payments/requests/${id}`)
+    await this.createDeleteRequest(`payments/requests/${this.pathId(id)}`)
   }
 
   /**
@@ -89,7 +108,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {PaymentIntent} PaymentIntent object
    */
   async fetchPaymentIntent(id: string): Promise<PaymentIntent> {
-    return await this.createGetRequest(`payments/intents/${id}`)
+    return await this.createGetRequest(`payments/intents/${this.pathId(id)}`)
   }
 
   /**
@@ -115,7 +134,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {PaymentCustomer} PaymentCustomer object
    */
   async fetchPaymentCustomer(id: string): Promise<PaymentCustomer> {
-    return await this.createGetRequest(`payments/customers/${id}`)
+    return await this.createGetRequest(`payments/customers/${this.pathId(id)}`)
   }
 
   /**
@@ -132,14 +151,14 @@ export class PluggyPaymentsClient extends BaseApi {
    * Delete a payment customer
    */
   async deletePaymentCustomer(id: string): Promise<void> {
-    await this.createDeleteRequest(`payments/customers/${id}`)
+    await this.createDeleteRequest(`payments/customers/${this.pathId(id)}`)
   }
 
   async updatePaymentCustomer(
     id: string,
     payload: Partial<CreatePaymentCustomer>
   ): Promise<PaymentCustomer> {
-    return await this.createPatchRequest(`payments/customers/${id}`, null, payload)
+    return await this.createPatchRequest(`payments/customers/${this.pathId(id)}`, null, payload)
   }
 
   /**
@@ -155,7 +174,9 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {PaymentRecipient} PaymentRecipient object
    */
   async fetchPaymentRecipient(id: string): Promise<PaymentRecipient> {
-    return await this.createGetRequest(`payments/recipients/${id}`)
+    return await this.createGetRequest(
+      `payments/recipients/${this.pathId(id, RESERVED_RECIPIENT_PATHS)}`
+    )
   }
 
   /**
@@ -172,7 +193,9 @@ export class PluggyPaymentsClient extends BaseApi {
    * Delete a payment recipient
    */
   async deletePaymentRecipient(id: string): Promise<void> {
-    await this.createDeleteRequest(`payments/recipients/${id}`)
+    await this.createDeleteRequest(
+      `payments/recipients/${this.pathId(id, RESERVED_RECIPIENT_PATHS)}`
+    )
   }
 
   /**
@@ -185,7 +208,11 @@ export class PluggyPaymentsClient extends BaseApi {
     id: string,
     payload: UpdatePaymentRecipient
   ): Promise<PaymentRecipient> {
-    return await this.createPatchRequest(`payments/recipients/${id}`, null, payload)
+    return await this.createPatchRequest(
+      `payments/recipients/${this.pathId(id, RESERVED_RECIPIENT_PATHS)}`,
+      null,
+      payload
+    )
   }
 
   /**
@@ -193,7 +220,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {PaymentInstitution} PaymentInstitution object
    */
   async fetchPaymentInstitution(id: string): Promise<PaymentInstitution> {
-    return await this.createGetRequest(`payments/recipients/institutions/${id}`)
+    return await this.createGetRequest(`payments/recipients/institutions/${this.pathId(id)}`)
   }
 
   /**
@@ -219,7 +246,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {BulkPayment} BulkPayment object
    */
   async fetchBulkPayment(id: string): Promise<BulkPayment> {
-    return await this.createGetRequest(`payments/bulk/${id}`)
+    return await this.createGetRequest(`payments/bulk/${this.pathId(id)}`)
   }
 
   /**
@@ -234,7 +261,7 @@ export class PluggyPaymentsClient extends BaseApi {
 
   /** Deletes the bulk payment */
   async deleteBulkPayment(id: string): Promise<void> {
-    await this.createDeleteRequest(`payments/bulk/${id}`)
+    await this.createDeleteRequest(`payments/bulk/${this.pathId(id)}`)
   }
 
   /**
@@ -250,7 +277,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {SmartAccount} SmartAccount object
    */
   async fetchSmartAccount(id: string): Promise<SmartAccount> {
-    return await this.createGetRequest(`payments/smart-accounts/${id}`)
+    return await this.createGetRequest(`payments/smart-accounts/${this.pathId(id)}`)
   }
 
   /**
@@ -258,7 +285,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {SmartAccountBalance} SmartAccountBalance object
    */
   async fetchSmartAccountBalance(id: string): Promise<SmartAccountBalance> {
-    return await this.createGetRequest(`payments/smart-accounts/${id}/balance`)
+    return await this.createGetRequest(`payments/smart-accounts/${this.pathId(id)}/balance`)
   }
 
   /**
@@ -291,7 +318,7 @@ export class PluggyPaymentsClient extends BaseApi {
    * @param paymentRequest ID of the payment request
    */
   async fetchScheduledPayments(paymentRequest: string): Promise<PageResponse<SchedulePayment>> {
-    return await this.createGetRequest(`payments/requests/${paymentRequest}/schedules`)
+    return await this.createGetRequest(`payments/requests/${this.pathId(paymentRequest)}/schedules`)
   }
 
   /**
@@ -304,7 +331,7 @@ export class PluggyPaymentsClient extends BaseApi {
     scheduleId: string
   ): Promise<SchedulePayment> {
     return await this.createGetRequest(
-      `payments/requests/${paymentRequest}/schedules/${scheduleId}`
+      `payments/requests/${this.pathId(paymentRequest)}/schedules/${this.pathId(scheduleId)}`
     )
   }
 
@@ -315,7 +342,7 @@ export class PluggyPaymentsClient extends BaseApi {
    */
   async cancelScheduledPayment(paymentRequest: string, scheduleId: string): Promise<void> {
     await this.createPostRequest(
-      `payments/requests/${paymentRequest}/schedules/${scheduleId}/cancel`
+      `payments/requests/${this.pathId(paymentRequest)}/schedules/${this.pathId(scheduleId)}/cancel`
     )
   }
 
@@ -324,7 +351,9 @@ export class PluggyPaymentsClient extends BaseApi {
    * @param paymentRequest ID of the payment request
    */
   async cancelScheduledPayments(paymentRequest: string): Promise<void> {
-    await this.createPostRequest(`payments/requests/${paymentRequest}/schedules/cancel`)
+    await this.createPostRequest(
+      `payments/requests/${this.pathId(paymentRequest)}/schedules/cancel`
+    )
   }
 
   /**
@@ -338,7 +367,7 @@ export class PluggyPaymentsClient extends BaseApi {
     payload: ScheduleAutomaticPixPaymentRequest
   ): Promise<AutomaticPixPayment> {
     return await this.createPostRequest(
-      `payments/requests/${authorizationId}/automatic-pix/schedule`,
+      `payments/requests/${this.pathId(authorizationId)}/automatic-pix/schedule`,
       null,
       payload
     )
@@ -357,7 +386,9 @@ export class PluggyPaymentsClient extends BaseApi {
     payload: RetryAutomaticPixPaymentRequest
   ): Promise<AutomaticPixPayment> {
     return await this.createPostRequest(
-      `payments/requests/${paymentRequestId}/automatic-pix/schedules/${automaticPixPaymentId}/retry`,
+      `payments/requests/${this.pathId(paymentRequestId)}/automatic-pix/schedules/${this.pathId(
+        automaticPixPaymentId
+      )}/retry`,
       null,
       payload
     )
@@ -374,7 +405,7 @@ export class PluggyPaymentsClient extends BaseApi {
     options: PaymentPixAutomaticFilters
   ): Promise<AutomaticPixPaymentListResponse> {
     return await this.createGetRequest(
-      `payments/requests/${automaticPixPaymentId}/automatic-pix/schedules`,
+      `payments/requests/${this.pathId(automaticPixPaymentId)}/automatic-pix/schedules`,
       options
     )
   }
@@ -390,7 +421,9 @@ export class PluggyPaymentsClient extends BaseApi {
     automaticPixPaymentId: string
   ): Promise<AutomaticPixPayment> {
     return await this.createGetRequest(
-      `payments/requests/${paymentRequestId}/automatic-pix/schedules/${automaticPixPaymentId}`
+      `payments/requests/${this.pathId(paymentRequestId)}/automatic-pix/schedules/${this.pathId(
+        automaticPixPaymentId
+      )}`
     )
   }
 
@@ -404,7 +437,9 @@ export class PluggyPaymentsClient extends BaseApi {
     automaticPixPaymentId: string
   ): Promise<void> {
     await this.createPostRequest(
-      `payments/requests/${paymentRequestId}/automatic-pix/schedules/${automaticPixPaymentId}/cancel`
+      `payments/requests/${this.pathId(paymentRequestId)}/automatic-pix/schedules/${this.pathId(
+        automaticPixPaymentId
+      )}/cancel`
     )
   }
 
@@ -413,7 +448,9 @@ export class PluggyPaymentsClient extends BaseApi {
    * @param paymentRequestId ID of the payment request
    */
   async cancelAutomaticPixAuthorization(paymentRequestId: string): Promise<void> {
-    await this.createPostRequest(`payments/requests/${paymentRequestId}/automatic-pix/cancel`)
+    await this.createPostRequest(
+      `payments/requests/${this.pathId(paymentRequestId)}/automatic-pix/cancel`
+    )
   }
 
   /**
@@ -444,7 +481,52 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {SmartTransferPreauthorization} SmartTransferPreauthorization object
    */
   async fetchSmartTransferPreauthorization(id: string): Promise<SmartTransferPreauthorization> {
-    return await this.createGetRequest(`smart-transfers/preauthorizations/${id}`)
+    return await this.createGetRequest(`smart-transfers/preauthorizations/${this.pathId(id)}`)
+  }
+
+  /**
+   * Fetch the source account balance of a smart transfer preauthorization created with linkedJourney.
+   * Each call reads the balance from the institution and counts toward its monthly quota.
+   * @param id ID of the smart transfer preauthorization
+   * @returns {SmartTransferPreauthorizationBalance} the balance in BRL
+   */
+  async fetchSmartTransferPreauthorizationBalance(
+    id: string
+  ): Promise<SmartTransferPreauthorizationBalance> {
+    return await this.createGetRequest(
+      `smart-transfers/preauthorizations/${this.pathId(id)}/balance`
+    )
+  }
+
+  /**
+   * Cancel only the balance permission of a smart transfer preauthorization. The preauthorization stays active.
+   * @param id ID of the smart transfer preauthorization
+   * @returns {SmartTransferPreauthorization} the preauthorization with the cancelled permission
+   */
+  async cancelSmartTransferPreauthorizationDataConsent(
+    id: string
+  ): Promise<SmartTransferPreauthorization> {
+    return await this.createDeleteRequest(
+      `smart-transfers/preauthorizations/${this.pathId(id)}/data-consent`
+    )
+  }
+
+  /**
+   * Fetch the payments of a smart transfer preauthorization, ordered by date descending
+   * @param id ID of the smart transfer preauthorization
+   * @param options SmartTransferPreauthorizationPaymentsFilters with from, to, page and pageSize
+   * @returns {PageResponse<SmartTransferPayment>} paged response of smart transfer payments
+   */
+  async fetchSmartTransferPreauthorizationPayments(
+    id: string,
+    options: SmartTransferPreauthorizationPaymentsFilters = {}
+  ): Promise<PageResponse<SmartTransferPayment>> {
+    return await this.createGetRequest(
+      `smart-transfers/preauthorizations/${this.pathId(id)}/payments`,
+      {
+        ...options,
+      }
+    )
   }
 
   /**
@@ -464,6 +546,67 @@ export class PluggyPaymentsClient extends BaseApi {
    * @returns {SmartTransferPayment} SmartTransferPayment object
    */
   async fetchSmartTransferPayment(id: string): Promise<SmartTransferPayment> {
-    return await this.createGetRequest(`smart-transfers/payments/${id}`)
+    return await this.createGetRequest(`smart-transfers/payments/${this.pathId(id)}`)
+  }
+
+  /**
+   * Creates a PIX por biometria payment request
+   * @param payload CreatePaymentRequestPixBiometric
+   * @returns {PaymentRequest} PaymentRequest object
+   */
+  async createPaymentRequestPixBiometric(
+    payload: CreatePaymentRequestPixBiometric
+  ): Promise<PaymentRequest> {
+    return await this.createPostRequest('payments/requests/pix-biometric', null, payload)
+  }
+
+  /**
+   * Fetch all PIX por biometria enrollments
+   * @param options PixBiometricEnrollmentsFilters with page and pageSize
+   * @returns {PageResponse<PixBiometricEnrollment>} paged response of enrollments
+   */
+  async fetchPixBiometricEnrollments(
+    options: PixBiometricEnrollmentsFilters = {}
+  ): Promise<PageResponse<PixBiometricEnrollment>> {
+    return await this.createGetRequest('pix-biometric/enrollments', { ...options })
+  }
+
+  /**
+   * Fetch a single PIX por biometria enrollment
+   * @param id ID of the enrollment
+   * @returns {PixBiometricEnrollment} PixBiometricEnrollment object
+   */
+  async fetchPixBiometricEnrollment(id: string): Promise<PixBiometricEnrollment> {
+    return await this.createGetRequest(`pix-biometric/enrollments/${this.pathId(id)}`)
+  }
+
+  /**
+   * Fetch the account balance of a PIX por biometria enrollment created with linkedJourney.
+   * Each call reads the balance from the institution and counts toward its monthly quota.
+   * @param id ID of the enrollment
+   * @returns {PixBiometricBalance} the balance in BRL
+   */
+  async fetchPixBiometricEnrollmentBalance(id: string): Promise<PixBiometricBalance> {
+    return await this.createGetRequest(`pix-biometric/enrollments/${this.pathId(id)}/balance`)
+  }
+
+  /**
+   * Revoke a PIX por biometria enrollment. This cannot be undone: the payer must link again.
+   * @param id ID of the enrollment
+   * @returns {PixBiometricEnrollment} the revoked enrollment
+   */
+  async revokePixBiometricEnrollment(id: string): Promise<PixBiometricEnrollment> {
+    return await this.createPostRequest(`pix-biometric/enrollments/${this.pathId(id)}/revoke`)
+  }
+
+  /**
+   * Cancel only the balance permission of a PIX por biometria enrollment. The enrollment stays active.
+   * @param id ID of the enrollment
+   * @returns {PixBiometricEnrollment} the enrollment with the cancelled permission
+   */
+  async cancelPixBiometricEnrollmentDataConsent(id: string): Promise<PixBiometricEnrollment> {
+    return await this.createDeleteRequest(
+      `pix-biometric/enrollments/${this.pathId(id)}/data-consent`
+    )
   }
 }
